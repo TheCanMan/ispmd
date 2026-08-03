@@ -18,6 +18,14 @@
     "three": "^0.185.1"
   },
   "devDependencies": {
-    "@types/three": "^0.185.3"
+    "@astrojs/check": "^0.9.10",
+    "@fontsource-variable/bricolage-grotesque": "^5.3.0",
+    "@fontsource-variable/literata": "^5.3.0",
+    "@fontsource-variable/reem-kufi": "^5.3.0",
+    "@fontsource/amiri": "^5.3.0",
+    "@fontsource/dm-mono": "^5.3.0",
+    "@types/three": "^0.185.3",
+    "sharp": "^0.35.3",
+    "typescript": "^7.0.2"
   }
 }
