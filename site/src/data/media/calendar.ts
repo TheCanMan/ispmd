@@ -61,7 +61,7 @@ export const calendarMedia = defineMedia({
     focal: '50% 45%',
     status: 'placeholder',
     src: 'placeholder/enroll-sunday.jpg',
-    alt: 'A large empty hall with a wooden floor and daylight from high windows',
+    alt: 'An empty mirrored studio with a wooden floor and a ballet barre',
     realAlt: 'A Sunday morning in the building, wide',
     shotNote:
       'The single most useful photo on the site: it answers "what am I signing up for".',

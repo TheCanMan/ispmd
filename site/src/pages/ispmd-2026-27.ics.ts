@@ -1,15 +1,16 @@
 /**
  * The downloadable academic calendar.
  *
- * Class start is confirmed at 10:00 AM, so DTSTART;TZID=America/New_York is
- * legitimate. The END is not confirmed and moves through the year, because
- * class runs "until Salat al-Dhuhr". So this emits DURATION:PT2H30M with a
- * DESCRIPTION saying so, rather than asserting a hard DTEND the school has
- * never published.
+ * Class start is confirmed at 10:00 AM, but the END is not confirmed and
+ * moves through the year because class runs "until Salat al-Dhuhr". Calendar
+ * clients turn any duration into a precise end time, so all 33 Sundays are
+ * date-only events. The confirmed start and variable close remain explicit in
+ * the class-day description without becoming a false time block.
  *
- * No-school Sundays ship as all-day events. COPY.md promises "all thirty-three
- * Sundays in it", and a parent who has the eight off-Sundays in their calendar
- * is exactly as well served as one who has the twenty-five class days.
+ * No-school Sundays use their own description and never inherit class times or
+ * venue details. COPY.md promises "all thirty-three Sundays in it", and a
+ * parent who has the eight off-Sundays is as well served as one who has the
+ * twenty-five class days.
  */
 
 import type { APIRoute } from 'astro';
@@ -68,12 +69,12 @@ function eventFor(session: Session, site: string): string[] {
     `DTSTAMP:${DTSTAMP}`,
     `SUMMARY:${escapeText(summaryFor(session))}`,
     `URL:${site}calendar`,
+    `DTSTART;VALUE=DATE:${compact(session.date)}`,
+    `DTEND;VALUE=DATE:${compact(addDay(session.date))}`,
   ];
 
   if (session.kind === 'no-school') {
     lines.push(
-      `DTSTART;VALUE=DATE:${compact(session.date)}`,
-      `DTEND;VALUE=DATE:${compact(addDay(session.date))}`,
       'TRANSP:TRANSPARENT',
       fold(`DESCRIPTION:${escapeText('No class this Sunday. The full calendar is at ' + site + 'calendar')}`)
     );
@@ -82,8 +83,6 @@ function eventFor(session: Session, site: string): string[] {
       ? `${session.note}. ${CLASS_DESCRIPTION}`
       : CLASS_DESCRIPTION;
     lines.push(
-      `DTSTART;TZID=America/New_York:${compact(session.date)}T100000`,
-      'DURATION:PT2H30M',
       fold(`DESCRIPTION:${escapeText(description)}`),
       fold(
         `LOCATION:${escapeText('Islamic Education Center, 7917 Montrose Rd, Potomac, MD 20854')}`
@@ -94,31 +93,6 @@ function eventFor(session: Session, site: string): string[] {
   lines.push('END:VEVENT');
   return lines;
 }
-
-/**
- * Clients that honour TZID want the zone defined in the file. These are the
- * post-2007 US rules: DST starts the second Sunday in March, ends the first
- * Sunday in November.
- */
-const VTIMEZONE = [
-  'BEGIN:VTIMEZONE',
-  'TZID:America/New_York',
-  'BEGIN:DAYLIGHT',
-  'TZOFFSETFROM:-0500',
-  'TZOFFSETTO:-0400',
-  'TZNAME:EDT',
-  'DTSTART:20070311T020000',
-  'RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=2SU',
-  'END:DAYLIGHT',
-  'BEGIN:STANDARD',
-  'TZOFFSETFROM:-0400',
-  'TZOFFSETTO:-0500',
-  'TZNAME:EST',
-  'DTSTART:20071104T020000',
-  'RRULE:FREQ=YEARLY;BYMONTH=11;BYDAY=1SU',
-  'END:STANDARD',
-  'END:VTIMEZONE',
-];
 
 export const GET: APIRoute = async ({ site }) => {
   const { year, sessions } = await getCalendarYear();
@@ -131,8 +105,6 @@ export const GET: APIRoute = async ({ site }) => {
     'CALSCALE:GREGORIAN',
     'METHOD:PUBLISH',
     `X-WR-CALNAME:Islamic School of Potomac ${year}`,
-    'X-WR-TIMEZONE:America/New_York',
-    ...VTIMEZONE,
     ...sessions.flatMap((session) => eventFor(session, base)),
     'END:VCALENDAR',
   ];
