@@ -103,8 +103,10 @@ const chords = walk.map((k, i) => {
          closed and the missing chord is already amber. */
       gsap.set([...straps, chord], { drawSVG: '100%' });
     } else {
-      const setupLines = new SplitText(setup, { type: 'lines', mask: 'lines' }).lines;
-      const punchLines = new SplitText(punchline, { type: 'lines', mask: 'lines' }).lines;
+      /* aria: 'none' - SplitText's default adds an aria-label, which is a
+         prohibited attribute on a <p>. See the note in motion.ts. */
+      const setupLines = new SplitText(setup, { type: 'lines', mask: 'lines', aria: 'none' }).lines;
+      const punchLines = new SplitText(punchline, { type: 'lines', mask: 'lines', aria: 'none' }).lines;
 
       gsap.set([setup, punchline], { opacity: 1 });
       gsap.set([...straps, chord], { drawSVG: '0%' });

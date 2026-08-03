@@ -114,7 +114,13 @@ const bodyClasses = [bodyClass, transparentHeader ? 'has-transparent-header' : '
 
     <Header transparent={transparentHeader} path={path} />
 
-    <main id="main" tabindex="-1">
+    {/*
+      Labelled because /enroll embeds the JotForm iframe, and JotForm's own
+      page carries a <main> too. Two unnamed landmarks of the same role are
+      indistinguishable when cycling landmarks, and the one we can name is
+      ours. Cheap everywhere, correct on the page that needs it.
+    */}
+    <main id="main" tabindex="-1" aria-label="Main content">
       <slot />
     </main>
 

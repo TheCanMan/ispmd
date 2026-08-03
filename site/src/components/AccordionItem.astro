@@ -11,14 +11,20 @@ interface Props {
   id: string;
   open?: boolean;
   class?: string;
+  /**
+   * The heading level. Defaults to h3, which is right when the accordion sits
+   * under an h2 section heading. Pass "h2" where the group labels above the
+   * list are not themselves headings, or the document skips a level.
+   */
+  level?: 'h2' | 'h3' | 'h4';
 }
 
-const { question, id, open = false, class: className = '' } = Astro.props;
+const { question, id, open = false, class: className = '', level: Heading = 'h3' } = Astro.props;
 const panelId = `${id}-panel`;
 ---
 
 <div class={`accordion__item ${className}`}>
-  <h3 class="accordion__heading">
+  <Heading class="accordion__heading">
     <button
       class="accordion__trigger t-subtitle"
       type="button"
@@ -33,7 +39,7 @@ const panelId = `${id}-panel`;
         <line class="v" x1="8" y1="1" x2="8" y2="15" />
       </svg>
     </button>
-  </h3>
+  </Heading>
 
   <div class="accordion__panel" id={panelId} role="region" aria-labelledby={id} hidden={!open}>
     <div class="accordion__panel-inner flow">

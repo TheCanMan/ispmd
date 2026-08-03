@@ -32,19 +32,68 @@ const {
   legend = true,
   class: className = '',
 } = Astro.props;
+
+/* Derived from the data rather than hardcoded, so the accessible name cannot
+   drift from the year actually rendered. */
+const first = sessions[0]?.date.slice(0, 4);
+const last = sessions[sessions.length - 1]?.date.slice(0, 4);
+const yearLabel = first && last && first !== last ? `${first}-${last}` : (first ?? '');
+const regionLabel = `The ${yearLabel} school year, Sunday by Sunday`;
 ---
 
 <div class={`cal-band cal-band--${variant} ${className}`} data-calendar-band>
   {legend && <CalendarLegend class="cal-band__legend" />}
 
-  <div class="cal-band__scroller" role="group" aria-label="The 2026-2027 school year, Sunday by Sunday">
-    <div class="cal-band__cells" data-stagger-vector>
-      {sessions.map((session) => <CalendarCell session={session} />)}
+  {/*
+    10 - a region that scrolls has to be reachable by keyboard, or a parent who
+    cannot use a mouse cannot read the second half of the year at all. The strip
+    variant scrolls, so it is focusable in the markup and works with no JS; the
+    script below then keeps that true of whichever bands ACTUALLY overflow at
+    the current width, rather than trusting the variant name.
+
+    The outline lives on the viewport wrapper because the scroller carries the
+    edge-fade mask, and a mask clips the element's own outline along with its
+    content.
+  */}
+  <div class="cal-band__viewport">
+    <div
+      class="cal-band__scroller"
+      role="region"
+      aria-label={regionLabel}
+      tabindex={variant === 'strip' ? 0 : undefined}
+      data-calendar-scroller
+    >
+      <div class="cal-band__cells" data-stagger-vector>
+        {sessions.map((session) => <CalendarCell session={session} />)}
+      </div>
     </div>
   </div>
 
   {affordance && <p class="t-label cal-band__affordance">{affordance}</p>}
 </div>
+
+<script>
+  /**
+   * Focusable exactly when scrollable, at any width and on any page. Tying it
+   * to the variant would be a guess about layout; measuring the overflow is
+   * not, and it means a band that starts scrolling at some breakpoint is
+   * reachable there too.
+   */
+  const sync = () => {
+    for (const el of document.querySelectorAll<HTMLElement>('[data-calendar-scroller]')) {
+      const scrolls = el.scrollWidth - el.clientWidth > 1;
+      if (scrolls) {
+        el.setAttribute('tabindex', '0');
+      } else if (el !== document.activeElement) {
+        el.removeAttribute('tabindex');
+      }
+    }
+  };
+
+  sync();
+  window.addEventListener('resize', sync, { passive: true });
+  document.fonts?.ready.then(sync);
+</script>
 
 <style>
   .cal-band {
@@ -53,8 +102,22 @@ const {
     gap: var(--s-5);
   }
 
+  .cal-band__viewport {
+    position: relative;
+  }
+
+  .cal-band__viewport:has(.cal-band__scroller:focus-visible) {
+    outline: var(--focus-width) solid var(--ctx-focus);
+    outline-offset: var(--focus-offset);
+  }
+
   .cal-band__scroller {
     position: relative;
+  }
+
+  .cal-band__scroller:focus-visible {
+    /* The wrapper draws the ring; drawing it twice reads as a doubled border. */
+    outline: none;
   }
 
   .cal-band__cells {

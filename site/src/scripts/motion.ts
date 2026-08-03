@@ -100,6 +100,18 @@ export function lineRise(target: HTMLElement, trigger?: Element) {
     /* Without a wrapper the mask cannot clip; SplitText's own masking keeps
        the DOM cheaper than hand-wrapping. */
     mask: 'lines',
+    /*
+     * SplitText's default (aria: "auto") puts aria-hidden on every split line
+     * and an aria-label on the element itself. On a <p> or a <div> - which
+     * have no implicit ARIA role - aria-label is PROHIBITED, and axe flags it
+     * as serious on every headline the entrance touches.
+     *
+     * "none" leaves aria alone entirely. The split lines still hold the real
+     * text nodes and are read in order, which is why the deliberate space
+     * before each <br> matters: it is what keeps the reading "We don't give
+     * homework" rather than "givehomework".
+     */
+    aria: 'none',
   });
 
   /* The element itself is hidden by .js-motion until its entrance is wired,

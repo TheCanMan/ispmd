@@ -19,8 +19,6 @@ import { labels } from '../data/site';
     <div class="lattice lattice--quiet" aria-hidden="true"></div>
 
     <div class="container notfound__inner">
-      <p class="t-mega notfound__numeral" aria-hidden="true">404</p>
-
       <div class="notfound__block">
         <h1 class="t-display" data-motion="line-rise">That page isn't here.</h1>
         <p class="t-body" data-motion="body-rise">
@@ -53,12 +51,28 @@ import { labels } from '../data/site';
     z-index: var(--z-content);
   }
 
-  /* Clipped by the left container edge, behind the type. */
-  .notfound__numeral {
+  /*
+   * 14.9 - the numeral sits behind the text block at 0.08 opacity, clipped by
+   * the left container edge. It is the only use of --fs-mega on the site.
+   *
+   * It is CSS-generated content rather than an aria-hidden <p> because that is
+   * what it actually is: decoration that carries no information. Generated
+   * content never enters the accessibility tree at all, so there is no hidden
+   * text node for a screen reader to reach or for a contrast rule to judge as
+   * body copy - which is the honest answer, since WCAG 1.4.3 exempts
+   * incidental text and this numeral says nothing the <h1> does not.
+   */
+  .notfound__inner::before {
+    content: "404";
     position: absolute;
     inset-block-start: 50%;
     inset-inline-start: calc(var(--gutter) * -1);
     transform: translateY(-50%);
+    font-family: var(--font-display);
+    font-size: var(--fs-mega);
+    font-variation-settings: var(--vf-mega);
+    line-height: var(--lh-mega);
+    letter-spacing: var(--tr-mega);
     color: var(--text);
     opacity: 0.08;
     pointer-events: none;
