@@ -52,7 +52,7 @@ export const contentMedia = defineMedia({
     focal: '50% 45%',
     status: 'placeholder',
     src: 'placeholder/story-volunteers.jpg',
-    alt: 'A volunteer handing over supplies across a table stacked with boxes',
+    alt: 'A group of people working together outdoors, planting saplings on a slope',
     realAlt: 'Adults setting up a room',
     shotNote: 'Volunteers doing something practical. Never posed.',
   },

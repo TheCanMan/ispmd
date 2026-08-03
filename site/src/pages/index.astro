@@ -1,17 +1,187 @@
 ---
+/**
+ * Home - DESIGN.md 14.1. Copy from COPY.md, Home, verbatim.
+ *
+ * Section rhythm, and the two rules it has to satisfy:
+ *   canvas -> paper -> paper-warm -> ink -> paper -> paper-cool -> paper -> ink footer
+ * Exactly two dark sections (The Homework and the footer), and no two
+ * coloured grounds adjacent without a --paper section between them.
+ */
+import Base from '../layouts/Base.astro';
+import Section from '../components/Section.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import Epigraph from '../components/Epigraph.astro';
+import Divider from '../components/Divider.astro';
+import Media from '../components/Media.astro';
+import Button from '../components/Button.astro';
 
+import Hero from '../components/home/Hero.astro';
+import ThreeDoors from '../components/home/ThreeDoors.astro';
+import Homework from '../components/home/Homework.astro';
+import ProgramBrief from '../components/home/ProgramBrief.astro';
+import ThisYear from '../components/home/ThisYear.astro';
+
+import { labels } from '../data/site';
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Base
+  title="Islamic School of Potomac"
+  description="A Sunday school in Potomac, Maryland for children ages 5 to 18. Arabic, Deen, and everything in between, September through May."
+  transparentHeader
+>
+  {/* 1. The Field */}
+  <Hero />
+
+  {/* 2. The Three Doors */}
+  <Section ground="paper" rhythm="sm">
+    <ThreeDoors />
+  </Section>
+
+  {/* 3. More than a Sunday School */}
+  <Section ground="warm" rhythm="lg" grid>
+    <p class="t-label manifesto__label" data-motion="body-rise">WHY WE EXIST</p>
+
+    <div class="manifesto__type">
+      <h2 class="t-display measure-display" data-motion="line-rise">
+        Every member <br />of the family.
+      </h2>
+      <p class="t-lead" data-motion="body-rise">
+        The Islamic School of Potomac was founded with a commitment to uplift every member of the
+        family, not just the students registered in our school. When the spiritual needs of each
+        member of the family are nourished, everyone thrives.
+      </p>
+    </div>
+
+    <div class="manifesto__epigraph">
+      <Divider />
+      <Epigraph align="start" />
+    </div>
+  </Section>
+
+  {/* 4. The Homework */}
+  <Section ground="ink" rhythm="lg">
+    <Homework />
+  </Section>
+
+  {/* 5. The Program in brief */}
+  <Section ground="paper">
+    <p class="t-label program-brief__label" data-motion="body-rise">WHAT WE TEACH</p>
+    <ProgramBrief />
+  </Section>
+
+  {/* 6. This year */}
+  <Section ground="cool">
+    <ThisYear />
+  </Section>
+
+  {/* 7. Standing behind the school */}
+  <Section ground="paper" rhythm="lg" container="none">
+    <div class="support">
+      <div class="container support__col">
+        <div class="support__type">
+          <SectionHeader
+            label="SUPPORT"
+            lines={['Tuition is $60.', 'That is not what', 'a year costs.']}
+            role="t-display"
+          />
+          <p class="t-body support__body" data-motion="body-rise">
+            The difference is made up by people who believe a community should have a school in it.
+            The Islamic School of Potomac is a 501(c)(3) non-profit, and every dollar goes into the
+            Sunday morning: the books, the room, the year.
+          </p>
+          <div class="support__cta" data-motion="body-rise">
+            <Button href="/give" variant="primary">{labels.give}</Button>
+          </div>
+        </div>
+      </div>
+
+      {/* 4.5 - bleeds to the viewport edge on ONE side only, never both and
+          never centred, with its inner edge on a grid column line so the
+          composition still reads as gridded. */}
+      <div class="support__media">
+        <Media slotId="home.community.wide" sizes="(min-width: 1024px) 62vw, 100vw" />
+      </div>
+    </div>
+  </Section>
+</Base>
+
+<style>
+  /* ---- 3. More than a Sunday School ---- */
+
+  .manifesto__label,
+  .manifesto__type,
+  .manifesto__epigraph {
+    grid-column: 1 / -1;
+  }
+
+  .manifesto__type {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-5);
+  }
+
+  .manifesto__epigraph {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-7);
+    margin-block-start: var(--s-9);
+  }
+
+  @media (min-width: 1024px) {
+    .manifesto__label { grid-column: 1 / 4; }
+    .manifesto__type  { grid-column: 4 / 11; }
+    .manifesto__type .t-lead { max-width: 46ch; }
+    .manifesto__epigraph { grid-column: 1 / 11; }
+  }
+
+  /* ---- 5. The Program in brief ---- */
+
+  .program-brief__label {
+    margin-block-end: var(--s-7);
+  }
+
+  /* ---- 7. Standing behind the school ---- */
+
+  .support {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-8);
+  }
+
+  .support__type {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-5);
+    max-width: var(--measure);
+  }
+
+  .support__cta {
+    margin-block-start: var(--s-2);
+  }
+
+  @media (min-width: 1024px) {
+    .support {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      align-items: center;
+      gap: var(--grid-gap);
+    }
+
+    .support__col {
+      /* The container's own padding still applies on the left; the right
+         half of the row belongs to the photo. */
+      margin-inline: 0;
+      margin-inline-start: max(var(--gutter), calc(50vw - var(--container) / 2));
+      padding-inline: 0;
+      max-width: calc(var(--container) / 2 - var(--gutter));
+    }
+
+    /* The right-hand column of a full-bleed two-column row already reaches
+       the viewport edge; a negative margin on top of that pushed 25vw of the
+       photo off-screen and made the whole document scroll sideways. One side
+       only means exactly this: the grid ends at the edge, and nothing beyond. */
+    .support__media {
+      margin-inline-end: 0;
+    }
+  }
+</style>

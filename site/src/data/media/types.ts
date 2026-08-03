@@ -3,7 +3,7 @@
  *
  * Every photo and video position on the site is a named entry here. No
  * component references a media file path directly; everything resolves
- * through <Media slot="..."> which reads this registry.
+ * through <Media slotId="..."> which reads this registry.
  *
  * The point of the indirection: aspect ratio is declared by the SLOT, not by
  * the file. When real photography arrives, swapping it in is three field

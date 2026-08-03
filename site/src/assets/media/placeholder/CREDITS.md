@@ -12,10 +12,10 @@ attribution is legally required; it is recorded here anyway.
 |---|---|---|---|---|
 | `home.community.wide` | rawpixel | unknown | cc0 1.0 | https://www.rawpixel.com/image/5928072/photo-image-paper-public-domain-people |
 | `home.program.arabic` | rawpixel | unknown | cc0 1.0 | https://www.rawpixel.com/image/5908341/image-flowers-book-public-domain |
-| `home.calendar.room` | rawpixel | U.S. Embassy South Africa | cc0 1.0 | https://www.rawpixel.com/image/6486441/photo-image-public-domain-wooden-table |
+| `home.calendar.room` | rawpixel | unknown | cc0 1.0 | https://www.rawpixel.com/image/5904338/photo-image-public-domain-wooden-table |
 | `story.opening` | rawpixel | libraryofcongress | cc0 1.0 | https://www.rawpixel.com/image/6810457/photo-image-shadow-light-art |
 | `story.families` | stocksnap | Family First | cc0 1.0 | https://stocksnap.io/photo/mother-daughter-FHQOAULEKZ |
-| `story.volunteers` | rawpixel | U.S. Department of Homeland Security (Source) | cc0 1.0 | https://www.rawpixel.com/image/4045941/photo-image-face-public-domain-person |
+| `story.volunteers` | rawpixel | unknown | cc0 1.0 | https://www.rawpixel.com/image/9658510/image-plant-person-tree |
 | `program.arabic` | stocksnap | Martin Vorel | cc0 1.0 | https://stocksnap.io/photo/child-kid-X6077HDEQH |
 | `program.deen` | rawpixel | The African Union Mission in Somalia | cc0 1.0 | https://www.rawpixel.com/image/3372953/free-photo-image-teaching-africa-african |
 | `program.between` | rawpixel | unknown | cc0 1.0 | https://www.rawpixel.com/image/3289124/free-photo-image-school-corridor-tokyo-building |

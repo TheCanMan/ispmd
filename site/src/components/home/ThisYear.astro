@@ -1,0 +1,137 @@
+---
+/**
+ * DESIGN.md 14.1 section 6, and 13.4 "The Year".
+ *
+ * The 33-Sunday band as a horizontally scrollable strip - the one element on
+ * this site permitted to scroll sideways, and it does so deliberately and
+ * with a visible affordance.
+ *
+ * The three milestone cards span 1/4, 4/7 and 8/11. The GAP AT COLUMN 7 is
+ * the point: it is what stops three items reading as a three-up grid.
+ *
+ * Copy from COPY.md, Home section 6.
+ */
+import CalendarBand from '../calendar/CalendarBand.astro';
+import MilestoneCard from '../MilestoneCard.astro';
+import SectionHeader from '../SectionHeader.astro';
+import Button from '../Button.astro';
+import { getCalendarYear } from '../../data/calendar';
+import { site, labels } from '../../data/site';
+
+const { sessions } = await getCalendarYear();
+
+const milestones = [
+  {
+    date: 'DECEMBER 13, 2026',
+    title: 'Deen Showcase',
+    line: 'The end of the first semester, and what the children have been working toward since September.',
+    slot: 'calendar.milestone.showcase',
+  },
+  {
+    date: 'MAY 9, 2027',
+    title: 'Arabic Final Exams',
+    line: 'A year of reading, in one morning.',
+    slot: 'calendar.milestone.exams',
+  },
+  {
+    date: 'MAY 16, 2027',
+    title: 'Quran Competition',
+    line: 'The last day of school.',
+    slot: 'calendar.milestone.quran',
+  },
+];
+---
+
+<div class="year">
+  <div class="year__head grid">
+    <SectionHeader
+      label="2026 - 2027"
+      headline="Thirty-three Sundays."
+      class="year__header"
+    >
+      <p class="t-body measure">
+        The school meets on twenty-five of them. Eight Sundays are off, for holidays, for Camp NWMI,
+        and for the Nights of Power. Three of the twenty-five the whole school looks forward to.
+      </p>
+    </SectionHeader>
+  </div>
+
+  <CalendarBand
+    sessions={sessions}
+    variant="strip"
+    affordance="Scroll the year"
+    class="year__band"
+  />
+
+  <div class="year__milestones grid">
+    {
+      milestones.map((milestone, i) => (
+        <MilestoneCard
+          date={milestone.date}
+          title={milestone.title}
+          slotId={milestone.slot}
+          class={`year__milestone year__milestone--${i + 1}`}
+        >
+          {milestone.line}
+        </MilestoneCard>
+      ))
+    }
+  </div>
+
+  <div class="year__actions">
+    <Button href="/calendar" variant="quiet" icon="arrow-right">{labels.calendar}</Button>
+    <Button href={site.icsPath} variant="quiet" icon="download" download>
+      {labels.calendarDownload}
+    </Button>
+  </div>
+</div>
+
+<style>
+  .year {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-8);
+  }
+
+  /* Astro scopes styles with a per-component attribute, and a class passed
+     INTO a child component does not carry the parent's scope. Layout rules
+     for those elements have to be global or they silently do nothing - which
+     is exactly what happened here: every one of these grid-column rules was
+     inert and the section rendered one column wide. */
+  :global(.year__header) {
+    grid-column: 1 / -1;
+  }
+
+  @media (min-width: 1024px) {
+    :global(.year__header) {
+      grid-column: 1 / 8;
+    }
+  }
+
+  .year__milestones {
+    row-gap: var(--s-7);
+  }
+
+  :global(.year__milestone) {
+    grid-column: 1 / -1;
+  }
+
+  @media (min-width: 768px) {
+    :global(.year__milestone--1) { grid-column: 1 / 5; }
+    :global(.year__milestone--2) { grid-column: 5 / 9; }
+    :global(.year__milestone--3) { grid-column: 1 / 5; }
+  }
+
+  /* 14.1 section 6 - 1/4, 4/7 and 8/11. Column 7 is deliberately empty. */
+  @media (min-width: 1024px) {
+    :global(.year__milestone--1) { grid-column: 1 / 4; }
+    :global(.year__milestone--2) { grid-column: 4 / 7; }
+    :global(.year__milestone--3) { grid-column: 8 / 11; }
+  }
+
+  .year__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-5) var(--s-7);
+  }
+</style>

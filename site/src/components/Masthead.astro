@@ -58,7 +58,12 @@ const {
         <h1 class="t-hero" data-motion="line-rise">
           {lines.map((line, i) => (
             <>
-              {i > 0 && <br />}
+              {i > 0 && (
+                <>
+                  {' '}
+                  <br />
+                </>
+              )}
               {line}
             </>
           ))}

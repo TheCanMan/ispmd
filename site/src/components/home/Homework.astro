@@ -1,0 +1,207 @@
+---
+/**
+ * DESIGN.md 13.4 "The Homework" and 12.3 "The two marks".
+ *
+ * This is the whole design in two seconds of motion, which is why it gets
+ * --section-y-lg and its own set-piece budget.
+ *
+ * Behind the punchline sits a single decagram with ONE CHORD MISSING - a
+ * visible gap in the strapwork. As the second line lands, that chord draws
+ * in, in --amber, and the star closes. No caption explains it.
+ *
+ * The exclamation mark is the school's own, it is the only one on the site,
+ * and at display size it is set in --amber while the rest of the line is
+ * --paper. One character, in the celebration colour, on the line that is the
+ * soul of the place.
+ */
+import Button from '../Button.astro';
+import { labels } from '../../data/site';
+
+/**
+ * 9.2, drawn as ten separate chords rather than one closed path so that one
+ * of them can be held back. Vertex k joins vertex k+3; the ordering
+ * 0 3 6 9 2 5 8 1 4 7 is the same walk, taken chord by chord.
+ */
+const R = 460;
+const CENTRE = 500;
+const vertex = (k: number) => {
+  const a = (Math.PI / 180) * 36 * k;
+  return [
+    +(CENTRE + R * Math.cos(a)).toFixed(2),
+    +(CENTRE + R * Math.sin(a)).toFixed(2),
+  ] as const;
+};
+
+const walk = [0, 3, 6, 9, 2, 5, 8, 1, 4, 7];
+const chords = walk.map((k, i) => {
+  const [x1, y1] = vertex(k);
+  const [x2, y2] = vertex(walk[(i + 1) % walk.length]);
+  return { d: `M${x1},${y1} L${x2},${y2}`, closing: i === walk.length - 1 };
+});
+---
+
+<div class="homework" data-homework>
+  <svg
+    class="homework__star"
+    viewBox="0 0 1000 1000"
+    aria-hidden="true"
+    focusable="false"
+    fill="none"
+    stroke-width="6"
+    stroke-linecap="butt"
+    stroke-linejoin="miter"
+    stroke-miterlimit="10"
+  >
+    {
+      chords.map((chord) =>
+        chord.closing ? (
+          <path class="homework__chord" data-homework-chord d={chord.d} />
+        ) : (
+          <path class="homework__strap" data-homework-strap d={chord.d} />
+        )
+      )
+    }
+  </svg>
+
+  <div class="homework__type">
+    <p class="t-label">Our teaching philosophy</p>
+
+    <p class="t-subtitle homework__setup" data-homework-setup>
+      Children have enough homework during the week.
+    </p>
+
+    <p class="t-hero homework__punchline" data-homework-punchline>
+      We don't give <br />homework to children. <br />We give it to <br />the parents<span
+        class="t-mark">!</span>
+    </p>
+
+    <p class="t-body homework__below">
+      Parents reinforce what their children learn by doing it with them: praying together, giving
+      together, showing up for the community together. It is the part of the program that happens at
+      your kitchen table, and it is the reason a Sunday morning here works.
+    </p>
+
+    <div class="homework__cta">
+      <Button href="/program" variant="quiet" icon="arrow-right">{labels.program}</Button>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { gsap, ScrollTrigger, prefersReducedMotion, SplitText } from '../../scripts/motion';
+
+  const root = document.querySelector<HTMLElement>('[data-homework]');
+
+  if (root) {
+    const setup = root.querySelector<HTMLElement>('[data-homework-setup]')!;
+    const punchline = root.querySelector<HTMLElement>('[data-homework-punchline]')!;
+    const straps = root.querySelectorAll<SVGPathElement>('[data-homework-strap]');
+    const chord = root.querySelector<SVGPathElement>('[data-homework-chord]')!;
+
+    if (prefersReducedMotion()) {
+      /* 5.4 - the end state is set, never skipped. The star is already
+         closed and the missing chord is already amber. */
+      gsap.set([...straps, chord], { drawSVG: '100%' });
+    } else {
+      const setupLines = new SplitText(setup, { type: 'lines', mask: 'lines' }).lines;
+      const punchLines = new SplitText(punchline, { type: 'lines', mask: 'lines' }).lines;
+
+      gsap.set([setup, punchline], { opacity: 1 });
+      gsap.set([...straps, chord], { drawSVG: '0%' });
+
+      const timeline = gsap.timeline({
+        scrollTrigger: { trigger: root, start: 'top 80%', end: 'bottom 60%', scrub: 0.6 },
+      });
+
+      timeline
+        .fromTo(setupLines, { yPercent: 108, rotate: 1.4 }, { yPercent: 0, rotate: 0, stagger: 0.055 }, 0)
+        /* 20% to 70%: the strapwork draws outward. */
+        .to(straps, { drawSVG: '100%', stagger: 0.04 }, 0.2)
+        /* 75%: the four punchline lines land. */
+        .fromTo(
+          punchLines,
+          { yPercent: 108, rotate: 1.4 },
+          { yPercent: 0, rotate: 0, stagger: 0.055 },
+          0.75
+        )
+        /* 70% to 90%: the missing chord draws in, and the star closes. */
+        .to(chord, { drawSVG: '100%' }, 0.7);
+
+      ScrollTrigger.refresh();
+    }
+  }
+</script>
+
+<style>
+  .homework {
+    position: relative;
+    isolation: isolate;
+  }
+
+  /* Centred on the line break, at 62% of the section height, in --paper at
+     0.22 opacity. */
+  .homework__star {
+    position: absolute;
+    inset-block-start: 50%;
+    inset-inline-start: 50%;
+    transform: translate(-50%, -50%);
+    width: auto;
+    height: 62%;
+    min-height: 320px;
+    aspect-ratio: 1 / 1;
+    z-index: var(--z-base);
+    pointer-events: none;
+    opacity: 0.22;
+  }
+
+  .homework__strap {
+    stroke: var(--paper);
+  }
+
+  /* The one chord that is missing until the star closes. Amber, at full
+     opacity, which is why it reads as an arrival rather than a fade-in. */
+  .homework__chord {
+    stroke: var(--amber);
+    opacity: calc(1 / 0.22);
+  }
+
+  .homework__type {
+    position: relative;
+    z-index: var(--z-content);
+    display: grid;
+    gap: var(--s-5);
+  }
+
+  .homework__setup {
+    grid-column: 1 / -1;
+    color: var(--text-on-dark-soft);
+    max-width: 46ch;
+  }
+
+  .homework__punchline {
+    grid-column: 1 / -1;
+    color: var(--text-on-dark);
+  }
+
+  .homework__below {
+    grid-column: 1 / -1;
+    max-width: var(--measure);
+    color: var(--text-on-dark-soft);
+  }
+
+  .homework__cta {
+    grid-column: 1 / -1;
+  }
+
+  @media (min-width: 1024px) {
+    .homework__type {
+      grid-template-columns: repeat(10, minmax(0, 1fr));
+      column-gap: var(--grid-gap);
+    }
+
+    .homework__setup   { grid-column: 2 / 8; }
+    .homework__punchline { grid-column: 2 / 10; }
+    .homework__below   { grid-column: 2 / 7; }
+    .homework__cta     { grid-column: 2 / 7; }
+  }
+</style>

@@ -4,7 +4,13 @@
  * DESIGN.md 7.4 and 8; tech plan Decision 1.
  *
  * Usage:
- *   <Media slot="home.community.wide" sizes="100vw" priority />
+ *   <Media slotId="home.community.wide" sizes="100vw" priority />
+ *
+ * The prop is `slotId`, NOT `slot`, even though the tech plan's illustrative
+ * snippet writes `slot`. `slot` is a reserved attribute: Astro reads it as a
+ * named-slot assignment and silently moves the element out of its position in
+ * the markup. That is exactly what happened on the milestone cards, and it is
+ * the kind of bug that looks like a CSS problem for an hour.
  *
  * Why the file lives in src/assets and not public/: Astro's asset pipeline
  * does not touch public/. `<Image src="/media/x.jpg">` emits a bare <img> with
@@ -17,7 +23,8 @@ import { Picture } from 'astro:assets';
 import { getSlot } from '../data/media';
 
 interface Props {
-  slot: string;
+  /** The registry key, e.g. 'home.community.wide'. */
+  slotId: string;
   /** Passed straight to <Picture>. Defaults to a sensible full-width guess. */
   sizes?: string;
   /** Above the fold: eager + fetchpriority high, and no reveal transition. */
@@ -28,7 +35,7 @@ interface Props {
   widths?: number[];
 }
 
-const { slot: slotId, sizes, priority = false, class: className = '', widths } = Astro.props;
+const { slotId, sizes, priority = false, class: className = '', widths } = Astro.props;
 const slot = getSlot(slotId);
 
 /**

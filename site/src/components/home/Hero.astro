@@ -1,0 +1,329 @@
+---
+/**
+ * DESIGN.md 14.1 section 1, 13.1 and 13.2.
+ *
+ * Full viewport, 100svh, min-height 640px. The type block sits OVER the
+ * canvas, not inside it. `.hero-window` is an empty positioned box: it is the
+ * aperture, and its rect is what drives the shader.
+ *
+ * Three tiers, applied independently of prefers-reduced-motion, which then
+ * applies on top of whichever tier resolved:
+ *
+ *   1  the Three.js Field, real depth and a real interlace
+ *   2  the same light field as a fullscreen quad, preset home-flat
+ *   3  a layered CSS gradient plus the flat lattice. Static, and genuinely
+ *      good-looking. Not an apology.
+ */
+import Button from '../Button.astro';
+import Icon from '../Icon.astro';
+import { labels } from '../../data/site';
+import { getSlot } from '../../data/media';
+
+/* 13.2 - State A while the montage is a placeholder: no video element, no
+   poster. The aperture is simply where the light comes through. */
+const montage = getSlot('home.hero.montage');
+const hasFootage = montage.status === 'real' && !!montage.src;
+---
+
+<section class="hero" data-hero>
+  <div class="hero__fallback" aria-hidden="true">
+    <div class="lattice lattice--present lattice--on-dark lattice--lg"></div>
+  </div>
+
+  <canvas class="hero__canvas" aria-hidden="true" tabindex="-1" data-hero-canvas></canvas>
+
+  {/* See .hero__scrim below. */}
+  <div class="hero__scrim" aria-hidden="true"></div>
+
+  <div class="hero__inner container">
+    <div class="hero__grid grid">
+      <div class="hero__type on-dark">
+        <p class="t-label" data-motion="body-rise">POTOMAC, MARYLAND · SUNDAY MORNINGS</p>
+
+        <h1 class="t-hero hero__headline" data-motion="line-rise">
+          We are more than <br />a Sunday school. <br />We are a community.
+        </h1>
+
+        <p class="t-lead measure-lead" data-motion="body-rise">
+          A school for children ages 5 to 18, one morning a week, built by the families who send
+          their children to it.
+        </p>
+
+        <div class="hero__actions" data-motion="body-rise">
+          <Button href="/enroll" variant="primary">{labels.enrollPrimary}</Button>
+          <Button href="/program" variant="quiet" icon="arrow-right">{labels.program}</Button>
+        </div>
+      </div>
+
+      {/* The aperture. Empty by design: the lattice is culled inside it and
+          the light comes through. */}
+      <div class="hero-window hero__window" data-hero-window>
+        {
+          hasFootage && (
+            <video muted loop playsinline preload="metadata" aria-hidden="true" class="hero__video" />
+          )
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="hero__cue on-dark" aria-hidden="true">
+    <p class="t-label">Scroll</p>
+    <svg class="hero__arrow" width="40" height="40" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="butt" stroke-linejoin="miter">
+      <g transform="rotate(90 10 10)">
+        <path data-cue-path d="M2,10 H17" />
+        <path data-cue-path d="M13.1,5.5 L18,10 L13.1,14.5" />
+      </g>
+    </svg>
+  </div>
+</section>
+
+<script>
+  import { detectTier } from '../../scripts/webgl';
+
+  const hero = document.querySelector<HTMLElement>('[data-hero]');
+  const canvas = document.querySelector<HTMLCanvasElement>('[data-hero-canvas]');
+  const windowEl = document.querySelector<HTMLElement>('[data-hero-window]');
+
+  if (hero && canvas && windowEl) {
+    const tier = detectTier();
+
+    /* Tier 3 leaves the CSS gradient showing and stops here. Nothing on this
+       page depends on the canvas, so there is nothing to apologise for. */
+    if (tier !== 3) {
+      const wide = window.innerWidth >= 900;
+
+      if (tier === 1) {
+        const { mountHeroField } = await import('../../scripts/hero-field');
+        const field = await mountHeroField({
+          canvas,
+          windowEl,
+          /* 13.2 - 4 rings at Tier 1 desktop, 2 below 900px. */
+          rings: wide ? 4 : 2,
+          onFallback: () => canvas.classList.remove('is-live'),
+        });
+
+        if (field) {
+          const { gsap, ScrollTrigger, prefersReducedMotion } = await import('../../scripts/motion');
+
+          /* Scrubbed handoff. Under reduced motion the pinned/scrubbed work
+             is off entirely and the hero is one still frame. */
+          if (!prefersReducedMotion()) {
+            ScrollTrigger.create({
+              trigger: hero,
+              start: 'top top',
+              end: 'bottom top',
+              scrub: 0.6,
+              onUpdate: (self) => field.setScrollProgress(self.progress),
+            });
+
+            /* The scroll cue draws on a 2.4s loop (14.1). */
+            const cue = document.querySelectorAll<SVGPathElement>('[data-cue-path]');
+            if (cue.length) {
+              gsap.fromTo(
+                cue,
+                { drawSVG: '0%' },
+                { drawSVG: '100%', duration: 1.2, ease: 'expo.out', repeat: -1, repeatDelay: 1.2 }
+              );
+            }
+          }
+        }
+      } else {
+        /* Tier 2: the same light field as a fullscreen quad, with the same
+           aperture cut. ~5KB of shader instead of a scene graph. */
+        const { mountField } = await import('../../scripts/webgl');
+        const handle = await mountField(canvas, {
+          preset: 'home-flat',
+          onFallback: () => canvas.classList.remove('is-live'),
+        });
+
+        if (handle) {
+          const push = () => {
+            const canvasRect = canvas.getBoundingClientRect();
+            const box = windowEl.getBoundingClientRect();
+            if (!canvasRect.width || !canvasRect.height) return;
+            handle.setWindowRect(
+              (box.left - canvasRect.left) / canvasRect.width,
+              1 - (box.bottom - canvasRect.top) / canvasRect.height,
+              box.width / canvasRect.width,
+              box.height / canvasRect.height
+            );
+          };
+          push();
+          window.addEventListener('resize', push, { passive: true });
+          document.fonts?.ready.then(push);
+        }
+      }
+    }
+  }
+</script>
+
+<style>
+  .hero {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    align-items: center;
+    min-height: 640px;
+    height: 100svh;
+    overflow: hidden;
+  }
+
+  /**
+   * Tier 3, and the ground every other tier paints over. A layered radial
+   * gradient from --slate-deep through --sienna to --amber, plus the flat
+   * lattice at --pattern-present in --paper.
+   */
+  .hero__fallback {
+    position: absolute;
+    inset: 0;
+    z-index: var(--z-base);
+    background:
+      radial-gradient(120% 90% at 68% 46%, var(--amber) 0%, transparent 46%),
+      radial-gradient(140% 110% at 62% 52%, var(--sienna) 0%, transparent 62%),
+      linear-gradient(158deg, var(--slate-deep) 0%, var(--ink) 100%);
+  }
+
+  .hero__canvas {
+    position: absolute;
+    inset: 0;
+    z-index: var(--z-media);
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity var(--dur-slow) var(--ease-out);
+  }
+
+  .hero__canvas.is-live {
+    opacity: 1;
+  }
+
+  /**
+   * 14.1 promises that "the backdrop's dark end guarantees contrast at the
+   * type's position". Measured, it does not: with uGlow at 1.0 the light term
+   * in 13.3 never falls below about 0.2, so the field stays mid-tone
+   * everywhere and --text-on-dark lands on sienna and amber rather than on
+   * --slate-deep. Contrast is not negotiable (10, 6.3), so the light falls
+   * off into --ink across the left of the frame instead.
+   *
+   * It is one-sided and it is a gradient, so it reads as the light running
+   * out rather than as a panel. It is not the dark-overlay-over-stock-photo
+   * hero that 12.4 refuses: there is no photograph, the type is not centred,
+   * and the geometry stays legible the whole way through.
+   */
+  .hero__scrim {
+    position: absolute;
+    inset: 0;
+    z-index: var(--z-media);
+    pointer-events: none;
+    background: linear-gradient(
+      100deg,
+      var(--ink) 0%,
+      rgba(40, 30, 20, 0.82) 24%,
+      rgba(40, 30, 20, 0.38) 40%,
+      rgba(40, 30, 20, 0) 51%
+    );
+  }
+
+  .hero__inner {
+    position: relative;
+    z-index: var(--z-content);
+    width: 100%;
+  }
+
+  .hero__grid {
+    align-items: center;
+    row-gap: var(--s-7);
+  }
+
+  .hero__type {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-5);
+    padding-block-end: var(--s-9);
+    color: var(--text-on-dark);
+  }
+
+  .hero__type .t-lead {
+    color: var(--text-on-dark-soft);
+  }
+
+  /**
+   * 14.1 puts the hero type block in five of ten columns and COPY.md fixes
+   * the headline's three line breaks. Measured at 1440px, the longest of
+   * those lines is 979px at --fs-hero's 160px and the block is 642px, so the
+   * two cannot both hold. --fs-display is the next role down and lands the
+   * same line at 636px: it fits, with the hero's own leading and tracking
+   * intact. Both values are section 1 tokens; nothing is invented here.
+   */
+  .hero__headline {
+    font-size: var(--fs-display);
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s-5) var(--s-6);
+    margin-block-start: var(--s-2);
+  }
+
+  /* 13.2 - the Window's position, by breakpoint. */
+  .hero__window {
+    grid-column: 1 / -1;
+    margin-block-start: var(--s-7);
+  }
+
+  @media (min-width: 768px) {
+    .hero__window {
+      grid-column: 4 / 11;
+      margin-block-start: var(--s-8);
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .hero__type {
+      grid-column: 1 / 6;
+      padding-block-end: 0;
+    }
+
+    /* 13.2 - the aperture occupies grid columns 6 through 11 and sits just
+       below centre. Its width comes from the grid area rather than a
+       percentage, so it stays exactly five columns at any container width. */
+    .hero__window {
+      grid-column: 6 / 11;
+      align-self: center;
+      margin-block-start: var(--s-6);
+    }
+  }
+
+  .hero__video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .hero__cue {
+    position: absolute;
+    inset-block-end: var(--s-6);
+    inset-inline-start: 50%;
+    transform: translateX(-50%);
+    z-index: var(--z-content);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--s-2);
+    color: var(--text-on-dark-soft);
+  }
+
+  .hero__cue .t-label {
+    color: var(--text-on-dark-soft);
+  }
+
+  @media (max-width: 599px) {
+    .hero__cue {
+      display: none;
+    }
+  }
+</style>

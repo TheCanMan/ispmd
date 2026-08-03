@@ -916,7 +916,12 @@ body.has-transparent-header main {
               border-color var(--dur-base) var(--ease-out);
 }
 
-.btn::before {
+/* The slide-up fill belongs to the filled variants only. Declaring it on
+   .btn would collide with .link-hook's own ::before on .btn-quiet, which
+   carries the hooked underline instead of a fill. */
+.btn-primary::before,
+.btn-ghost::before,
+.btn-ghost-on-dark::before {
   content: "";
   position: absolute;
   inset: 0;

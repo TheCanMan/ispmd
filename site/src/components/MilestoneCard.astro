@@ -18,17 +18,18 @@ interface Props {
   /** Rendered in mono, e.g. `DECEMBER 13, 2026`. */
   date: string;
   title: string;
-  slot?: string;
+  /** A media registry key. Named slotId for the same reason Media.astro is. */
+  slotId?: string;
   href?: string;
   class?: string;
 }
 
-const { date, title, slot: mediaSlot, href, class: className = '' } = Astro.props;
+const { date, title, slotId, href, class: className = '' } = Astro.props;
 const Tag = href ? 'a' : 'article';
 ---
 
 <Tag class={`milestone ${className}`} href={href} data-motion="tile-in">
-  {mediaSlot && <Media slot={mediaSlot} sizes="(min-width: 1024px) 28vw, 90vw" class="milestone__media" />}
+  {slotId && <Media slotId={slotId} sizes="(min-width: 1024px) 28vw, 90vw" class="milestone__media" />}
 
   <p class="t-label milestone__date">{date}</p>
   <h3 class="t-subtitle">{title}</h3>
@@ -44,7 +45,7 @@ const Tag = href ? 'a' : 'article';
     color: inherit;
   }
 
-  .milestone__media {
+  :global(.milestone__media) {
     margin-block-end: var(--s-2);
   }
 
@@ -57,7 +58,7 @@ const Tag = href ? 'a' : 'article';
   }
 
   @media (hover: hover) and (pointer: fine) {
-    a.milestone:hover .milestone__media {
+    a.milestone:hover :global(.milestone__media) {
       /* Transform only. Never width, height or filter on hover. */
       transform: translateY(-2px);
       transition: transform var(--dur-base) var(--ease-out);

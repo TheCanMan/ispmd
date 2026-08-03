@@ -1,0 +1,150 @@
+---
+/**
+ * DESIGN.md 13.4, "The Three Doors".
+ *
+ * The multi-audience routing moment, and the reason it is not three cards:
+ * three cards make the reader choose between equals. Three full-width rows
+ * make the reader RECOGNISE THEMSELVES.
+ *
+ * Copy from COPY.md, Home section 2. The section is unlabeled; the three rows
+ * are the content.
+ */
+import Icon from '../Icon.astro';
+
+const doors = [
+  {
+    index: '01',
+    title: 'Thinking about enrolling',
+    line: 'What a Sunday looks like, what it costs, and how to start.',
+    href: '/enroll',
+    tint: 'var(--tint-sienna)',
+    accent: 'var(--sienna)',
+  },
+  {
+    index: '02',
+    title: 'Already with us',
+    line: "The calendar, the year's three big days, and when we next meet.",
+    href: '/calendar',
+    tint: 'var(--tint-slate)',
+    accent: 'var(--slate)',
+  },
+  {
+    index: '03',
+    title: 'Standing behind the school',
+    line: 'Where the money goes at a school with $60 tuition.',
+    href: '/give',
+    tint: 'var(--tint-amber)',
+    accent: 'var(--amber-deep)',
+  },
+];
+---
+
+<nav class="doors" aria-label="Where to go next">
+  {
+    doors.map((door) => (
+      <a
+        class="door"
+        href={door.href}
+        style={`--door-tint: ${door.tint}; --door-accent: ${door.accent};`}
+        data-motion="line-rise"
+      >
+        <span class="t-label door__index">{door.index}</span>
+        <span class="door__body">
+          <span class="t-title door__title">{door.title}</span>
+          <span class="t-small door__line">{door.line}</span>
+        </span>
+        <Icon name="arrow-right" class="door__arrow" />
+        <span class="door__rule" aria-hidden="true" />
+      </a>
+    ))
+  }
+</nav>
+
+<style>
+  .doors {
+    display: flex;
+    flex-direction: column;
+    border-block-start: var(--border-hair) solid var(--rule);
+  }
+
+  .door {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--s-4) var(--s-5);
+    min-height: 132px;
+    padding-block: var(--s-5);
+    padding-inline: var(--s-4);
+    margin-inline: calc(var(--s-4) * -1);
+    border-block-end: var(--border-hair) solid var(--rule);
+    text-decoration: none;
+    color: inherit;
+    transition: background-color var(--dur-base) var(--ease-out);
+  }
+
+  .door__index {
+    align-self: start;
+    padding-block-start: var(--s-2);
+  }
+
+  .door__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-2);
+  }
+
+  .door__title {
+    display: block;
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+
+  .door__arrow {
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+
+  /* strap-draw along the row's bottom edge, in the door's accent colour. */
+  .door__rule {
+    position: absolute;
+    inset-block-end: -1px;
+    inset-inline-start: 0;
+    inset-inline-end: 0;
+    height: var(--border-thin);
+    background: var(--door-accent);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .door:hover,
+    .door:focus-visible {
+      background: var(--door-tint);
+    }
+
+    .door:hover .door__title,
+    .door:focus-visible .door__title {
+      transform: translateX(12px);
+    }
+
+    .door:hover .door__arrow,
+    .door:focus-visible .door__arrow {
+      transform: translateX(8px);
+    }
+
+    .door:hover .door__rule,
+    .door:focus-visible .door__rule {
+      transform: scaleX(1);
+    }
+  }
+
+  /* Touch gets the end state immediately (5.1) - here that means the tint
+     never appears rather than appearing on tap and sticking. */
+  .door:focus-visible {
+    background: var(--door-tint);
+  }
+
+  .door:focus-visible .door__rule {
+    transform: scaleX(1);
+  }
+</style>

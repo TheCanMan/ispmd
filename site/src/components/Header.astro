@@ -151,6 +151,8 @@ const menuLinks = [{ label: 'Home', href: '/' }, ...primaryNav, ...secondaryNav]
     display: inline-flex;
     align-items: center;
     gap: var(--s-3);
+    /* 10 - 44px minimum target, on the lockup as much as on a button. */
+    min-height: 44px;
     text-decoration: none;
     color: var(--text);
   }
@@ -185,15 +187,6 @@ const menuLinks = [{ label: 'Home', href: '/' }, ...primaryNav, ...secondaryNav]
     gap: var(--s-6);
   }
 
-  @media (min-width: 1024px) {
-    .site-nav {
-      display: flex;
-    }
-    .menu-trigger {
-      display: none;
-    }
-  }
-
   .site-nav__list {
     display: flex;
     align-items: center;
@@ -201,6 +194,9 @@ const menuLinks = [{ label: 'Home', href: '/' }, ...primaryNav, ...secondaryNav]
   }
 
   .site-nav__list a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
     color: var(--text);
     text-decoration: none;
   }
@@ -209,7 +205,8 @@ const menuLinks = [{ label: 'Home', href: '/' }, ...primaryNav, ...secondaryNav]
     color: var(--text-on-dark);
   }
 
-  .site-nav__cta {
+  /* Passed into <Button>, so it needs to be global to reach the element. */
+  :global(.site-nav__cta) {
     padding-block: 10px;
     min-height: 44px;
   }
@@ -221,6 +218,18 @@ const menuLinks = [{ label: 'Home', href: '/' }, ...primaryNav, ...secondaryNav]
     min-height: 44px;
     padding-inline: var(--s-2);
     color: var(--text);
+  }
+
+  /* Below 1024px the links collapse to a labelled button (7.1). This sits
+     after the base declaration so source order cannot undo it. */
+  @media (min-width: 1024px) {
+    .site-nav {
+      display: flex;
+    }
+
+    .menu-trigger {
+      display: none;
+    }
   }
 
   .site-header.is-transparent:not(.is-stuck) .menu-trigger {
