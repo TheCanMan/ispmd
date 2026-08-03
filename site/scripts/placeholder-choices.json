@@ -1,0 +1,22 @@
+{
+  "_comment": "Chosen placeholder for each image slot in DESIGN.md 15. A number is an index into that slot's candidate list in .placeholder-cache/candidates.json. The object form adds `from` to borrow a candidate that surfaced under another slot's query, and `crop` to override the crop gravity - the attention strategy chases texture energy rather than subject, which butchers the 21/9 slots. home.hero.montage is absent on purpose: DESIGN.md 15 forbids sourcing a stock video montage and the hero renders State A without one.",
+  "home.community.wide": { "from": "enroll.classroom", "index": 5, "crop": "centre" },
+  "home.program.arabic": 2,
+  "home.calendar.room": 2,
+  "story.opening": { "index": 7, "crop": "centre" },
+  "story.families": 1,
+  "story.volunteers": { "index": 3, "crop": "centre" },
+  "program.arabic": 3,
+  "program.deen": 8,
+  "program.between": 2,
+  "program.showcase": { "index": 6, "crop": "centre" },
+  "calendar.milestone.showcase": 22,
+  "calendar.milestone.exams": 3,
+  "calendar.milestone.quran": 16,
+  "enroll.sunday": 4,
+  "enroll.classroom": { "index": 3, "crop": "centre" },
+  "faqs.aside": 18,
+  "give.impact": { "index": 6, "crop": "centre" },
+  "give.classroom": 3,
+  "contact.venue": 2
+}

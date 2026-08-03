@@ -1,0 +1,114 @@
+---
+/**
+ * The only component on this site that renders a photograph or a video.
+ * DESIGN.md 7.4 and 8; tech plan Decision 1.
+ *
+ * Usage:
+ *   <Media slot="home.community.wide" sizes="100vw" priority />
+ *
+ * Why the file lives in src/assets and not public/: Astro's asset pipeline
+ * does not touch public/. `<Image src="/media/x.jpg">` emits a bare <img> with
+ * no srcset, no format conversion, and no error when the file is missing. On a
+ * site whose audience is parents on phones, shipping one 2400px JPEG to a
+ * 360px viewport is the largest available performance defect. Resolving
+ * through import.meta.glob to ImageMetadata is what makes srcset real.
+ */
+import { Picture } from 'astro:assets';
+import { getSlot } from '../data/media';
+
+interface Props {
+  slot: string;
+  /** Passed straight to <Picture>. Defaults to a sensible full-width guess. */
+  sizes?: string;
+  /** Above the fold: eager + fetchpriority high, and no reveal transition. */
+  priority?: boolean;
+  /** Extra classes on the frame. */
+  class?: string;
+  /** Widths to emit. Defaults are derived from the slot's minWidth. */
+  widths?: number[];
+}
+
+const { slot: slotId, sizes, priority = false, class: className = '', widths } = Astro.props;
+const slot = getSlot(slotId);
+
+/**
+ * Eager glob so ImageMetadata (and therefore the intrinsic dimensions Astro
+ * needs to reserve the box) is available at build time.
+ */
+const assets = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/media/**/*.{jpg,jpeg,png,webp,avif}',
+  { eager: true }
+);
+
+const resolved = slot.src ? assets[`/src/assets/media/${slot.src}`] : undefined;
+
+if (slot.src && !resolved) {
+  throw new Error(
+    `Media slot "${slotId}" points at src/assets/media/${slot.src}, which does not exist. ` +
+      `Run \`npm run check:media\` for the full picture.`
+  );
+}
+
+const poster = slot.poster ? assets[`/src/assets/media/${slot.poster}`] : undefined;
+
+/** 8.6 - decorative or purely textural media takes alt="" and role="presentation". */
+const alt = slot.decorative ? '' : slot.alt;
+
+const defaultWidths = [
+  Math.round(slot.minWidth / 4),
+  Math.round(slot.minWidth / 2),
+  Math.round(slot.minWidth * 0.75),
+  slot.minWidth,
+].filter((w) => w >= 320);
+
+const frameClass = [
+  'media',
+  `tr-${slot.treatment}`,
+  priority ? '' : 'media--reveal',
+  className,
+]
+  .filter(Boolean)
+  .join(' ');
+
+const style = `--slot-ratio: ${slot.ratio}; --slot-focal: ${slot.focal};`;
+---
+
+<figure class={frameClass} style={style} data-slot={slotId} data-status={slot.status}>
+  {
+    slot.kind === 'video' && resolved ? (
+      <video
+        muted
+        loop
+        playsinline
+        preload="metadata"
+        poster={poster?.default.src}
+        aria-hidden={slot.decorative ? 'true' : undefined}
+        src={resolved.default.src}
+      />
+    ) : resolved ? (
+      <Picture
+        src={resolved.default}
+        alt={alt}
+        widths={widths ?? defaultWidths}
+        sizes={sizes ?? '(min-width: 1024px) 50vw, 100vw'}
+        formats={['avif', 'webp']}
+        fallbackFormat="jpg"
+        loading={priority ? 'eager' : 'lazy'}
+        decoding={priority ? 'sync' : 'async'}
+        fetchpriority={priority ? 'high' : 'auto'}
+        role={slot.decorative ? 'presentation' : undefined}
+      />
+    ) : null
+  }
+</figure>
+
+<style>
+  /**
+   * The frame, the plate rule and every treatment live in global.css so the
+   * classes are available to any component that needs a media box without
+   * importing this one. Only the <figure> reset belongs here.
+   */
+  figure.media {
+    margin: 0;
+  }
+</style>

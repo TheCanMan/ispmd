@@ -1067,17 +1067,43 @@ a.card,
   pointer-events: none;
 }
 
+/* Astro's <Picture> wraps its <img> in a <picture>, so the direct-child
+   selectors in the verbatim block above cannot reach it. Same declarations,
+   one level deeper. */
+.media > picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.media > picture > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: var(--slot-focal);
+  display: block;
+}
+
+.media > figcaption {
+  position: absolute;
+  inset-block-end: 0;
+  inset-inline: 0;
+  z-index: var(--z-content);
+}
+
 /* 7.4 Reveal - the grade animates from desaturated to its treatment value
    over --dur-slow on entrance. The only filter animation on the site, and
    only on entrance, never on scrub. */
 .media--reveal > img,
-.media--reveal > video {
+.media--reveal > video,
+.media--reveal > picture > img {
   filter: saturate(0) contrast(1.1);
   transition: filter var(--dur-slow) var(--ease-out);
 }
 
 .media--reveal.is-revealed > img,
-.media--reveal.is-revealed > video {
+.media--reveal.is-revealed > video,
+.media--reveal.is-revealed > picture > img {
   filter: none;
 }
 
