@@ -35,7 +35,13 @@ Captured 2026-08-03.
 Copy must say "classes are held at the Islamic Education Center" or equivalent, never "our address is."
 See the two-organization finding below for why this distinction is load-bearing.
 
-### DO NOT PUBLISH - phone numbers
+### Phone - resolved 2026-08-03
+
+**Publish: (301) 929-1441.** Authorized by Amin as the school's contact line.
+
+**Do NOT publish the street address associated with that number.** A directory listing ties it to 15216 Red Clover Dr, Rockville MD 20853, a residential address. The number is cleared; the address is not, and was never authorized.
+
+**Do NOT publish (301) 340-2070.** That is the Islamic Education Center's main line, not ISP's. See below.
 
 ISP and the Islamic Education Center are **legally separate organizations**:
 
@@ -48,9 +54,17 @@ Verified against Charity Navigator and ProPublica Nonprofit Explorer under each 
 
 **(301) 340-2070 is IEC's main line, not ISP's.** Publishing it as the school's number routes parents to a different organization. Do not use it as ISP's contact number. If the venue's number appears at all, it must be explicitly labelled as the venue's.
 
-A separate listing shows **(301) 929-1441 at 15216 Red Clover Dr, Rockville MD 20853** for ISP. Red Clover Dr is a residential street, so this is almost certainly a board member's or registered agent's home address - normal for a small volunteer nonprofit. **Do not publish either the number or that address.** Pending an explicit decision from Amin.
+**Consequence for design and copy:** the school's full contact picture is below. Every channel here is cleared for publication.
 
-**Consequence for design and copy:** ISP has no publishable phone number. `info@ispmd.org` is the only confirmed contact channel the school owns. Header, footer, contact page and schema.org markup must all work without a phone number, and must not leave a visible gap where one was assumed.
+| Channel | Value |
+|---|---|
+| Phone | (301) 929-1441 |
+| Email | info@ispmd.org |
+| Mail and donations | P.O. Box 833, Rockville MD 20848-0833 |
+| Classes held at | Islamic Education Center, 7917 Montrose Rd, Potomac MD 20854 |
+| Social | [@ispmd](https://www.instagram.com/ispmd/), Facebook |
+
+The P.O. Box is for mail and donations. It is **not** where class meets, and copy must not imply otherwise.
 
 ---
 
