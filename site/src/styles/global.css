@@ -1,0 +1,1594 @@
+/* =====================================================================
+   Islamic School of Potomac - global stylesheet
+
+   Section numbers below refer to DESIGN.md, which is the contract.
+   The @font-face block (2.2) and the :root block (1) are pasted verbatim
+   and must not be edited. Everything after them implements the utility
+   classes those sections imply.
+
+   No colour, size, duration, easing, radius or z-index may be introduced
+   here that is not a token in the :root block.
+   ===================================================================== */
+
+/* =====================================================================
+   2.2  FONTS  - verbatim from DESIGN.md
+   ===================================================================== */
+
+@font-face {
+  font-family: "Bricolage Grotesque";
+  src: url("/fonts/bricolage-grotesque-var.woff2") format("woff2");
+  font-weight: 200 800;
+  font-stretch: 75% 100%;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Literata";
+  src: url("/fonts/literata-var.woff2") format("woff2");
+  font-weight: 200 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Literata";
+  src: url("/fonts/literata-italic-var.woff2") format("woff2");
+  font-weight: 200 900;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "DM Mono";
+  src: url("/fonts/dm-mono-400.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Arabic faces are fetched ONLY when Arabic codepoints are present on the page. */
+@font-face {
+  font-family: "Reem Kufi";
+  src: url("/fonts/reem-kufi-var.woff2") format("woff2");
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF;
+}
+@font-face {
+  font-family: "Amiri";
+  src: url("/fonts/amiri-400.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF;
+}
+
+/* Metric-matched fallbacks. These stop the swap from shifting layout. */
+@font-face {
+  font-family: "Bricolage Fallback";
+  src: local("Helvetica Neue"), local("Arial"), local("Liberation Sans");
+  size-adjust: 97%;
+  ascent-override: 92%;
+  descent-override: 24%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: "Literata Fallback";
+  src: local("Georgia"), local("Times New Roman"), local("Liberation Serif");
+  size-adjust: 103%;
+  ascent-override: 90%;
+  descent-override: 24%;
+  line-gap-override: 0%;
+}
+
+/* =====================================================================
+   1  TOKENS  - verbatim from DESIGN.md. Do not edit.
+   ===================================================================== */
+
+:root {
+  color-scheme: light;
+
+  /* ==========================================================
+     1.1  COLOUR - GROUNDS
+     ========================================================== */
+  --paper:            #FBF8F2;   /* default page ground */
+  --paper-warm:       #F6E7D7;   /* alternating warm section ground */
+  --paper-cool:       #E4EBE6;   /* alternating cool section ground */
+  --vellum:           #F4E1CE;   /* cards and insets on warm grounds */
+
+  --ink:              #281E14;   /* warm bistre - primary dark ground */
+  --ink-raised:       #35291C;   /* cards sitting on --ink */
+  --slate-deep:       #22394B;   /* secondary dark ground */
+  --slate-raised:     #2C4759;   /* cards sitting on --slate-deep */
+
+  /* ==========================================================
+     1.2  COLOUR - TEXT ON LIGHT GROUNDS
+     ========================================================== */
+  --text:             #281E14;   /* 15.4:1 on --paper */
+  --text-soft:        #5A4A3A;   /*  8.0:1 on --paper */
+  --text-faint:       #7A6857;   /*  5.0:1 on --paper */
+  --text-link:        #3C6482;   /*  5.9:1 on --paper */
+  --text-link-warm:   #8F4A16;   /*  6.3:1 on --paper */
+  --text-amber:       #8A5D12;   /*  5.4:1 on --paper - the only amber-family text colour */
+
+  /* ==========================================================
+     1.3  COLOUR - TEXT ON DARK GROUNDS
+     ========================================================== */
+  --text-on-dark:        #FBF8F2; /* 15.4:1 on --ink | 11.3:1 on --slate-deep */
+  --text-on-dark-soft:   #C9BCAB; /*  8.8:1 on --ink |  6.4:1 on --slate-deep */
+  --text-on-dark-faint:  #A99A86; /*  6.0:1 on --ink |  4.4:1 on --slate-deep - >=19px only */
+  --link-on-dark:        #E8B05A; /*  8.4:1 on --ink |  6.2:1 on --slate-deep */
+  --link-on-dark-cool:   #7FA6BF; /*  6.3:1 on --ink |  4.6:1 on --slate-deep */
+
+  /* ==========================================================
+     1.4  COLOUR - ACCENTS
+     Sienna is the school's Semester 1 colour. Slate is their Semester 2
+     colour. Amber is their milestone colour. Honour those meanings.
+     ========================================================== */
+  --sienna:           #A85A1E;   /* 4.8:1 on --paper - text >=16px, fills, rules */
+  --sienna-ink:       #8F4A16;   /* body-size sienna text and links */
+  --sienna-bright:    #C87A3A;   /* hover; text on --ink only, never on --slate-deep */
+  --slate:            #3C6482;
+  --slate-light:      #7FA6BF;
+  --amber:            #E8B05A;   /* FILL ONLY on light grounds. Text on dark grounds. */
+  --amber-deep:       #C98F35;   /* fill / rule only, never text */
+
+  /* ==========================================================
+     1.5  COLOUR - FILLS
+     These are NEVER text colours on a light ground.
+     --text (#281E14) on any of them clears 8:1 - use it for labels inside cells.
+     ========================================================== */
+  --fill-apricot:     #E8B282;   /* class Sundays (their colour) */
+  --fill-sage:        #B0D194;   /* no-school Sundays (their colour) */
+  --fill-sky:         #B9DEE4;   /* Semester 2 cells (their colour) */
+  --fill-amber:       #E8B05A;   /* milestone Sundays (their colour) */
+  --fill-mist:        #DCE5E0;   /* their tessellation ground */
+
+  /* ==========================================================
+     1.6  COLOUR - RULES, TINTS, STATES
+     ========================================================== */
+  --rule:                 rgba(40, 30, 20, 0.14);
+  --rule-strong:          rgba(40, 30, 20, 0.28);
+  --rule-faint:           rgba(40, 30, 20, 0.07);
+  --rule-accent:          rgba(168, 90, 30, 0.42);
+  --rule-on-dark:         rgba(251, 248, 242, 0.16);
+  --rule-on-dark-strong:  rgba(251, 248, 242, 0.34);
+
+  --tint-sienna:      rgba(168, 90, 30, 0.08);
+  --tint-slate:       rgba(60, 100, 130, 0.08);
+  --tint-amber:       rgba(232, 176, 90, 0.14);
+  --tint-sage:        rgba(176, 209, 148, 0.20);
+  --tint-ink:         rgba(40, 30, 20, 0.05);
+  --tint-paper:       rgba(251, 248, 242, 0.07);
+
+  --state-ok:         #4E7B4A;   /* 4.7:1 on --paper */
+  --state-warn:       #8A5D12;   /* 5.4:1 on --paper */
+  --state-error:      #9B3218;   /* 6.9:1 on --paper */
+
+  /* ==========================================================
+     1.7  COLOUR - SHADOW
+     Shadows are ink-tinted. A black shadow on warm paper reads dirty.
+     ========================================================== */
+  --shadow-sm:        0 1px 2px rgba(40, 30, 20, 0.06);
+  --shadow-md:        0 6px 20px -8px rgba(40, 30, 20, 0.14);
+  --shadow-lg:        0 24px 60px -24px rgba(40, 30, 20, 0.22);
+  --shadow-glow:      0 0 48px -8px rgba(232, 176, 90, 0.45);
+
+  /* ==========================================================
+     2.1  TYPE - FAMILIES
+     ========================================================== */
+  --font-display: "Bricolage Grotesque", "Bricolage Fallback", "Helvetica Neue", Arial, sans-serif;
+  --font-text:    "Literata", "Literata Fallback", Georgia, "Times New Roman", serif;
+  --font-mono:    "DM Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-kufi:    "Reem Kufi", "Noto Naskh Arabic", serif;   /* Arabic display */
+  --font-naskh:   "Amiri", "Noto Naskh Arabic", serif;       /* Arabic running text */
+
+  /* ==========================================================
+     2.2  TYPE - VARIABLE AXIS SETTINGS
+     Use as: font-variation-settings: var(--vf-hero);
+     ========================================================== */
+  --vf-mega:      "wght" 400, "wdth" 78, "opsz" 96;
+  --vf-hero:      "wght" 500, "wdth" 82, "opsz" 96;
+  --vf-display:   "wght" 500, "wdth" 86, "opsz" 72;
+  --vf-title:     "wght" 600, "wdth" 92, "opsz" 36;
+  --vf-subtitle:  "wght" 600, "wdth" 96, "opsz" 24;
+  --vf-ui:        "wght" 500, "wdth" 100, "opsz" 14;
+  --vf-ui-strong: "wght" 650, "wdth" 100, "opsz" 14;
+  --vf-text:      "opsz" 16;                 /* Literata body */
+  --vf-text-lg:   "opsz" 28;                 /* Literata lead */
+  --vf-kufi:      "wght" 500;
+
+  /* ==========================================================
+     2.3  TYPE - SIZE
+     Fluid between 360px and 1600px viewport.
+     ========================================================== */
+  --fs-mega:      clamp(4rem,      0.5rem  + 15.50vw, 16rem);      /*  64 -> 256 */
+  --fs-hero:      clamp(3.25rem,   1rem    + 10.00vw, 11rem);      /*  52 -> 176 */
+  --fs-display:   clamp(2.5rem,    1.15rem +  6.00vw, 6.5rem);     /*  40 -> 104 */
+  --fs-title:     clamp(1.75rem,   1.20rem +  2.44vw, 3.25rem);    /*  28 ->  52 */
+  --fs-subtitle:  clamp(1.375rem,  1.10rem +  1.22vw, 2rem);       /*  22 ->  32 */
+  --fs-lead:      clamp(1.1875rem, 1.06rem +  0.56vw, 1.5rem);     /*  19 ->  24 */
+  --fs-body:      clamp(1.0625rem, 1.02rem +  0.19vw, 1.1875rem);  /*  17 ->  19 */
+  --fs-small:     clamp(0.9375rem, 0.92rem +  0.09vw, 1rem);       /*  15 ->  16 */
+  --fs-label:     0.8125rem;                                       /*  13 */
+  --fs-label-lg:  0.9375rem;                                       /*  15 */
+  --fs-arabic:    clamp(1.5rem,    1.05rem +  2.00vw, 2.75rem);    /*  24 ->  44 */
+
+  /* ==========================================================
+     2.4  TYPE - LINE HEIGHT
+     ========================================================== */
+  --lh-mega:      0.86;
+  --lh-hero:      0.92;
+  --lh-display:   0.98;
+  --lh-title:     1.06;
+  --lh-subtitle:  1.18;
+  --lh-lead:      1.45;
+  --lh-body:      1.62;
+  --lh-small:     1.50;
+  --lh-label:     1.20;
+  --lh-arabic:    1.85;   /* Arabic needs more leading than Latin */
+
+  /* ==========================================================
+     2.5  TYPE - TRACKING
+     ========================================================== */
+  --tr-mega:      -0.045em;
+  --tr-hero:      -0.035em;
+  --tr-display:   -0.028em;
+  --tr-title:     -0.018em;
+  --tr-subtitle:  -0.012em;
+  --tr-lead:      -0.004em;
+  --tr-body:       0em;
+  --tr-small:      0.005em;
+  --tr-label:      0.14em;   /* mono, uppercase */
+  --tr-arabic:     0em;      /* NEVER letter-space Arabic - it breaks the joins */
+
+  /* ==========================================================
+     3  SPACE  (8px base, 4px sub-unit)
+     ========================================================== */
+  --s-1:   4px;
+  --s-2:   8px;
+  --s-3:  12px;
+  --s-4:  16px;
+  --s-5:  24px;
+  --s-6:  32px;
+  --s-7:  48px;
+  --s-8:  64px;
+  --s-9:  96px;
+  --s-10: 128px;
+  --s-11: 176px;
+  --s-12: 240px;
+
+  --section-y:     clamp(72px,  9vw, 176px);   /* standard section padding-block */
+  --section-y-lg:  clamp(112px, 13vw, 240px);  /* set-piece sections */
+  --section-y-sm:  clamp(48px,  5vw, 88px);    /* dense / list sections */
+
+  /* ==========================================================
+     4  LAYOUT
+     The page grid is TEN columns. Five-fold symmetry is the system
+     the pattern is built on; ten is its natural division.
+     Consequence: thirds are not available on the page grid. That is
+     deliberate - it forces asymmetry. Component-internal grids are free.
+     ========================================================== */
+  --container:         1440px;
+  --container-narrow:   760px;   /* long-form measure container */
+  --container-wide:    1760px;   /* full-bleed-with-margin bands */
+  --gutter:            clamp(20px, 4.4vw, 72px);
+  --grid-cols:         10;
+  --grid-gap:          clamp(16px, 2vw, 32px);
+  --measure:           62ch;     /* body copy max width */
+  --measure-lead:      46ch;     /* lead paragraph max width */
+  --measure-display:   17ch;     /* display headline max width */
+
+  /* Breakpoints - DOCUMENTATION ONLY.
+     Custom properties cannot be used in @media. Write these literally. */
+  --bp-xs:  360px;
+  --bp-sm:  600px;
+  --bp-md:  768px;
+  --bp-lg: 1024px;
+  --bp-xl: 1280px;
+  --bp-2xl:1600px;
+
+  /* ==========================================================
+     5  SHAPE
+     The pattern is angular. Pills and large radii fight it.
+     ========================================================== */
+  --radius-xs:    2px;
+  --radius-sm:    4px;    /* buttons, inputs, photo frames */
+  --radius-md:   10px;    /* cards, panels */
+  --radius-lg:   16px;    /* only the JotForm frame */
+  --radius-full: 999px;   /* ONLY the calendar "today" dot and status pips */
+
+  --border-hair:  1px;
+  --border-thin:  1.5px;
+  --border-thick: 2px;
+
+  /* ==========================================================
+     6  MOTION
+     ========================================================== */
+  --dur-instant: 0.12s;
+  --dur-fast:    0.22s;
+  --dur-base:    0.32s;
+  --dur-slow:    0.62s;
+  --dur-reveal:  0.90s;   /* standard entrance */
+  --dur-draw:    1.90s;   /* the pattern drawing itself */
+
+  --ease-out:      cubic-bezier(0.16, 1, 0.30, 1);   /* default; expo-out */
+  --ease-entrance: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out:   cubic-bezier(0.65, 0, 0.35, 1);   /* scrubbed / pinned */
+  --ease-exit:     cubic-bezier(0.40, 0, 1, 1);
+
+  --stagger:       0.055s;   /* between siblings */
+  --stagger-slow:  0.090s;   /* between large blocks */
+  --rise:          24px;     /* standard entrance translate-Y */
+  --rise-sm:       12px;
+  --lenis-lerp:    0.085;    /* documentation - pass to Lenis in JS */
+
+  /* ==========================================================
+     7  DEPTH
+     ========================================================== */
+  --z-base:     0;
+  --z-media:    1;
+  --z-content:  2;
+  --z-raised:  10;
+  --z-sticky:  50;
+  --z-header: 100;
+  --z-overlay:200;
+  --z-modal:  300;
+  --z-grain: 9000;
+
+  /* ==========================================================
+     8  MEDIA
+     Aspect ratio is declared by the SLOT, never by the file.
+     These five are the only ratios in the site.
+     ========================================================== */
+  --ratio-window: 16 / 9;   /* the hero montage aperture */
+  --ratio-band:   21 / 9;   /* full-bleed bands - max twice site-wide */
+  --ratio-land:    5 / 4;
+  --ratio-port:    4 / 5;   /* the dominant editorial ratio */
+  --ratio-square:  1 / 1;
+
+  /* ==========================================================
+     9  PATTERN AND SURFACE
+     ========================================================== */
+  --pattern-whisper: 0.05;
+  --pattern-quiet:   0.10;
+  --pattern-present: 0.18;
+  --pattern-strong:  0.34;
+  --pattern-scale:   380px;   /* rendered width of one girih repeat tile */
+  --pattern-scale-lg: 620px;
+  --grain-opacity:   0.045;
+  --grain-tile:      180px;
+
+  /* ==========================================================
+     10  FOCUS
+     ========================================================== */
+  --focus-color:         #3C6482;   /* --slate, 5.9:1 on --paper */
+  --focus-color-on-dark: #E8B05A;   /* --amber, 8.4:1 on --ink */
+  --focus-width:  2px;
+  --focus-offset: 3px;
+}
+
+/* =====================================================================
+   GROUND CONTEXT  - implements 6.2 "Text colour is not a free choice"
+
+   These are aliases, not new values. Every one of them points at a token
+   in the block above. They exist so that a single element class (.on-dark)
+   flips an entire subtree's text, rule and focus colours to the correct
+   row of the 6.2 table without any component choosing a colour itself.
+
+   Type roles below consume --ctx-* and never --text directly.
+   ===================================================================== */
+
+:root,
+.on-light {
+  --ctx-text:        var(--text);
+  --ctx-text-soft:   var(--text-soft);
+  --ctx-text-faint:  var(--text-faint);
+  --ctx-link:        var(--text-link);
+  --ctx-rule:        var(--rule);
+  --ctx-rule-strong: var(--rule-strong);
+  --ctx-focus:       var(--focus-color);
+  --ctx-accent:      var(--sienna);
+}
+
+.on-dark,
+.ground-ink,
+.ground-slate {
+  --ctx-text:        var(--text-on-dark);
+  --ctx-text-soft:   var(--text-on-dark-soft);
+  --ctx-text-faint:  var(--text-on-dark-faint);
+  --ctx-link:        var(--link-on-dark);
+  --ctx-rule:        var(--rule-on-dark);
+  --ctx-rule-strong: var(--rule-on-dark-strong);
+  --ctx-focus:       var(--focus-color-on-dark);
+  --ctx-accent:      var(--link-on-dark);
+}
+
+/* 6.2, final row: on a --fill-* cell every text colour is --text. */
+.on-fill {
+  --ctx-text:        var(--text);
+  --ctx-text-soft:   var(--text);
+  --ctx-text-faint:  var(--text);
+  --ctx-link:        var(--text);
+  --ctx-rule:        var(--rule);
+  --ctx-rule-strong: var(--rule-strong);
+  --ctx-focus:       var(--focus-color);
+  --ctx-accent:      var(--sienna);
+}
+
+/* --text-on-dark-faint is not permitted below 19px on --slate-deep (6.2).
+   On a slate ground the faint role resolves to the soft colour instead. */
+.ground-slate {
+  --ctx-text-faint: var(--text-on-dark-soft);
+}
+
+/* =====================================================================
+   BASE
+   ===================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: auto;   /* Lenis owns smooth scrolling; see 5.1 */
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ctx-text-soft);
+  font-family: var(--font-text);
+  font-size: var(--fs-body);
+  font-variation-settings: var(--vf-text);
+  line-height: var(--lh-body);
+  letter-spacing: var(--tr-body);
+  overflow-x: hidden;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6, p, figure, blockquote, dl, dd {
+  margin: 0;
+}
+
+ul, ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+img, svg, video, canvas {
+  display: block;
+  max-width: 100%;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+}
+
+hr {
+  display: none;   /* 4.3 - the girih divider replaces every horizontal rule */
+}
+
+::selection {
+  background: var(--tint-amber);
+  color: var(--text);
+}
+
+:focus-visible {
+  outline: var(--focus-width) solid var(--ctx-focus);
+  outline-offset: var(--focus-offset);
+}
+
+/* =====================================================================
+   3  TYPE ROLES
+   Thirteen roles. There are no other type treatments on this site.
+   ===================================================================== */
+
+.t-mega {
+  font-family: var(--font-display);
+  font-size: var(--fs-mega);
+  font-variation-settings: var(--vf-mega);
+  line-height: var(--lh-mega);
+  letter-spacing: var(--tr-mega);
+  color: inherit;
+}
+
+.t-hero {
+  font-family: var(--font-display);
+  font-size: var(--fs-hero);
+  font-variation-settings: var(--vf-hero);
+  line-height: var(--lh-hero);
+  letter-spacing: var(--tr-hero);
+  color: inherit;
+}
+
+.t-display {
+  font-family: var(--font-display);
+  font-size: var(--fs-display);
+  font-variation-settings: var(--vf-display);
+  line-height: var(--lh-display);
+  letter-spacing: var(--tr-display);
+  color: var(--ctx-text);
+}
+
+.t-title {
+  font-family: var(--font-display);
+  font-size: var(--fs-title);
+  font-variation-settings: var(--vf-title);
+  line-height: var(--lh-title);
+  letter-spacing: var(--tr-title);
+  color: var(--ctx-text);
+}
+
+.t-subtitle {
+  font-family: var(--font-display);
+  font-size: var(--fs-subtitle);
+  font-variation-settings: var(--vf-subtitle);
+  line-height: var(--lh-subtitle);
+  letter-spacing: var(--tr-subtitle);
+  color: var(--ctx-text);
+}
+
+.t-lead {
+  font-family: var(--font-text);
+  font-size: var(--fs-lead);
+  font-variation-settings: var(--vf-text-lg);
+  line-height: var(--lh-lead);
+  letter-spacing: var(--tr-lead);
+  color: var(--ctx-text-soft);
+}
+
+.t-body {
+  font-family: var(--font-text);
+  font-size: var(--fs-body);
+  font-variation-settings: var(--vf-text);
+  line-height: var(--lh-body);
+  letter-spacing: var(--tr-body);
+  color: var(--ctx-text-soft);
+}
+
+.t-small {
+  font-family: var(--font-text);
+  font-size: var(--fs-small);
+  font-variation-settings: var(--vf-text);
+  line-height: var(--lh-small);
+  letter-spacing: var(--tr-small);
+  color: var(--ctx-text-faint);
+}
+
+.t-label {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: 400;
+  line-height: var(--lh-label);
+  letter-spacing: var(--tr-label);
+  text-transform: uppercase;
+  color: var(--ctx-text-faint);
+}
+
+.t-label-lg {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-lg);
+  font-weight: 400;
+  line-height: var(--lh-label);
+  letter-spacing: var(--tr-label);
+  text-transform: uppercase;
+  color: var(--ctx-text-faint);
+}
+
+.t-ui {
+  font-family: var(--font-display);
+  font-size: var(--fs-small);
+  font-variation-settings: var(--vf-ui);
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  color: inherit;
+}
+
+/* 3, Arabic mechanics: never letter-spaced, never text-transformed.
+   Every .t-arabic / .t-arabic-kufi element also carries lang="ar" dir="rtl". */
+.t-arabic {
+  font-family: var(--font-naskh);
+  font-size: var(--fs-arabic);
+  font-weight: 400;
+  line-height: var(--lh-arabic);
+  letter-spacing: var(--tr-arabic);
+  text-transform: none;
+  color: inherit;
+}
+
+.t-arabic-kufi {
+  font-family: var(--font-kufi);
+  font-size: var(--fs-subtitle);
+  font-variation-settings: var(--vf-kufi);
+  line-height: 1.4;
+  letter-spacing: var(--tr-arabic);
+  text-transform: none;
+  color: inherit;
+}
+
+/* Literata italic is the site's emphasis voice. Bricolage has no italic and
+   one is never synthesised, so italic always implies the text family. */
+.t-italic {
+  font-family: var(--font-text);
+  font-style: italic;
+}
+
+/* 3, Numbers: anything a reader might compare to another number. */
+.t-num {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+}
+
+/* 12.3 - the exclamation mark, and the closing chord. The only two places
+   colour enters headline type. */
+.t-mark {
+  color: var(--amber);
+}
+
+/* =====================================================================
+   4  LAYOUT
+   ===================================================================== */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+  gap: var(--grid-gap);
+}
+
+.container {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.container-narrow {
+  width: 100%;
+  max-width: var(--container-narrow);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.container-wide {
+  width: 100%;
+  max-width: var(--container-wide);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* Below 768px almost every span becomes 1 / -1. The grid stays ten columns
+   so the maths never changes (4.1). */
+@media (max-width: 767px) {
+  .grid > * {
+    grid-column: 1 / -1;
+  }
+}
+
+/* 4.4 - prose measure */
+.measure        { max-width: var(--measure); }
+.measure-lead   { max-width: var(--measure-lead); }
+.measure-display{ max-width: var(--measure-display); }
+
+/* 4.4 - paragraph rhythm inside a prose block */
+.flow > * + * {
+  margin-block-start: var(--s-5);
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+}
+
+.stack-2  { gap: var(--s-2); }
+.stack-3  { gap: var(--s-3); }
+.stack-4  { gap: var(--s-4); }
+.stack-5  { gap: var(--s-5); }
+.stack-6  { gap: var(--s-6); }
+.stack-7  { gap: var(--s-7); }
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-4);
+}
+
+/* 4.2 - section rhythm */
+.section     { padding-block: var(--section-y); }
+.section-lg  { padding-block: var(--section-y-lg); }
+.section-sm  { padding-block: var(--section-y-sm); }
+
+.section,
+.section-lg,
+.section-sm {
+  position: relative;
+}
+
+.ground-paper { background: var(--paper); }
+.ground-warm  { background: var(--paper-warm); }
+.ground-cool  { background: var(--paper-cool); }
+.ground-ink   { background: var(--ink); color: var(--ctx-text-soft); }
+.ground-slate { background: var(--slate-deep); color: var(--ctx-text-soft); }
+
+/* 4.5 - full-bleed on ONE side only, inner edge still on a column line. */
+.bleed-right {
+  margin-inline-end: calc(50% - 50vw);
+}
+
+.bleed-left {
+  margin-inline-start: calc(50% - 50vw);
+}
+
+/* 10 - Landmarks and skip target */
+main:focus {
+  outline: none;
+}
+
+/* =====================================================================
+   4.3  SECTION DIVIDER
+   A 1px rule whose left 140px resolves into three cells of the lattice.
+   ===================================================================== */
+
+.divider {
+  --divider-detail: 140px;
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 40px;
+  color: var(--ctx-rule);
+}
+
+.divider__lattice {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  width: var(--divider-detail);
+  height: 40px;
+  overflow: visible;
+}
+
+.divider__rule {
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: var(--divider-detail);
+  inset-inline-end: 0;
+  height: var(--border-hair);
+  background: currentColor;
+  transform-origin: left center;
+}
+
+/* =====================================================================
+   5.3  LINKS AND CONTROLS
+   ===================================================================== */
+
+/* Inline prose link */
+.link {
+  color: var(--ctx-link);
+  text-decoration: underline;
+  text-decoration-color: var(--ctx-rule-strong);
+  text-decoration-thickness: var(--border-hair);
+  text-underline-offset: 0.18em;
+  transition: text-decoration-color var(--dur-fast) var(--ease-out),
+              text-decoration-thickness var(--dur-fast) var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .link:hover {
+    text-decoration-color: var(--ctx-link);
+    text-decoration-thickness: var(--border-thin);
+  }
+}
+
+/* Nav and editorial index link: the hooked underline.
+   A 1.5px rule draws from the left, and at its right end kicks up 36 degrees
+   for 6px - the turn of an interlace. Never on inline prose links. */
+.link-hook {
+  position: relative;
+  display: inline-block;
+  text-decoration: none;
+  padding-block-end: 0.18em;
+}
+
+.link-hook::after,
+.link-hook::before {
+  content: "";
+  position: absolute;
+  inset-block-end: 0;
+  height: var(--border-thin);
+  background: currentColor;
+  pointer-events: none;
+}
+
+.link-hook::after {
+  inset-inline-start: 0;
+  inset-inline-end: 6px;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--dur-base) var(--ease-out);
+}
+
+.link-hook::before {
+  inset-inline-end: 0;
+  width: 6px;
+  transform: rotate(-36deg) scaleX(0);
+  transform-origin: left bottom;
+  transition: transform var(--dur-base) var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .link-hook:hover::after {
+    transform: scaleX(1);
+  }
+  .link-hook:hover::before {
+    transform: rotate(-36deg) scaleX(1);
+    transition-delay: calc(var(--dur-base) * 0.7);
+  }
+}
+
+/* Current page, and any link whose hook is drawn at rest (7.1, 14.8). */
+.link-hook.is-drawn::after {
+  transform: scaleX(1);
+}
+
+.link-hook.is-drawn::before {
+  transform: rotate(-36deg) scaleX(1);
+}
+
+.link-hook.is-drawn {
+  color: var(--sienna);
+}
+
+.on-dark .link-hook.is-drawn {
+  color: var(--link-on-dark);
+}
+
+/* =====================================================================
+   7.3  BUTTONS
+   The fill slides up from the bottom edge. No scale, no shadow change.
+   At most one .btn-primary per viewport.
+   ===================================================================== */
+
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  overflow: hidden;
+  isolation: isolate;
+  font-family: var(--font-display);
+  font-size: var(--fs-small);
+  font-variation-settings: var(--vf-ui-strong);
+  line-height: 1;
+  text-transform: none;
+  text-decoration: none;
+  padding: 14px 24px;
+  min-height: 44px;
+  border: var(--border-hair) solid transparent;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: color var(--dur-base) var(--ease-out),
+              border-color var(--dur-base) var(--ease-out);
+}
+
+.btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  transform: translateY(101%);
+  transition: transform var(--dur-base) var(--ease-out);
+}
+
+.btn > * {
+  position: relative;
+  z-index: 1;
+}
+
+.btn-primary {
+  background: var(--sienna);
+  color: var(--paper);
+}
+
+.btn-primary::before {
+  background: var(--ink);
+}
+
+.btn-ghost {
+  background: transparent;
+  border-color: var(--rule-strong);
+  color: var(--text);
+}
+
+.btn-ghost::before {
+  background: var(--ink);
+}
+
+.btn-quiet {
+  background: transparent;
+  color: var(--text-link);
+  padding-inline: 0;
+}
+
+/* On dark grounds (7.3, right column). */
+.on-dark .btn-primary,
+.btn-primary.on-dark {
+  background: var(--amber);
+  color: var(--ink);
+}
+
+.on-dark .btn-primary::before,
+.btn-primary.on-dark::before {
+  background: var(--paper);
+}
+
+.on-dark .btn-ghost,
+.btn-ghost-on-dark {
+  background: transparent;
+  border-color: var(--rule-on-dark-strong);
+  color: var(--text-on-dark);
+}
+
+.on-dark .btn-ghost::before,
+.btn-ghost-on-dark::before {
+  background: var(--paper);
+}
+
+.on-dark .btn-quiet,
+.btn-quiet.on-dark {
+  color: var(--link-on-dark);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .btn-primary:hover::before,
+  .btn-ghost:hover::before,
+  .btn-ghost-on-dark:hover::before {
+    transform: translateY(0);
+  }
+
+  .btn-ghost:hover {
+    color: var(--paper);
+    border-color: transparent;
+  }
+
+  .on-dark .btn-ghost:hover,
+  .btn-ghost-on-dark:hover {
+    color: var(--ink);
+    border-color: transparent;
+  }
+}
+
+/* .btn-quiet carries the hooked underline rather than a fill. */
+.btn-quiet.link-hook {
+  padding-block-end: 0.18em;
+  min-height: 44px;
+}
+
+/* =====================================================================
+   7.5  CARD
+   There is one card. It never sits in a three-up grid and never contains
+   an icon in a coloured circle.
+   ===================================================================== */
+
+.card {
+  background: var(--vellum);
+  border: var(--border-hair) solid var(--rule);
+  border-radius: var(--radius-md);
+  padding: var(--s-6);
+  box-shadow: var(--shadow-sm);
+}
+
+.ground-warm .card,
+.ground-cool .card {
+  background: var(--paper);
+}
+
+.ground-ink .card {
+  background: var(--ink-raised);
+  border-color: var(--rule-on-dark);
+}
+
+.ground-slate .card {
+  background: var(--slate-raised);
+  border-color: var(--rule-on-dark);
+}
+
+a.card,
+.card--link {
+  display: block;
+  text-decoration: none;
+  transition: border-color var(--dur-base) var(--ease-out),
+              box-shadow var(--dur-base) var(--ease-out),
+              transform var(--dur-base) var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  a.card:hover,
+  .card--link:hover {
+    border-color: var(--rule-accent);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+}
+
+/* =====================================================================
+   7.4  PHOTO FRAME  - verbatim from DESIGN.md
+   Every image and video renders through Media.astro.
+   ===================================================================== */
+
+.media {
+  position: relative;
+  aspect-ratio: var(--slot-ratio);      /* set inline from the slot */
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+  background: var(--fill-mist);          /* the ground while loading */
+}
+
+.media > img, .media > video {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: var(--slot-focal);    /* set inline from the slot */
+  display: block;
+}
+
+.media::after {                          /* the plate rule */
+  content: ""; position: absolute; inset: 0;
+  border: 1px solid rgba(40, 30, 20, 0.16);
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+/* 7.4 Reveal - the grade animates from desaturated to its treatment value
+   over --dur-slow on entrance. The only filter animation on the site, and
+   only on entrance, never on scrub. */
+.media--reveal > img,
+.media--reveal > video {
+  filter: saturate(0) contrast(1.1);
+  transition: filter var(--dur-slow) var(--ease-out);
+}
+
+.media--reveal.is-revealed > img,
+.media--reveal.is-revealed > video {
+  filter: none;
+}
+
+/* =====================================================================
+   8  PHOTOGRAPHY TREATMENTS  - verbatim from DESIGN.md
+   The treatment class sits on .media; nothing else about the image is
+   styled. These must come after .media::after so the graded plate rules
+   replace the default one.
+   ===================================================================== */
+
+.tr-ink-duotone { filter: url(#ink-duotone) contrast(1.04); }
+
+.tr-warm-grade { filter: saturate(0.82) contrast(1.06) brightness(1.02) sepia(0.12) hue-rotate(-6deg); }
+.tr-warm-grade::before {
+  content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background: var(--sienna); opacity: 0.08; mix-blend-mode: multiply;
+}
+.tr-warm-grade::after {   /* replaces the default plate rule for graded slots */
+  content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none;
+  background: var(--fill-sky); opacity: 0.06; mix-blend-mode: screen;
+  border: 1px solid rgba(40, 30, 20, 0.16); border-radius: inherit;
+}
+
+.tr-cool-grade { filter: saturate(0.78) contrast(1.05) brightness(1.01); }
+.tr-cool-grade::before {
+  content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background: var(--slate); opacity: 0.10; mix-blend-mode: multiply;
+}
+.tr-cool-grade::after {
+  content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none;
+  background: var(--fill-apricot); opacity: 0.05; mix-blend-mode: screen;
+  border: 1px solid rgba(40, 30, 20, 0.16); border-radius: inherit;
+}
+
+.tr-behind-screen { filter: saturate(0.80) contrast(1.08) brightness(0.98); }
+.tr-behind-screen::before {
+  content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background-image: url("/img/girih-tile.svg");
+  background-size: var(--pattern-scale) auto;
+  background-repeat: repeat;
+  opacity: 0.16;
+  mix-blend-mode: soft-light;
+}
+.tr-behind-screen::after {
+  content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none;
+  box-shadow: inset 0 0 48px 12px rgba(40, 30, 20, 0.18);
+  border: 1px solid rgba(40, 30, 20, 0.16); border-radius: inherit;
+}
+
+/* 8.5 - no grade, no tint, plate rule only. */
+.tr-raw { filter: none; }
+
+/* =====================================================================
+   7.6  ACCORDION
+   Rows separated by hairlines. No boxes, no shadows.
+   ===================================================================== */
+
+.accordion {
+  border-block-start: var(--border-hair) solid var(--ctx-rule);
+}
+
+.accordion__item {
+  border-block-end: var(--border-hair) solid var(--ctx-rule);
+}
+
+.accordion__heading {
+  margin: 0;
+}
+
+.accordion__trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-5);
+  width: 100%;
+  min-height: 44px;
+  padding-block: var(--s-5);
+  text-align: start;
+  color: var(--ctx-text);
+}
+
+.accordion__indicator {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  color: var(--sienna);
+}
+
+.accordion__indicator line {
+  stroke: currentColor;
+  stroke-width: var(--border-thin);
+  stroke-linecap: butt;
+}
+
+/* On open the vertical stroke scales to zero: the plus becomes a minus.
+   It does not rotate. */
+.accordion__indicator .v {
+  transform-origin: center;
+  transform: scaleY(1);
+  transition: transform var(--dur-base) var(--ease-out);
+}
+
+.accordion__trigger[aria-expanded="true"] .accordion__indicator .v {
+  transform: scaleY(0);
+}
+
+.accordion__panel {
+  overflow: hidden;
+}
+
+.accordion__panel-inner {
+  padding-block-end: var(--s-5);
+  max-width: var(--measure);
+}
+
+/* =====================================================================
+   7.7  CALENDAR CELL
+   The atom of the Calendar page and the homepage calendar band.
+   ===================================================================== */
+
+.cal-cell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-1);
+  padding: var(--s-4);
+  min-height: 44px;
+  border: 1px solid rgba(40, 30, 20, 0.10);
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  color: var(--text);
+}
+
+@media (min-width: 768px) {
+  .cal-cell {
+    aspect-ratio: 1 / 1;
+  }
+}
+
+.cal-cell__month {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: 400;
+  line-height: var(--lh-label);
+  letter-spacing: var(--tr-label);
+  text-transform: uppercase;
+  color: var(--text);
+  opacity: 0.7;
+}
+
+.cal-cell__day {
+  font-family: var(--font-mono);
+  font-size: var(--fs-subtitle);
+  font-weight: 400;
+  line-height: 1;
+  color: var(--text);
+}
+
+.cal-cell__title {
+  font-family: var(--font-text);
+  font-size: var(--fs-small);
+  font-variation-settings: var(--vf-text);
+  line-height: var(--lh-small);
+  color: var(--text);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.cal-cell--class            { background: var(--fill-apricot); }
+.cal-cell--class.is-sem2    { background: var(--fill-sky); }
+
+.cal-cell--no-school        { background: var(--fill-sage); }
+.cal-cell--no-school .cal-cell__title { opacity: 0.8; }
+
+.cal-cell--milestone {
+  background: var(--fill-amber);
+  border-inline-start: var(--border-thick) solid var(--sienna);
+}
+
+/* Computed client-side against the visitor's clock, never at build time. */
+.cal-cell--next {
+  outline: 2px solid var(--sienna);
+  outline-offset: 3px;
+}
+
+.cal-cell__ribbon {
+  position: absolute;
+  inset-block-end: calc(100% + var(--s-2));
+  inset-inline-start: 0;
+  white-space: nowrap;
+}
+
+.cal-cell__ramadan {
+  margin-block-start: auto;
+  color: var(--text-amber);
+}
+
+.cal-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-5);
+}
+
+.cal-legend__item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+}
+
+.cal-legend__swatch {
+  width: 14px;
+  height: 14px;
+  border: 1px solid rgba(40, 30, 20, 0.10);
+  border-radius: var(--radius-xs);
+}
+
+/* =====================================================================
+   HAIRLINE ROWS
+   The site's dominant list form. Used on Our Story, Program, Calendar,
+   Enroll and Contact. No boxes, no cards, no three-up grids.
+   ===================================================================== */
+
+.hairlines {
+  border-block-start: var(--border-hair) solid var(--ctx-rule);
+}
+
+.hairline-row {
+  display: grid;
+  gap: var(--s-2) var(--grid-gap);
+  padding-block: var(--s-5);
+  border-block-end: var(--border-hair) solid var(--ctx-rule);
+}
+
+@media (min-width: 768px) {
+  .hairline-row {
+    grid-template-columns: minmax(0, 4fr) minmax(0, 6fr);
+    align-items: baseline;
+  }
+}
+
+a.hairline-row {
+  text-decoration: none;
+  min-height: 44px;
+  transition: background-color var(--dur-base) var(--ease-out);
+}
+
+/* =====================================================================
+   7.9  ICONS
+   Six icons, inline SVG, butt caps and miter joins. Round caps are
+   forbidden - they soften shapes that should agree with the strapwork.
+   ===================================================================== */
+
+.icon {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: butt;
+  stroke-linejoin: miter;
+}
+
+/* =====================================================================
+   7.10  SKIP LINK
+   First focusable element in Base.astro.
+   ===================================================================== */
+
+.skip-link {
+  position: fixed;
+  inset-block-start: var(--s-4);
+  inset-inline-start: var(--s-4);
+  z-index: var(--z-modal);
+  background: var(--ink);
+  color: var(--text-on-dark);
+  padding: 12px 20px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-display);
+  font-size: var(--fs-small);
+  font-variation-settings: var(--vf-ui-strong);
+  text-decoration: none;
+  transform: translateY(calc(-100% - var(--s-8)));
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* =====================================================================
+   6.4  SURFACE TREATMENT
+   One page-level grain overlay, not per element. No mix-blend-mode.
+   ===================================================================== */
+
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-grain);
+  pointer-events: none;
+  opacity: var(--grain-opacity);
+  background-image: url("/img/grain.png");    /* 180x180 transparent-black speckle */
+  background-size: var(--grain-tile) var(--grain-tile);
+}
+
+/* 9.3 - the flat lattice. --pattern-* opacities only, --paper on dark
+   grounds and --ink on light ones. It never sits over body copy.
+
+   One vector asset governs every flat appearance (9.1, rule 5). It is used
+   here as a mask rather than a background image so that its colour is a real
+   token: an SVG referenced by url() has no CSS context, so its currentColor
+   would resolve to the file's own default and no ground rule could reach it. */
+.lattice {
+  position: absolute;
+  inset: 0;
+  z-index: var(--z-base);
+  pointer-events: none;
+  opacity: var(--pattern-quiet);
+  background-color: var(--ink);
+  -webkit-mask-image: url("/img/girih-tile.svg");
+  mask-image: url("/img/girih-tile.svg");
+  -webkit-mask-size: var(--pattern-scale) auto;
+  mask-size: var(--pattern-scale) auto;
+  -webkit-mask-repeat: repeat;
+  mask-repeat: repeat;
+}
+
+.lattice--whisper { opacity: var(--pattern-whisper); }
+.lattice--quiet   { opacity: var(--pattern-quiet); }
+.lattice--present { opacity: var(--pattern-present); }
+.lattice--strong  { opacity: var(--pattern-strong); }
+
+.lattice--lg {
+  -webkit-mask-size: var(--pattern-scale-lg) auto;
+  mask-size: var(--pattern-scale-lg) auto;
+}
+
+.on-dark .lattice,
+.ground-ink .lattice,
+.ground-slate .lattice,
+.lattice--on-dark {
+  background-color: var(--paper);
+}
+
+/* 7.2 - in the footer the lattice runs across the top 40% and terminates
+   mid-cell at the bottom of the visible area. Clipped, not faded. */
+.lattice--clip-bottom {
+  inset-block-end: auto;
+  height: 40%;
+}
+
+/* 9.2 - the construction overlay, permanently visible under reduced motion. */
+.lattice--construction {
+  -webkit-mask-image: url("/img/girih-construction.svg");
+  mask-image: url("/img/girih-construction.svg");
+}
+
+/* =====================================================================
+   13.3  SHADER BAND
+   The masthead on every page except the homepage. The canvas is always
+   aria-hidden and tabindex="-1"; no information exists only in it.
+   ===================================================================== */
+
+.shader-band {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  min-height: 44svh;
+  max-height: calc(100vw / (21 / 9));
+  overflow: hidden;
+  isolation: isolate;
+}
+
+@media (min-width: 768px) {
+  .shader-band {
+    min-height: 52svh;
+  }
+}
+
+.shader-band__canvas,
+.shader-band__fallback {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: var(--z-base);
+}
+
+.shader-band__canvas {
+  z-index: var(--z-media);
+  opacity: 0;
+  transition: opacity var(--dur-slow) var(--ease-out);
+}
+
+.shader-band__canvas.is-live {
+  opacity: 1;
+}
+
+.shader-band__inner {
+  position: relative;
+  z-index: var(--z-content);
+  width: 100%;
+  padding-block: var(--section-y-sm);
+}
+
+/* =====================================================================
+   14.1 / 13.2  THE HERO WINDOW
+   An empty positioned DOM box. Its getBoundingClientRect() is the source
+   of truth for uWindowRect; the 3D scene is never projected into screen
+   space to find it.
+   ===================================================================== */
+
+.hero-window {
+  position: relative;
+  aspect-ratio: var(--ratio-window);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  box-shadow: var(--shadow-glow);
+  pointer-events: none;
+}
+
+/* =====================================================================
+   PRINT FLOOR
+   Page-specific print rules (the Calendar's two-column semester layout)
+   belong on that page. This is only what is true of every page.
+   ===================================================================== */
+
+@media print {
+  .grain,
+  .skip-link,
+  canvas,
+  .lattice,
+  .shader-band__canvas,
+  .shader-band__fallback,
+  .site-header,
+  .site-footer,
+  .btn {
+    display: none !important;
+  }
+
+  :root {
+    --paper: #FFFFFF;
+    --paper-warm: #FFFFFF;
+    --paper-cool: #FFFFFF;
+    --vellum: #FFFFFF;
+    --ctx-text: #281E14;
+    --ctx-text-soft: #281E14;
+    --ctx-text-faint: #281E14;
+  }
+
+  body {
+    background: #FFFFFF;
+    color: #281E14;
+  }
+
+  .section,
+  .section-lg,
+  .section-sm {
+    padding-block: var(--s-5);
+  }
+
+  .cal-cell,
+  .cal-cell--class,
+  .cal-cell--no-school,
+  .cal-cell--milestone {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+}
+
+/* =====================================================================
+   5.4  REDUCED MOTION
+   A second design, not a fallback. Transitions collapse to --dur-instant,
+   not to zero: state changes must stay legible. The JS half of this lives
+   in src/scripts/motion.ts and src/scripts/webgl.ts and is not optional.
+   ===================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: var(--dur-instant) !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: var(--dur-instant) !important;
+    transition-delay: 0s !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Entrance start-states are cleared so content is never left hidden if
+     JavaScript does not run. */
+  [data-motion] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .media--reveal > img,
+  .media--reveal > video {
+    filter: none;
+  }
+}
