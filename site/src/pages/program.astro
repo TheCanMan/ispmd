@@ -6,14 +6,9 @@
  * paper-cool -> ink -> paper -> paper. Section 7 (Homework, restated) is the
  * page's only dark section - two would be one too many alongside the footer.
  *
- * NOT IMPLEMENTED, and reported rather than worked around: 13.4 "The Program
- * sequence" asks for uDensity to tween (4.6 -> 3.2 -> 2.0) as each of the
- * three parts scrolls into view. mountField() in webgl.ts already exposes a
- * setUniform() for exactly this, but the handle it returns is only reachable
- * from Masthead.astro's own <script>, which is frozen/read-only to this page
- * agent - there is no hook to reach it from here without editing a shared
- * component. The masthead ships with the static `program` preset for the
- * whole page instead.
+ * 13.4 "The Program sequence": uDensity tweens 4.6 -> 3.2 -> 2.0 as Arabic,
+ * Deen and "...and in between" scroll past, via onField(). The three
+ * sections carry #arabic/#deen/#between for exactly this.
  */
 import Base from '../layouts/Base.astro';
 import Masthead from '../components/Masthead.astro';
@@ -73,7 +68,7 @@ const moments = [
   </Section>
 
   {/* 3. Arabic */}
-  <Section ground="paper" grid>
+  <Section id="arabic" ground="paper" grid>
     <p class="t-label part__index" data-motion="body-rise">01</p>
 
     <div class="part__text">
@@ -104,7 +99,7 @@ const moments = [
   </Section>
 
   {/* 4. Deen */}
-  <Section ground="warm" grid>
+  <Section id="deen" ground="warm" grid>
     <div class="part__media part__media--deen">
       <Media slotId="program.deen" sizes="(min-width: 1024px) 33vw, 90vw" />
     </div>
@@ -131,7 +126,7 @@ const moments = [
   </Section>
 
   {/* 5. ...and in between */}
-  <Section ground="paper" grid>
+  <Section id="between" ground="paper" grid>
     <p class="t-label part__index" data-motion="body-rise">03</p>
 
     <h2 class="t-display t-italic between__headline" data-motion="line-rise">...and in between</h2>
@@ -224,6 +219,33 @@ const moments = [
     </div>
   </Section>
 </Base>
+
+<script>
+  // DESIGN.md 13.4 - the pattern loosens as the content loosens.
+  import { onField } from '../scripts/webgl';
+  import { gsap, ScrollTrigger, prefersReducedMotion } from '../scripts/motion';
+
+  onField('program', (field) => {
+    if (prefersReducedMotion()) return;
+    for (const [sel, density] of [['#arabic', 4.6], ['#deen', 3.2], ['#between', 2.0]] as const) {
+      ScrollTrigger.create({
+        trigger: sel,
+        start: 'top 60%',
+        onEnter: () =>
+          gsap.to(
+            { v: 0 },
+            {
+              duration: 0.62,
+              ease: 'expo.out',
+              onUpdate() {
+                field.setUniform('uDensity', density);
+              },
+            }
+          ),
+      });
+    }
+  });
+</script>
 
 <style>
   /* ---- Masthead epigraph ---- */

@@ -100,9 +100,9 @@ const jsonLd = educationalOrganization(Astro.site!.href);
         <p class="t-subtitle venue__times">
           Sundays, 10:00 AM until Salat al-Dhuhr<br />September through May
         </p>
-        <a class="link" href={site.venue.mapsUrl} rel="noopener noreferrer" target="_blank">
+        <Button href={site.venue.mapsUrl} variant="quiet" external>
           Open in maps
-        </a>
+        </Button>
       </div>
 
       <div class="venue__media">
@@ -147,30 +147,13 @@ const jsonLd = educationalOrganization(Astro.site!.href);
   <Section ground="paper" container="narrow">
     <SectionHeader label="ELSEWHERE" />
     <div class="elsewhere">
-      <a class="link" href={site.social.instagram} rel="noopener noreferrer" target="_blank">
-        Instagram
-      </a>
-      <a class="link" href={site.social.facebook} rel="noopener noreferrer" target="_blank">
-        Facebook
-      </a>
+      <Button href={site.social.instagram} variant="quiet" external>Instagram</Button>
+      <Button href={site.social.facebook} variant="quiet" external>Facebook</Button>
     </div>
   </Section>
 </Base>
 
 <style>
-  /*
-   * Masthead.astro's h1 uses `.t-hero { color: inherit; }`, and `.on-dark`
-   * only redefines the --ctx-* custom properties, not `color` itself, so the
-   * inherited value stays whatever body resolved to and the headline never
-   * actually turns light on a dark masthead. Hero.astro on the homepage
-   * works around the same gap by hardcoding color: var(--text-on-dark) on
-   * its own headline class; Masthead.astro has no equivalent for its `dark`
-   * variant, and that file is frozen to this page agent.
-   */
-  :global(.masthead.on-dark .t-hero) {
-    color: var(--text-on-dark);
-  }
-
   /* ---- 2. Reach us ---- */
 
   .reach {
@@ -215,6 +198,7 @@ const jsonLd = educationalOrganization(Astro.site!.href);
   .venue__text {
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
     gap: var(--s-4);
   }
 

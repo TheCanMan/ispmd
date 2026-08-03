@@ -6,13 +6,9 @@
  * paper -> paper -> paper-cool -> ink footer. Two dark grounds total, footer
  * included, which is the maximum 4.2 allows.
  *
- * NOT IMPLEMENTED, and reported rather than worked around: 13.3 says the give
- * masthead's uLightOrigin.y should scrub from 0.02 to 0.5 across the page's
- * scroll - the one interior page with scrubbed shader motion. That needs the
- * FieldHandle mountField() returns, which is only reachable inside
- * Masthead.astro's own <script>; that file is frozen/read-only to this page
- * agent, so there is no hook to scrub the uniform from here. The masthead
- * renders with the static `give` preset instead.
+ * 13.3 - the give masthead's uLightOrigin.y scrubs from 0.02 to 0.5 across
+ * the masthead's own scroll distance via onField(), the one interior page
+ * with scrubbed shader motion. Skipped under prefers-reduced-motion.
  *
  * The three suggested-amount tiles reuse MilestoneCard's asymmetric span
  * (1/4, 4/7, 8/11 with a deliberate gap at column 7) rather than the shared
@@ -152,21 +148,24 @@ const tiles = [
   </Section>
 </Base>
 
-<style>
-  /*
-   * Masthead.astro's h1 uses `.t-hero { color: inherit; }`, and `.on-dark`
-   * only redefines the --ctx-* custom properties, not `color` itself - it
-   * never re-declares `color`, so `inherit` keeps whatever body's color
-   * resolved to, and the headline stays --text-soft even on a dark masthead.
-   * Hero.astro on the homepage works around the same gap by hardcoding
-   * color: var(--text-on-dark) on its own headline class; Masthead.astro has
-   * no such override for its `dark` variant. Masthead.astro is frozen to
-   * this page agent, so the fix has to live here instead.
-   */
-  :global(.masthead.on-dark .t-hero) {
-    color: var(--text-on-dark);
-  }
+<script>
+  // DESIGN.md 13.3 - light rises through the give masthead as you read.
+  import { onField } from '../scripts/webgl';
+  import { ScrollTrigger, prefersReducedMotion } from '../scripts/motion';
 
+  onField('give', (field) => {
+    if (prefersReducedMotion()) return;
+    ScrollTrigger.create({
+      trigger: document.querySelector('.masthead'),
+      start: 'top top',
+      end: 'bottom top',
+      scrub: 0.6,
+      onUpdate: (self) => field.setUniform('uLightOrigin', [0.5, 0.02 + self.progress * 0.48]),
+    });
+  });
+</script>
+
+<style>
   /* ---- Masthead sub-line ---- */
 
   .give-sub {
