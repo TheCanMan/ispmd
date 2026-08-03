@@ -1,0 +1,382 @@
+---
+/**
+ * Calendar - DESIGN.md 14.4. Copy from COPY.md, Calendar, verbatim.
+ *
+ * The complete year is rendered at build time. NextClass only adds the
+ * visitor-clock highlight and current-session copy; it never replaces the
+ * readable calendar below it.
+ */
+import Base from '../layouts/Base.astro';
+import Masthead from '../components/Masthead.astro';
+import Section from '../components/Section.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import Button from '../components/Button.astro';
+import HairlineList from '../components/HairlineList.astro';
+import HairlineRow from '../components/HairlineRow.astro';
+import MilestoneCard from '../components/MilestoneCard.astro';
+import CalendarBand from '../components/calendar/CalendarBand.astro';
+import NextClass from '../components/calendar/NextClass.astro';
+
+import { getCalendarYear, sessionsBySemester, type Session } from '../data/calendar';
+import { labels, site } from '../data/site';
+import { formatSessionDate } from '../scripts/next-class';
+
+const { sessions } = await getCalendarYear();
+const semester1 = sessionsBySemester(sessions, 1);
+const semester2 = sessionsBySemester(sessions, 2);
+
+const kindLabel = (session: Session) =>
+  session.kind === 'no-school' ? 'No school' : session.kind === 'milestone' ? 'Milestone' : 'Class';
+
+const displayNote = (session: Session) => {
+  if (session.note === 'Ramadan') return 'RAMADAN';
+  if (session.note === 'Last Day of School') return 'Last day of school';
+  return session.note;
+};
+---
+
+<Base
+  title="Calendar 2026-2027 - Islamic School of Potomac"
+  description="Thirty-three Sundays, twenty-five of them class. The full 2026-2027 academic calendar, including the Deen Showcase, Arabic Final Exams and the Quran Competition."
+  bodyClass="calendar-page"
+>
+  <p class="t-label print-header">
+    Islamic School of Potomac · Academic Calendar 2026-2027 · ispmd.org
+  </p>
+
+  {/* 1. Masthead */}
+  <Masthead
+    preset="calendar"
+    label="ACADEMIC CALENDAR"
+    lines={['2026 - 2027']}
+    short
+    class="calendar-masthead print-hide"
+  >
+    <p class="t-lead calendar-masthead__subline" data-motion="body-rise">
+      Thirty-three Sundays. The school meets on twenty-five of them.
+    </p>
+  </Masthead>
+
+  {/* 2. Next class. The server-rendered ended state is a truthful fallback. */}
+  <Section ground="paper" class="print-hide">
+    <NextClass />
+  </Section>
+
+  {/* 3. The year. All 33 cells are static HTML. */}
+  <Section ground="cool" rhythm="sm" class="print-hide">
+    <CalendarBand sessions={sessions} variant="grid" legend />
+  </Section>
+
+  {/* 4-5. The two semester lists become two columns on paper. */}
+  <div class="semester-lists">
+    <Section ground="paper" rhythm="sm" class="semester-list semester-list--one">
+      <div class="semester__head">
+        <h2 class="t-title" data-motion="line-rise">First Semester</h2>
+        <p class="t-small" data-motion="body-rise">
+          September 13 to December 13. Fourteen Sundays, eleven of them class.
+        </p>
+      </div>
+
+      <HairlineList>
+        {
+          semester1.map((session) => (
+            <HairlineRow
+              marker={formatSessionDate(session.date)}
+              title={session.title}
+              titleRole="t-body"
+              meta={kindLabel(session)}
+              muted={session.kind === 'no-school'}
+              class={`semester-row semester-row--${session.kind} semester-row--sem1`}
+            >
+              {displayNote(session) && (
+                <p class:list={['t-label semester__note', { 'is-ramadan': session.note === 'Ramadan' }]}>
+                  {displayNote(session)}
+                </p>
+              )}
+            </HairlineRow>
+          ))
+        }
+      </HairlineList>
+    </Section>
+
+    <Section ground="paper" rhythm="sm" class="semester-list semester-list--two">
+      <div class="semester__head">
+        <h2 class="t-title" data-motion="line-rise">Second Semester</h2>
+        <p class="t-small" data-motion="body-rise">
+          January 10 to May 16. Nineteen Sundays, fourteen of them class.
+        </p>
+      </div>
+
+      <HairlineList>
+        {
+          semester2.map((session) => (
+            <HairlineRow
+              marker={formatSessionDate(session.date)}
+              title={session.title}
+              titleRole="t-body"
+              meta={kindLabel(session)}
+              muted={session.kind === 'no-school'}
+              class={`semester-row semester-row--${session.kind} semester-row--sem2`}
+            >
+              {displayNote(session) && (
+                <p class:list={['t-label semester__note', { 'is-ramadan': session.note === 'Ramadan' }]}>
+                  {displayNote(session)}
+                </p>
+              )}
+            </HairlineRow>
+          ))
+        }
+      </HairlineList>
+    </Section>
+  </div>
+
+  {/* 6. The three moments. The gap before the third card is deliberate. */}
+  <Section ground="warm" grid class="print-hide">
+    <p class="t-label milestones__label" data-motion="body-rise">
+      THREE DAYS THE YEAR POINTS AT
+    </p>
+
+    <MilestoneCard
+      date="DECEMBER 13, 2026"
+      title="Deen Showcase"
+      slotId="calendar.milestone.showcase"
+      class="calendar-milestone--one"
+    >
+      The children present what they have been working on since September. It closes the first
+      semester, and it is the best morning to come if you want to see what the school actually is.
+    </MilestoneCard>
+
+    <MilestoneCard
+      date="MAY 9, 2027"
+      title="Arabic Final Exams"
+      slotId="calendar.milestone.exams"
+      class="calendar-milestone--two"
+    >
+      A year of reading, in one morning. Nobody is ranked and nobody is held back.
+    </MilestoneCard>
+
+    <MilestoneCard
+      date="MAY 16, 2027"
+      title="Quran Competition"
+      slotId="calendar.milestone.quran"
+      class="calendar-milestone--three"
+    >
+      The last day of school. The whole year points at it.
+    </MilestoneCard>
+  </Section>
+
+  {/* 7. Where and when */}
+  <Section ground="paper" grid class="print-hide">
+    <div class="practical">
+      <SectionHeader
+        label="PRACTICAL"
+        lines={['Sunday mornings,', 'September through May.']}
+        role="t-title"
+      />
+
+      <div class="flow practical__copy" data-motion="body-rise">
+        <p class="t-body">
+          Class begins at 10:00 AM and runs until Salat al-Dhuhr. Classes are held at the Islamic
+          Education Center, 7917 Montrose Rd, Potomac, MD 20854. The Islamic School of Potomac is a
+          separate organization and meets there.
+        </p>
+        <p class="t-body">
+          If you need to check whether class is on, call
+          <a class="link t-num" href={site.phone.href}>{site.phone.display}</a> or write to
+          <a class="link t-num" href={site.email.href}>{site.email.display}</a>.
+        </p>
+      </div>
+
+      <div class="practical__contacts" data-motion="body-rise">
+        <a class="link t-num" href={site.phone.href}>{site.phone.display}</a>
+        <a class="link t-num" href={site.email.href}>{site.email.display}</a>
+      </div>
+
+      <div data-motion="body-rise">
+        <Button href="/contact" variant="quiet" icon="arrow-right">{labels.contact}</Button>
+      </div>
+    </div>
+  </Section>
+
+  {/* 8. CTA */}
+  <Section ground="paper" class="print-hide">
+    <div class="calendar-cta">
+      <SectionHeader headline="Not enrolled yet?" role="t-display" />
+      <div data-motion="body-rise">
+        <Button href="/enroll" variant="quiet" icon="arrow-right">{labels.enrollPrimary}</Button>
+      </div>
+    </div>
+  </Section>
+</Base>
+
+<style>
+  .print-header {
+    display: none;
+  }
+
+  .calendar-masthead__subline {
+    grid-column: 1 / -1;
+    max-width: var(--measure-lead);
+    margin-block-start: var(--s-5);
+  }
+
+  .semester__head {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-3);
+    margin-block-end: var(--s-6);
+    padding-block-start: var(--s-4);
+  }
+
+  :global(.semester-list--one) .semester__head {
+    border-block-start: var(--border-thick) solid var(--sienna);
+  }
+
+  :global(.semester-list--two) .semester__head {
+    border-block-start: var(--border-thick) solid var(--slate);
+  }
+
+  .semester__note {
+    color: var(--ctx-text-faint);
+  }
+
+  .semester__note.is-ramadan {
+    color: var(--text-amber);
+  }
+
+  .milestones__label {
+    grid-column: 1 / -1;
+    margin-block-end: var(--s-7);
+  }
+
+  :global(.calendar-milestone--one),
+  :global(.calendar-milestone--two),
+  :global(.calendar-milestone--three) {
+    grid-column: 1 / -1;
+  }
+
+  .practical {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-5);
+  }
+
+  .practical__contacts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-3) var(--s-6);
+    font-family: var(--font-mono);
+    font-size: var(--fs-lead);
+    line-height: var(--lh-lead);
+  }
+
+  .calendar-cta {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: var(--s-5);
+  }
+
+  @media (min-width: 1024px) {
+    .calendar-masthead__subline {
+      grid-column: 1 / 8;
+    }
+
+    :global(.calendar-milestone--one) { grid-column: 1 / 4; }
+    :global(.calendar-milestone--two) { grid-column: 4 / 7; }
+    :global(.calendar-milestone--three) { grid-column: 8 / 11; }
+
+    .practical {
+      grid-column: 2 / 8;
+    }
+  }
+
+  @media print {
+    @page {
+      size: letter portrait;
+      margin: var(--s-5);
+    }
+
+    :global(.print-hide),
+    :global(.calendar-masthead) {
+      display: none !important;
+    }
+
+    .print-header {
+      display: block;
+      padding-block-end: var(--s-3);
+      border-block-end: var(--border-thick) solid var(--ink);
+      margin-block-end: var(--s-4);
+    }
+
+    .semester-lists {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--s-5);
+    }
+
+    :global(.semester-list) {
+      padding-block: 0;
+      background: var(--paper);
+      break-inside: avoid;
+    }
+
+    :global(.semester-list > .container) {
+      max-width: none;
+      padding-inline: 0;
+    }
+
+    .semester__head {
+      gap: var(--s-1);
+      margin-block-end: var(--s-2);
+      padding-block-start: var(--s-2);
+    }
+
+    .semester__head .t-title {
+      font-size: var(--fs-subtitle);
+    }
+
+    :global(.semester-list .hairline-row) {
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+      gap: var(--s-1);
+      padding: var(--s-1) var(--s-2);
+      break-inside: avoid;
+    }
+
+    :global(.semester-list .hairline-row__lead),
+    :global(.semester-list .hairline-row__body) {
+      gap: var(--s-1);
+    }
+
+    :global(.semester-list .t-body),
+    :global(.semester-list .t-small),
+    :global(.semester-list .t-label) {
+      font-size: var(--fs-label);
+      line-height: var(--lh-label);
+    }
+
+    :global(.semester-row--class.semester-row--sem1) {
+      background: var(--fill-apricot);
+    }
+
+    :global(.semester-row--class.semester-row--sem2) {
+      background: var(--fill-sky);
+    }
+
+    :global(.semester-row--no-school) {
+      background: var(--fill-sage);
+    }
+
+    :global(.semester-row--milestone) {
+      background: var(--fill-amber);
+    }
+
+    :global(.calendar-page),
+    :global(.calendar-page *) {
+      print-color-adjust: exact;
+      -webkit-print-color-adjust: exact;
+    }
+  }
+</style>
