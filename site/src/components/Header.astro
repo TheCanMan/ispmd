@@ -132,6 +132,34 @@ const menuLinks = [{ label: 'Home', href: '/' }, ...primaryNav, ...secondaryNav]
     background: transparent;
   }
 
+  /*
+   * The same defect as the hero type block, one element up. Over the hero the
+   * header is transparent, and the nav sits top-right over the BRIGHTEST part
+   * of the light field: --text-on-dark on amber measured 1.75-1.84:1.
+   *
+   * The light falls off at the top edge the way it falls off at the type
+   * block. It is gated on .is-transparent:not(.is-stuck), so it exists only
+   * over the hero: on the other seven pages the header takes --paper from the
+   * start and this never renders, and it is removed again the moment the
+   * header sticks.
+   */
+  .site-header.is-transparent:not(.is-stuck)::before {
+    content: "";
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline: 0;
+    height: calc(100% + var(--s-9));
+    z-index: -1;
+    pointer-events: none;
+    background: linear-gradient(
+      to bottom,
+      rgba(40, 30, 20, 0.86) 0%,
+      rgba(40, 30, 20, 0.68) 46%,
+      rgba(40, 30, 20, 0.32) 74%,
+      rgba(40, 30, 20, 0) 100%
+    );
+  }
+
   /* Toggled by the scroll handler in Base.astro at 72px. */
   .site-header.is-stuck {
     background: var(--paper);
@@ -193,9 +221,13 @@ const menuLinks = [{ label: 'Home', href: '/' }, ...primaryNav, ...secondaryNav]
     gap: var(--s-6);
   }
 
+  /* 10 - 44 x 44px, both axes. Short labels like "Give" measured 32px wide
+     with a compliant height, which is half a passing target. */
   .site-nav__list a {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
+    min-width: 44px;
     min-height: 44px;
     color: var(--text);
     text-decoration: none;
@@ -265,6 +297,10 @@ const menuLinks = [{ label: 'Home', href: '/' }, ...primaryNav, ...secondaryNav]
   }
 
   .menu__list a {
+    display: inline-flex;
+    align-items: center;
+    min-width: 44px;
+    min-height: 44px;
     color: var(--text-on-dark);
     text-decoration: none;
   }

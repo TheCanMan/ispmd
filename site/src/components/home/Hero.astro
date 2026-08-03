@@ -32,8 +32,6 @@ const hasFootage = montage.status === 'real' && !!montage.src;
 
   <canvas class="hero__canvas" aria-hidden="true" tabindex="-1" data-hero-canvas></canvas>
 
-  {/* See .hero__scrim below. */}
-  <div class="hero__scrim" aria-hidden="true"></div>
 
   <div class="hero__inner container">
     <div class="hero__grid grid">
@@ -164,9 +162,25 @@ const hasFootage = montage.status === 'real' && !!montage.src;
     isolation: isolate;
     display: flex;
     align-items: center;
-    min-height: 640px;
-    height: 100svh;
+    /*
+     * min-height, not height. With a fixed height, content taller than the
+     * viewport overflows a centred flex box in BOTH directions, so the type
+     * block rode up under the fixed header and the eyebrow rendered on the
+     * same line as the wordmark. Measured at 768: the block started at y=-13.
+     * min-height keeps "full viewport" and lets a tall hero simply be taller.
+     */
+    min-height: max(640px, 100svh);
     overflow: hidden;
+    /* The header is fixed and the hero sits under it, plus a little air so
+       the eyebrow never sits flush against the header's bottom edge. */
+    padding-block-start: calc(64px + var(--s-6));
+    padding-block-end: var(--s-10);
+  }
+
+  @media (min-width: 1024px) {
+    .hero {
+      padding-block-start: calc(76px + var(--s-6));
+    }
   }
 
   /**
@@ -201,28 +215,56 @@ const hasFootage = montage.status === 'real' && !!montage.src;
   /**
    * 14.1 promises that "the backdrop's dark end guarantees contrast at the
    * type's position". Measured, it does not: with uGlow at 1.0 the light term
-   * in 13.3 never falls below about 0.2, so the field stays mid-tone
-   * everywhere and --text-on-dark lands on sienna and amber rather than on
-   * --slate-deep. Contrast is not negotiable (10, 6.3), so the light falls
-   * off into --ink across the left of the frame instead.
+   * in 13.3 never falls below about 0.2, so the field stays mid-tone and the
+   * lattice ribbons are --paper on top of that. Sampling the true backdrop
+   * with the text hidden, --text-on-dark landed as low as 1.00:1.
    *
-   * It is one-sided and it is a gradient, so it reads as the light running
-   * out rather than as a panel. It is not the dark-overlay-over-stock-photo
-   * hero that 12.4 refuses: there is no photograph, the type is not centred,
-   * and the geometry stays legible the whole way through.
+   * The scrim is therefore anchored to the TYPE BLOCK, not to the viewport.
+   * A viewport-anchored gradient has to be re-guessed at every breakpoint and
+   * was wrong at all of them: at 1440 the headline ran off its right edge, and
+   * below 1200 the block spans full width and the gradient never covered it.
+   * Anchored to the element, it cannot miss.
+   *
+   * It resolves to solid --ink under the text, which is what makes 6.3's
+   * verified pairings hold by construction rather than by luck, and falls off
+   * over a long radius so it reads as the light running out rather than as a
+   * panel. It is not the hero 12.4 refuses: no photograph, not centred, and
+   * the geometry stays legible the whole way through.
    */
-  .hero__scrim {
+  .hero__type,
+  .hero__cue {
+    position: relative;
+  }
+
+  .hero__type::before,
+  .hero__cue::before {
+    content: "";
     position: absolute;
-    inset: 0;
-    z-index: var(--z-media);
+    z-index: -1;
     pointer-events: none;
-    background: linear-gradient(
-      100deg,
-      var(--ink) 0%,
-      rgba(40, 30, 20, 0.82) 24%,
-      rgba(40, 30, 20, 0.38) 40%,
-      rgba(40, 30, 20, 0) 51%
-    );
+  }
+
+  /*
+   * A solid --ink rectangle inset to the block, feathered with a static blur.
+   * A radial gradient has to be tuned so its falloff lands outside the text,
+   * and it was wrong at three of seven breakpoints. Blurring a solid keeps
+   * the core at FULL --ink over the whole block by construction and puts the
+   * entire falloff outside it, which is the property that was missing.
+   */
+  .hero__type::before {
+    inset: calc(var(--s-11) * -1);
+    background: var(--ink);
+    /* A big blur radius is what stops this reading as a panel. At --s-7 the
+       rectangle's corners were still legible; at --s-9 the falloff is ~190px
+       wide and the shape dissolves into the field. The inset is twice the
+       radius so the whole feather lands outside the text. */
+    filter: blur(var(--s-9));
+  }
+
+  .hero__cue::before {
+    inset: calc(var(--s-9) * -1);
+    background: var(--ink);
+    filter: blur(var(--s-7));
   }
 
   .hero__inner {
@@ -241,7 +283,6 @@ const hasFootage = montage.status === 'real' && !!montage.src;
     display: flex;
     flex-direction: column;
     gap: var(--s-5);
-    padding-block-end: var(--s-9);
     color: var(--text-on-dark);
   }
 
@@ -285,7 +326,7 @@ const hasFootage = montage.status === 'real' && !!montage.src;
   @media (min-width: 1200px) {
     .hero__type {
       grid-column: 1 / 6;
-      padding-block-end: 0;
+      padding-block-end: var(--s-9);
     }
 
     /* 13.2 - the aperture occupies grid columns 6 through 11 and sits just
