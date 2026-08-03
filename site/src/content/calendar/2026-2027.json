@@ -1,0 +1,207 @@
+{
+  "year": "2026-2027",
+  "sessions": [
+    {
+      "date": "2026-09-13",
+      "kind": "milestone",
+      "title": "Back to School Day",
+      "semester": 1
+    },
+    {
+      "date": "2026-09-20",
+      "kind": "class",
+      "title": "Class",
+      "semester": 1
+    },
+    {
+      "date": "2026-09-27",
+      "kind": "no-school",
+      "title": "Camp NWMI",
+      "semester": 1
+    },
+    {
+      "date": "2026-10-04",
+      "kind": "class",
+      "title": "Class",
+      "semester": 1
+    },
+    {
+      "date": "2026-10-11",
+      "kind": "no-school",
+      "title": "No School",
+      "semester": 1
+    },
+    {
+      "date": "2026-10-18",
+      "kind": "class",
+      "title": "Class",
+      "semester": 1
+    },
+    {
+      "date": "2026-10-25",
+      "kind": "class",
+      "title": "Class",
+      "semester": 1
+    },
+    {
+      "date": "2026-11-01",
+      "kind": "class",
+      "title": "Class",
+      "semester": 1
+    },
+    {
+      "date": "2026-11-08",
+      "kind": "class",
+      "title": "Class",
+      "semester": 1
+    },
+    {
+      "date": "2026-11-15",
+      "kind": "class",
+      "title": "Class",
+      "semester": 1
+    },
+    {
+      "date": "2026-11-22",
+      "kind": "class",
+      "title": "Class",
+      "semester": 1
+    },
+    {
+      "date": "2026-11-29",
+      "kind": "no-school",
+      "title": "Thanksgiving Weekend",
+      "semester": 1
+    },
+    {
+      "date": "2026-12-06",
+      "kind": "class",
+      "title": "Class",
+      "semester": 1
+    },
+    {
+      "date": "2026-12-13",
+      "kind": "milestone",
+      "title": "Deen Showcase",
+      "note": "End of Semester 1",
+      "semester": 1
+    },
+    {
+      "date": "2027-01-10",
+      "kind": "milestone",
+      "title": "Semester 2 Begins",
+      "semester": 2
+    },
+    {
+      "date": "2027-01-17",
+      "kind": "no-school",
+      "title": "MLK Weekend",
+      "semester": 2
+    },
+    {
+      "date": "2027-01-24",
+      "kind": "class",
+      "title": "Class",
+      "semester": 2
+    },
+    {
+      "date": "2027-01-31",
+      "kind": "class",
+      "title": "Class",
+      "semester": 2
+    },
+    {
+      "date": "2027-02-07",
+      "kind": "class",
+      "title": "Class",
+      "semester": 2
+    },
+    {
+      "date": "2027-02-14",
+      "kind": "no-school",
+      "title": "Presidents' Day Weekend",
+      "semester": 2
+    },
+    {
+      "date": "2027-02-21",
+      "kind": "class",
+      "title": "Class",
+      "note": "Ramadan",
+      "semester": 2
+    },
+    {
+      "date": "2027-02-28",
+      "kind": "class",
+      "title": "Class",
+      "note": "Ramadan",
+      "semester": 2
+    },
+    {
+      "date": "2027-03-07",
+      "kind": "no-school",
+      "title": "Nights of Power",
+      "semester": 2
+    },
+    {
+      "date": "2027-03-14",
+      "kind": "class",
+      "title": "Class",
+      "semester": 2
+    },
+    {
+      "date": "2027-03-21",
+      "kind": "class",
+      "title": "Class",
+      "semester": 2
+    },
+    {
+      "date": "2027-03-28",
+      "kind": "no-school",
+      "title": "Spring Break",
+      "semester": 2
+    },
+    {
+      "date": "2027-04-04",
+      "kind": "no-school",
+      "title": "Spring Break",
+      "semester": 2
+    },
+    {
+      "date": "2027-04-11",
+      "kind": "class",
+      "title": "Class",
+      "semester": 2
+    },
+    {
+      "date": "2027-04-18",
+      "kind": "class",
+      "title": "Class",
+      "semester": 2
+    },
+    {
+      "date": "2027-04-25",
+      "kind": "class",
+      "title": "Class",
+      "semester": 2
+    },
+    {
+      "date": "2027-05-02",
+      "kind": "class",
+      "title": "Class",
+      "semester": 2
+    },
+    {
+      "date": "2027-05-09",
+      "kind": "milestone",
+      "title": "Arabic Final Exams",
+      "semester": 2
+    },
+    {
+      "date": "2027-05-16",
+      "kind": "milestone",
+      "title": "Quran Competition",
+      "note": "Last Day of School",
+      "semester": 2
+    }
+  ]
+}

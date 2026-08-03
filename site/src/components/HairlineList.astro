@@ -1,0 +1,24 @@
+---
+/**
+ * The site's dominant list form. Rows separated by hairlines, no boxes, no
+ * shadows, no cards, and never a three-up grid (DESIGN.md 4.1, 7.5, 12.4).
+ *
+ * Used on Our Story section 4, Program sections 6 and 8, Enroll sections 4
+ * and 5, the Calendar semester lists and Contact.
+ *
+ *   <HairlineList>
+ *     <HairlineRow marker="10:00 AM" title="Class begins.">
+ *       <p class="t-body">...</p>
+ *     </HairlineRow>
+ *   </HairlineList>
+ */
+interface Props {
+  class?: string;
+}
+
+const { class: className = '' } = Astro.props;
+---
+
+<div class={`hairlines ${className}`}>
+  <slot />
+</div>

@@ -1,0 +1,73 @@
+---
+/**
+ * A section label plus its headline, with the gaps DESIGN.md 4.4 specifies:
+ * label-to-headline var(--s-3), headline-to-body var(--s-5).
+ *
+ * Headlines are --text or --text-on-dark. They are not sienna, not slate,
+ * not amber (3, "Headline colour"). Colour in a headline is reserved for one
+ * word or one mark per page.
+ *
+ * Line breaks inside a headline are deliberate wherever COPY.md writes them
+ * across several lines; pass `lines` and they are broken exactly there.
+ */
+interface Props {
+  label?: string;
+  /** A single headline string, or the exact lines COPY.md breaks it into. */
+  headline?: string;
+  lines?: string[];
+  level?: 'h1' | 'h2' | 'h3';
+  /** Which type role the headline takes. */
+  role?: 't-hero' | 't-display' | 't-title' | 't-subtitle';
+  id?: string;
+  class?: string;
+  measure?: boolean;
+}
+
+const {
+  label,
+  headline,
+  lines,
+  level: Heading = 'h2',
+  role = 't-display',
+  id,
+  class: className = '',
+  measure = false,
+} = Astro.props;
+
+const parts = lines ?? (headline ? [headline] : []);
+---
+
+<div class={`section-header ${className}`}>
+  {label && <p class="t-label" data-motion="body-rise">{label}</p>}
+
+  {
+    parts.length > 0 && (
+      <Heading
+        id={id}
+        class:list={[role, measure ? 'measure-display' : '']}
+        data-motion="line-rise"
+      >
+        {parts.map((line, i) => (
+          <>
+            {i > 0 && <br />}
+            {line}
+          </>
+        ))}
+      </Heading>
+    )
+  }
+
+  <slot />
+</div>
+
+<style>
+  .section-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-3);
+  }
+
+  .section-header > :global(:not(.t-label) + *) {
+    margin-block-start: var(--s-2);
+  }
+</style>

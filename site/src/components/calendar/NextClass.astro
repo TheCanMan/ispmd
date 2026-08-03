@@ -1,0 +1,130 @@
+---
+/**
+ * DESIGN.md 14.4 section 2. Computed client-side against the visitor's clock,
+ * never at build time.
+ *
+ * The three states and every word in them come from COPY.md, Calendar section
+ * 2. No fourth state may be shown - in particular, never a stale date and
+ * never a blank.
+ *
+ * The server renders the "ended" copy as the initial state on purpose. If the
+ * script never runs, a visitor sees a true statement and a working email
+ * address rather than a date that may already have passed.
+ */
+import Button from '../Button.astro';
+import { site } from '../../data/site';
+---
+
+<div class="next-class" data-next-class>
+  <div class="next-class__body">
+    <p class="t-label" data-next-label>The year has ended</p>
+
+    <p class="next-class__date t-num" data-next-date hidden></p>
+    <p class="t-title" data-next-title>The 2026-2027 year finished on May 16.</p>
+    <p class="t-body" data-next-note>
+      The calendar for the next school year goes up over the summer. Write to
+      <a class="link" href={site.email.href}>{site.email.display}</a> and we will tell you when.
+    </p>
+    <p class="t-body" data-next-off hidden></p>
+  </div>
+
+  <div class="next-class__actions">
+    <Button href={site.icsPath} variant="primary" icon="download" download>
+      Add the year to your calendar
+    </Button>
+    <p class="t-small">
+      Downloads a calendar file with all thirty-three Sundays in it. Open it once and every date
+      lands in the calendar you already use.
+    </p>
+  </div>
+</div>
+
+<script>
+  import { resolveNextClass, formatSessionDate, type Session } from '../../scripts/next-class';
+
+  const root = document.querySelector<HTMLElement>('[data-next-class]');
+
+  if (root) {
+    const label = root.querySelector<HTMLElement>('[data-next-label]')!;
+    const dateEl = root.querySelector<HTMLElement>('[data-next-date]')!;
+    const titleEl = root.querySelector<HTMLElement>('[data-next-title]')!;
+    const noteEl = root.querySelector<HTMLElement>('[data-next-note]')!;
+    const offEl = root.querySelector<HTMLElement>('[data-next-off]')!;
+
+    try {
+      const res = await fetch('/calendar.json');
+      if (!res.ok) throw new Error(String(res.status));
+      const { sessions } = (await res.json()) as { sessions: Session[] };
+
+      const result = resolveNextClass(sessions);
+
+      /* The ended state is already in the markup; leaving it alone is the
+         correct outcome rather than a failure to update. */
+      if (result.state !== 'ended') {
+        label.textContent = 'Next class';
+
+        dateEl.hidden = false;
+        dateEl.textContent = formatSessionDate(result.session.date);
+
+        titleEl.textContent = result.session.title;
+
+        noteEl.textContent = result.daysLine;
+
+        if (result.state === 'after-break') {
+          offEl.hidden = false;
+          offEl.textContent = result.offLine;
+        }
+
+        /* 7.7 - the matching cell in the band gains its outline and ribbon. */
+        const cell = document.querySelector<HTMLElement>(
+          `[data-session-date="${result.session.date}"]`
+        );
+        if (cell) {
+          cell.classList.add('cal-cell--next');
+          const ribbon = document.createElement('p');
+          ribbon.className = 't-label cal-cell__ribbon';
+          ribbon.textContent = 'Next class';
+          cell.prepend(ribbon);
+        }
+      }
+    } catch {
+      /* The static calendar below is the source of truth and is already on
+         the page. A failed fetch leaves a true message, not a broken one. */
+    }
+  }
+</script>
+
+<style>
+  .next-class {
+    display: grid;
+    gap: var(--s-7);
+  }
+
+  @media (min-width: 1024px) {
+    .next-class {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 4fr);
+      align-items: start;
+      gap: var(--grid-gap);
+    }
+  }
+
+  .next-class__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-3);
+  }
+
+  .next-class__date {
+    font-size: var(--fs-display);
+    line-height: var(--lh-display);
+    letter-spacing: var(--tr-display);
+    color: var(--ctx-text);
+  }
+
+  .next-class__actions {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: var(--s-4);
+  }
+</style>

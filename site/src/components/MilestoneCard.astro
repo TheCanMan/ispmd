@@ -1,0 +1,66 @@
+---
+/**
+ * The three days the year points at: the Deen Showcase, the Arabic Final
+ * Exams and the Quran Competition.
+ *
+ * Amber is the school's own milestone colour (6.1), and exactly ONE amber
+ * mark is permitted per page - so the amber rule here is a single hairline,
+ * not a fill, and the group of three shares it.
+ *
+ * These are never laid out as a three-up card grid (4.1, 7.5, 12.4). On the
+ * homepage and the Calendar page they span 1/4, 4/7 and 8/11, leaving a
+ * deliberate gap at column 7 which is what stops the rhythm reading as a
+ * template.
+ */
+import Media from './Media.astro';
+
+interface Props {
+  /** Rendered in mono, e.g. `DECEMBER 13, 2026`. */
+  date: string;
+  title: string;
+  slot?: string;
+  href?: string;
+  class?: string;
+}
+
+const { date, title, slot: mediaSlot, href, class: className = '' } = Astro.props;
+const Tag = href ? 'a' : 'article';
+---
+
+<Tag class={`milestone ${className}`} href={href} data-motion="tile-in">
+  {mediaSlot && <Media slot={mediaSlot} sizes="(min-width: 1024px) 28vw, 90vw" class="milestone__media" />}
+
+  <p class="t-label milestone__date">{date}</p>
+  <h3 class="t-subtitle">{title}</h3>
+  <div class="t-small milestone__body"><slot /></div>
+</Tag>
+
+<style>
+  .milestone {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-3);
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .milestone__media {
+    margin-block-end: var(--s-2);
+  }
+
+  /* The one amber mark: a 2px rule above the date, in the school's own
+     milestone colour. Amber is never text on a light ground (6.2). */
+  .milestone__date {
+    padding-block-start: var(--s-3);
+    border-block-start: var(--border-thick) solid var(--amber-deep);
+    color: var(--text-amber);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    a.milestone:hover .milestone__media {
+      /* Transform only. Never width, height or filter on hover. */
+      transform: translateY(-2px);
+      transition: transform var(--dur-base) var(--ease-out);
+    }
+  }
+</style>

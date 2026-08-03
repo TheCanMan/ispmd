@@ -1,0 +1,101 @@
+---
+/**
+ * One row of a HairlineList.
+ *
+ * `marker` is the left column: a mono index (`01`), a time (`10:00 AM`) or a
+ * date. Numbers a reader might compare to another number are set in
+ * --font-mono per DESIGN.md 3.
+ *
+ * Pass `href` and the whole row becomes a link with a 44px minimum target
+ * and an arrow at the right edge.
+ */
+import Icon from './Icon.astro';
+
+interface Props {
+  marker?: string;
+  title?: string;
+  /** The type role for `title`. */
+  titleRole?: 't-subtitle' | 't-title' | 't-body';
+  href?: string;
+  /** Right-aligned trailing label, e.g. the calendar's Kind column. */
+  meta?: string;
+  external?: boolean;
+  class?: string;
+  /** Dims the title, for no-school calendar rows. */
+  muted?: boolean;
+}
+
+const {
+  marker,
+  title,
+  titleRole = 't-subtitle',
+  href,
+  meta,
+  external = false,
+  class: className = '',
+  muted = false,
+} = Astro.props;
+
+const Tag = href ? 'a' : 'div';
+---
+
+<Tag
+  class={`hairline-row ${className}`}
+  href={href}
+  rel={external ? 'noopener noreferrer' : undefined}
+  target={external ? '_blank' : undefined}
+  data-motion="tile-in"
+>
+  <div class="hairline-row__lead">
+    {marker && <p class="t-label hairline-row__marker">{marker}</p>}
+    {title && <p class:list={[titleRole, { 'is-muted': muted }]}>{title}</p>}
+  </div>
+
+  <div class="hairline-row__body flow">
+    <slot />
+    {meta && <p class="t-label hairline-row__meta">{meta}</p>}
+    {href && <Icon name={external ? 'external' : 'arrow-right'} class="hairline-row__arrow" />}
+  </div>
+</Tag>
+
+<style>
+  .hairline-row__lead {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-2);
+  }
+
+  .hairline-row__marker {
+    color: var(--ctx-text-faint);
+  }
+
+  .hairline-row__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-3);
+    position: relative;
+  }
+
+  .hairline-row__meta {
+    text-align: end;
+  }
+
+  .is-muted {
+    color: var(--ctx-text-faint);
+  }
+
+  a.hairline-row {
+    color: inherit;
+  }
+
+  .hairline-row__arrow {
+    align-self: end;
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    a.hairline-row:hover .hairline-row__arrow {
+      transform: translateX(8px);
+    }
+  }
+</style>

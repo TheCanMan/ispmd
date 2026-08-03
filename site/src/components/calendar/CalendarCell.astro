@@ -1,0 +1,53 @@
+---
+/**
+ * DESIGN.md 7.7. The atom of the Calendar page and the homepage band.
+ *
+ * The Semester 1 / Semester 2 fill split is the school's own encoding from
+ * their calendar graphic: apricot for a class Sunday in the first half of the
+ * year, sky for the second, sage for no school, amber for a milestone. Those
+ * meanings are theirs and the site honours them everywhere (6.1).
+ *
+ * Colour never carries meaning alone (10). Every cell states its kind in
+ * words, and the page carries a visible legend.
+ */
+import { cellParts } from '../../scripts/next-class';
+import type { Session } from '../../data/calendar';
+
+interface Props {
+  session: Session;
+  /** Set by the client island, never at build time. */
+  next?: boolean;
+  class?: string;
+}
+
+const { session, next = false, class: className = '' } = Astro.props;
+const { month, day } = cellParts(session.date);
+
+const kindLabel =
+  session.kind === 'no-school' ? 'No school' : session.kind === 'milestone' ? session.title : 'Class';
+
+const classes = [
+  'cal-cell',
+  'on-fill',
+  `cal-cell--${session.kind}`,
+  session.semester === 2 ? 'is-sem2' : '',
+  next ? 'cal-cell--next' : '',
+  className,
+]
+  .filter(Boolean)
+  .join(' ');
+---
+
+<div class={classes} data-session-date={session.date} data-motion="tile-in">
+  {next && <p class="t-label cal-cell__ribbon">Next class</p>}
+
+  <p class="cal-cell__month">{month}</p>
+  <p class="cal-cell__day">{day}</p>
+  <p class="cal-cell__title">{session.title}</p>
+
+  {/* The kind is available to assistive technology on every cell, and
+      visibly on the ones where the title does not already say it. */}
+  <span class="visually-hidden">{kindLabel}</span>
+
+  {session.note === 'Ramadan' && <p class="t-label cal-cell__ramadan">Ramadan</p>}
+</div>

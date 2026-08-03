@@ -1,0 +1,130 @@
+---
+/**
+ * DESIGN.md 13.4, "The Year". Thirty-three Sundays as one continuous band.
+ *
+ * On the Calendar page it wraps into a grid below 1024px. On the homepage it
+ * is a horizontally scrollable strip with an edge fade and a visible
+ * affordance - the one element on this site permitted to scroll sideways
+ * (10, "Zoom"), and it does so deliberately.
+ *
+ * The band renders statically with every session in it. The next-class
+ * highlight is progressive enhancement layered on top by the island, so a
+ * visitor with a wrong clock gets a wrong highlight over a correct list.
+ */
+import CalendarCell from './CalendarCell.astro';
+import CalendarLegend from './CalendarLegend.astro';
+import type { Session } from '../../data/calendar';
+
+interface Props {
+  sessions: Session[];
+  /** 'strip' scrolls sideways (homepage); 'grid' wraps (calendar page). */
+  variant?: 'strip' | 'grid';
+  /** COPY.md: `SCROLL THE YEAR`, homepage version only. */
+  affordance?: string;
+  legend?: boolean;
+  class?: string;
+}
+
+const {
+  sessions,
+  variant = 'grid',
+  affordance,
+  legend = true,
+  class: className = '',
+} = Astro.props;
+---
+
+<div class={`cal-band cal-band--${variant} ${className}`} data-calendar-band>
+  {legend && <CalendarLegend class="cal-band__legend" />}
+
+  <div class="cal-band__scroller" role="group" aria-label="The 2026-2027 school year, Sunday by Sunday">
+    <div class="cal-band__cells" data-stagger-vector>
+      {sessions.map((session) => <CalendarCell session={session} />)}
+    </div>
+  </div>
+
+  {affordance && <p class="t-label cal-band__affordance">{affordance}</p>}
+</div>
+
+<style>
+  .cal-band {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-5);
+  }
+
+  .cal-band__scroller {
+    position: relative;
+  }
+
+  .cal-band__cells {
+    display: grid;
+    gap: var(--s-3);
+  }
+
+  /* ---- grid variant: the Calendar page ---- */
+
+  .cal-band--grid .cal-band__cells {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media (min-width: 600px) {
+    .cal-band--grid .cal-band__cells {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .cal-band--grid .cal-band__cells {
+      /* Eleven columns takes 33 cells to exactly three rows. */
+      grid-template-columns: repeat(11, minmax(0, 1fr));
+    }
+  }
+
+  /* ---- strip variant: the homepage ---- */
+
+  .cal-band--strip .cal-band__scroller {
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x proximity;
+    padding-block-end: var(--s-3);
+    /* The edge fade is a mask so it works over any ground colour. */
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent 0,
+      #000 24px,
+      #000 calc(100% - 48px),
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      to right,
+      transparent 0,
+      #000 24px,
+      #000 calc(100% - 48px),
+      transparent 100%
+    );
+  }
+
+  .cal-band--strip .cal-band__cells {
+    grid-auto-flow: column;
+    grid-auto-columns: 148px;
+    grid-template-columns: none;
+  }
+
+  .cal-band--strip .cal-band__cells > :global(.cal-cell) {
+    scroll-snap-align: start;
+    aspect-ratio: 1 / 1;
+  }
+
+  .cal-band__affordance {
+    align-self: flex-end;
+  }
+
+  @media print {
+    .cal-band--strip .cal-band__scroller {
+      overflow: visible;
+      -webkit-mask-image: none;
+      mask-image: none;
+    }
+  }
+</style>

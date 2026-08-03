@@ -1,0 +1,246 @@
+---
+/**
+ * The shell every page renders inside.
+ *
+ * Owns: <head>, the landmarks in DESIGN.md 10, the skip link (7.10), the
+ * inline duotone filter (8.1), the grain overlay (6.4), the header scroll
+ * state and the mobile menu behaviour (7.1).
+ *
+ * Pages pass their own title and description from COPY.md. Nothing here
+ * writes user-facing prose.
+ */
+import '../styles/global.css';
+
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { labels } from '../data/site';
+
+interface Props {
+  /** COPY.md, "Page titles and meta descriptions". Used verbatim. */
+  title: string;
+  description: string;
+  /** The homepage hero owns the viewport, so the header starts transparent. */
+  transparentHeader?: boolean;
+  /** DESIGN.md 14.8 puts the EducationalOrganization block on Contact only. */
+  jsonLd?: Record<string, unknown>;
+  /** Extra classes on <body>, e.g. a page-scoped hook. */
+  bodyClass?: string;
+  /** Suppress the default OG image when a page has a better one. */
+  ogImage?: string;
+}
+
+const {
+  title,
+  description,
+  transparentHeader = false,
+  jsonLd,
+  bodyClass = '',
+  ogImage = '/img/og-default.jpg',
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImageUrl = new URL(ogImage, Astro.site);
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const bodyClasses = [bodyClass, transparentHeader ? 'has-transparent-header' : '']
+  .filter(Boolean)
+  .join(' ');
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical.href} />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="theme-color" content="#FBF8F2" />
+
+    {/* 2.2 - exactly two faces preload: the two that render above the fold on
+        every page. Never the Arabic faces, never the italic. */}
+    <link rel="preload" href="/fonts/bricolage-grotesque-var.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/literata-var.woff2" as="font" type="font/woff2" crossorigin />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical.href} />
+    <meta property="og:image" content={ogImageUrl.href} />
+    <meta property="og:site_name" content="Islamic School of Potomac" />
+    <meta property="og:locale" content="en_US" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    {jsonLd && <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+
+    <meta name="generator" content={Astro.generator} />
+
+    <script is:inline>
+      /**
+       * Entrance start-states are applied ONLY when JavaScript is available,
+       * so a visitor with JS disabled never meets a blank page - they simply
+       * get the site with no entrances, which is the correct outcome.
+       *
+       * The timeout is the other half of that promise: if motion.ts fails to
+       * load or throws, content appears anyway rather than staying hidden.
+       */
+      document.documentElement.classList.add('js-motion');
+      setTimeout(function () {
+        document.documentElement.classList.remove('js-motion');
+      }, 2500);
+    </script>
+  </head>
+
+  <body class={bodyClasses}>
+    <a class="skip-link" href="#main">{labels.skip}</a>
+
+    {/*
+      8.1 - the ink-duotone filter. Luminance mapped onto a two-point ramp
+      from --ink to --paper with deliberately warm midtones (R > G > B),
+      which is what makes it read as ink on paper rather than a grey photo.
+      The endpoints are exactly --ink and --paper in 0-1 channel values.
+    */}
+    <svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
+      <filter id="ink-duotone" color-interpolation-filters="sRGB">
+        <feColorMatrix type="saturate" values="0" />
+        <feComponentTransfer>
+          <feFuncR type="table" tableValues="0.157 0.60 0.984" />
+          <feFuncG type="table" tableValues="0.118 0.54 0.973" />
+          <feFuncB type="table" tableValues="0.078 0.44 0.949" />
+        </feComponentTransfer>
+      </filter>
+    </svg>
+
+    <Header transparent={transparentHeader} path={path} />
+
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+
+    <Footer />
+
+    <div class="grain" aria-hidden="true"></div>
+
+    <script>
+      /**
+       * Header ground state (7.1) and the mobile menu.
+       *
+       * Both are class toggles rather than scroll-linked style writes, and
+       * both are plain DOM: the menu has to work before GSAP or Three.js
+       * have loaded, or a visitor on a slow connection is stranded.
+       */
+      const header = document.querySelector<HTMLElement>('[data-header]');
+      const trigger = document.querySelector<HTMLButtonElement>('[data-menu-trigger]');
+      const menu = document.querySelector<HTMLElement>('[data-menu]');
+      const menuLabel = document.querySelector<HTMLElement>('[data-menu-label]');
+
+      if (header) {
+        const setStuck = () => header.classList.toggle('is-stuck', window.scrollY > 72);
+        setStuck();
+        window.addEventListener('scroll', setStuck, { passive: true });
+      }
+
+      if (trigger && menu) {
+        const FOCUSABLE =
+          'a[href], button:not([disabled]), input, select, textarea, [tabindex]:not([tabindex="-1"])';
+        let lastFocused: HTMLElement | null = null;
+
+        const open = () => {
+          lastFocused = document.activeElement as HTMLElement;
+          menu.hidden = false;
+          trigger.setAttribute('aria-expanded', 'true');
+          if (menuLabel) menuLabel.textContent = 'Close';
+          document.body.style.overflow = 'hidden';
+          menu.querySelector<HTMLElement>(FOCUSABLE)?.focus();
+        };
+
+        const close = () => {
+          menu.hidden = true;
+          trigger.setAttribute('aria-expanded', 'false');
+          if (menuLabel) menuLabel.textContent = 'Menu';
+          document.body.style.overflow = '';
+          (lastFocused ?? trigger).focus();
+        };
+
+        trigger.addEventListener('click', () => {
+          menu.hidden ? open() : close();
+        });
+
+        /* Focus is trapped, Esc closes, the trigger regains focus on close. */
+        document.addEventListener('keydown', (event) => {
+          if (menu.hidden) return;
+
+          if (event.key === 'Escape') {
+            event.preventDefault();
+            close();
+            return;
+          }
+
+          if (event.key !== 'Tab') return;
+
+          const items = Array.from(menu.querySelectorAll<HTMLElement>(FOCUSABLE));
+          if (items.length === 0) return;
+          const first = items[0];
+          const last = items[items.length - 1];
+
+          if (event.shiftKey && document.activeElement === first) {
+            event.preventDefault();
+            last.focus();
+          } else if (!event.shiftKey && document.activeElement === last) {
+            event.preventDefault();
+            first.focus();
+          }
+        });
+
+        /* A link inside the overlay navigates; on a same-page hash it would
+           otherwise leave the overlay covering the target. */
+        menu.addEventListener('click', (event) => {
+          if ((event.target as HTMLElement).closest('a')) close();
+        });
+
+        /* Resizing past the desktop breakpoint with the menu open would leave
+           body scroll locked behind a hidden overlay. */
+        const desktop = window.matchMedia('(min-width: 1024px)');
+        desktop.addEventListener('change', (event) => {
+          if (event.matches && !menu.hidden) close();
+        });
+      }
+    </script>
+
+    <script>
+      /**
+       * 5.4 - reduced motion is checked in JS, not only in CSS, and it is
+       * re-checked on change. The motion and WebGL modules read this flag,
+       * so it has to be set before they initialise.
+       */
+      const query = window.matchMedia('(prefers-reduced-motion: reduce)');
+      const apply = () => document.documentElement.classList.toggle('reduce-motion', query.matches);
+      apply();
+      query.addEventListener('change', apply);
+
+      const { initMotion } = await import('../scripts/motion');
+      initMotion();
+
+      /**
+       * 7.4 - the reveal. The image's grade animates from desaturated to its
+       * treatment value on entrance. Colour arrives. This is the only filter
+       * animation on the site and it never runs on scrub.
+       */
+      const reveals = document.querySelectorAll<HTMLElement>('.media--reveal');
+      if (reveals.length) {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (!entry.isIntersecting) continue;
+              entry.target.classList.add('is-revealed');
+              observer.unobserve(entry.target);
+            }
+          },
+          { rootMargin: '0px 0px -12% 0px' }
+        );
+        for (const el of reveals) observer.observe(el);
+      }
+    </script>
+  </body>
+</html>

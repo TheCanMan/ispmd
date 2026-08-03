@@ -1,0 +1,68 @@
+---
+/**
+ * DESIGN.md 7.3.
+ *
+ * The fill slides up from the bottom edge with the label crossfading. No
+ * scale, no shadow change. There is at most ONE .btn-primary per viewport -
+ * that is a composition rule this component cannot enforce, so check it.
+ *
+ *   <Button href="/enroll">Enroll your child</Button>
+ *   <Button variant="ghost" href="/program">See the program</Button>
+ *   <Button variant="quiet" href="/calendar" icon="arrow-right">See the full year</Button>
+ *
+ * Labels come from COPY.md verbatim; see `labels` in src/data/site.ts.
+ */
+import Icon, { type IconName } from './Icon.astro';
+
+interface Props {
+  href?: string;
+  variant?: 'primary' | 'ghost' | 'ghost-on-dark' | 'quiet';
+  icon?: IconName;
+  /** Renders a <button> instead of an <a>. */
+  type?: 'button' | 'submit';
+  class?: string;
+  download?: boolean;
+  external?: boolean;
+  id?: string;
+  'aria-label'?: string;
+}
+
+const {
+  href,
+  variant = 'primary',
+  icon,
+  type,
+  class: className = '',
+  download = false,
+  external = false,
+  id,
+  'aria-label': ariaLabel,
+} = Astro.props;
+
+const classes = [
+  'btn',
+  `btn-${variant}`,
+  variant === 'quiet' ? 'link-hook' : '',
+  className,
+]
+  .filter(Boolean)
+  .join(' ');
+
+const Tag = href ? 'a' : 'button';
+const rel = external ? 'noopener noreferrer' : undefined;
+const target = external ? '_blank' : undefined;
+---
+
+<Tag
+  class={classes}
+  href={href}
+  id={id}
+  type={href ? undefined : (type ?? 'button')}
+  rel={rel}
+  target={target}
+  download={download ? '' : undefined}
+  aria-label={ariaLabel}
+>
+  <span><slot /></span>
+  {icon && <Icon name={icon} />}
+</Tag>

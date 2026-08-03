@@ -1,0 +1,78 @@
+---
+/**
+ * DESIGN.md 7.9. Six icons, no icon library.
+ *
+ * stroke-linecap is butt and joins are miter. Round caps are forbidden: they
+ * soften shapes that should agree with the strapwork. The arrow chevron's
+ * half-angle is 36 degrees, not 45, so it agrees with the pattern's geometry.
+ */
+export type IconName =
+  | 'arrow-right'
+  | 'arrow-down'
+  | 'plus'
+  | 'external'
+  | 'download'
+  | 'mail';
+
+interface Props {
+  name: IconName;
+  class?: string;
+  size?: number;
+}
+
+const { name, class: className = '', size = 20 } = Astro.props;
+---
+
+<svg
+  class={`icon ${className}`}
+  width={size}
+  height={size}
+  viewBox="0 0 20 20"
+  aria-hidden="true"
+  focusable="false"
+>
+  {name === 'arrow-right' && (
+    <>
+      <path d="M2,10 H17" />
+      <path d="M13.1,5.5 L18,10 L13.1,14.5" />
+    </>
+  )}
+
+  {name === 'arrow-down' && (
+    <g transform="rotate(90 10 10)">
+      <path d="M2,10 H17" />
+      <path d="M13.1,5.5 L18,10 L13.1,14.5" />
+    </g>
+  )}
+
+  {name === 'plus' && (
+    <>
+      <path d="M10,3 V17" />
+      <path d="M3,10 H17" />
+    </>
+  )}
+
+  {name === 'external' && (
+    <>
+      <path d="M7,3 H17 V13" />
+      <path d="M17,3 L7,13" />
+    </>
+  )}
+
+  {name === 'download' && (
+    <>
+      <g transform="rotate(90 10 10)">
+        <path d="M2,10 H17" />
+        <path d="M13.1,5.5 L18,10 L13.1,14.5" />
+      </g>
+      <path d="M3,15 V17 H17 V15" />
+    </>
+  )}
+
+  {name === 'mail' && (
+    <>
+      <path d="M2,5 H18 V15 H2 Z" />
+      <path d="M2,5 L10,11 L18,5" />
+    </>
+  )}
+</svg>

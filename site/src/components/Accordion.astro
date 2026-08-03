@@ -1,0 +1,80 @@
+---
+/**
+ * DESIGN.md 7.6. Rows separated by hairlines, no boxes, no shadows.
+ *
+ * The indicator is a 16px plus sign. On open the VERTICAL stroke scales to
+ * zero, so the plus becomes a minus. It does not rotate.
+ *
+ * The first item in the list is open on load. Panels are `hidden` when
+ * closed, so a screen reader never reads a collapsed answer, and the height
+ * tween is done on the wrapper so `hidden` and the animation do not fight.
+ *
+ *   <Accordion>
+ *     <AccordionItem question="..." id="faq-1" open>answer</AccordionItem>
+ *   </Accordion>
+ */
+interface Props {
+  class?: string;
+}
+
+const { class: className = '' } = Astro.props;
+---
+
+<div class={`accordion ${className}`} data-accordion>
+  <slot />
+</div>
+
+<script>
+  /**
+   * Plain DOM with an optional GSAP height tween. It has to work before GSAP
+   * loads, so the open/close state is set synchronously and the animation is
+   * decoration on top of it.
+   */
+  const reduce = () => document.documentElement.classList.contains('reduce-motion');
+
+  for (const accordion of document.querySelectorAll<HTMLElement>('[data-accordion]')) {
+    const triggers = accordion.querySelectorAll<HTMLButtonElement>('[data-accordion-trigger]');
+
+    for (const trigger of triggers) {
+      const panelId = trigger.getAttribute('aria-controls');
+      const panel = panelId ? document.getElementById(panelId) : null;
+      if (!panel) continue;
+
+      trigger.addEventListener('click', async () => {
+        const isOpen = trigger.getAttribute('aria-expanded') === 'true';
+
+        if (isOpen) {
+          trigger.setAttribute('aria-expanded', 'false');
+          panel.hidden = true;
+          panel.style.height = '';
+          return;
+        }
+
+        trigger.setAttribute('aria-expanded', 'true');
+        panel.hidden = false;
+
+        if (reduce()) {
+          panel.style.height = '';
+          return;
+        }
+
+        const inner = panel.firstElementChild as HTMLElement | null;
+        if (!inner) return;
+
+        const { gsap } = await import('../scripts/motion');
+        gsap.fromTo(
+          panel,
+          { height: 0 },
+          {
+            height: inner.offsetHeight,
+            duration: 0.32,
+            ease: 'expo.out',
+            onComplete: () => {
+              panel.style.height = '';
+            },
+          }
+        );
+      });
+    }
+  }
+</script>

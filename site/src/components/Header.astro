@@ -1,0 +1,283 @@
+---
+/**
+ * DESIGN.md 7.1.
+ *
+ * Fixed. Transparent over the homepage hero; on every other page it sits on
+ * --paper from the start. After 72px of scroll it gains a ground, a hairline
+ * and a blur - toggled with a class, never a scroll-linked style write.
+ *
+ * The phone number is deliberately NOT in the desktop bar. Six items are
+ * already there, and a phone number in a desktop nav is the posture of an
+ * organisation with a receptionist. It earns its place on mobile, where a
+ * parent wondering whether class is on actually wants to tap it.
+ */
+import { primaryNav, secondaryNav, site, labels } from '../data/site';
+import Button from './Button.astro';
+
+interface Props {
+  /** The homepage hero owns the viewport, so the header starts transparent. */
+  transparent?: boolean;
+  path: string;
+}
+
+const { transparent = false, path } = Astro.props;
+
+const isCurrent = (href: string) => path === href || (href !== '/' && path.startsWith(href));
+
+const menuLinks = [{ label: 'Home', href: '/' }, ...primaryNav, ...secondaryNav];
+---
+
+<header class:list={['site-header', { 'is-transparent': transparent }]} data-header>
+  <div class="site-header__inner container">
+    <a class="lockup" href="/" aria-label={`${site.name} - home`}>
+      {/* 9.3 - the one place the pattern is a complete centred composition.
+          It is a signature, not a composition. */}
+      <svg class="lockup__mark" width="28" height="28" viewBox="0 0 28 28" aria-hidden="true" focusable="false">
+        <path
+          d="M26,14 L10.29,25.41 L4.29,6.95 L23.71,6.95 L17.71,25.41 L2,14 L17.71,2.59 L23.71,21.05 L4.29,21.05 L10.29,2.59 Z"
+          fill="none"
+          stroke="var(--sienna)"
+          stroke-width="1.6"
+          stroke-linejoin="miter"
+          stroke-miterlimit="10"
+          stroke-linecap="butt"
+        />
+      </svg>
+      <span class="lockup__words">
+        <span>{site.wordmark[0]}</span>
+        <span>{site.wordmark[1]}</span>
+      </span>
+    </a>
+
+    <nav class="site-nav" aria-label="Main">
+      <ul class="site-nav__list">
+        {
+          primaryNav.map((link) => (
+            <li>
+              <a
+                class:list={['t-ui', 'link-hook', { 'is-drawn': isCurrent(link.href) }]}
+                href={link.href}
+                aria-current={isCurrent(link.href) ? 'page' : undefined}
+              >
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <Button href="/enroll" variant="primary" class="site-nav__cta">Enroll</Button>
+    </nav>
+
+    <button
+      class="menu-trigger t-ui"
+      type="button"
+      aria-expanded="false"
+      aria-controls="site-menu"
+      data-menu-trigger
+    >
+      <span data-menu-label>{labels.menuOpen}</span>
+      <svg width="20" height="14" viewBox="0 0 20 14" aria-hidden="true" focusable="false">
+        <path d="M0,1 H20 M0,7 H20 M0,13 H20" stroke="currentColor" stroke-width="1.5" stroke-linecap="butt" fill="none" />
+      </svg>
+    </button>
+  </div>
+</header>
+
+<div class="menu on-dark" id="site-menu" hidden data-menu>
+  <div class="menu__inner container">
+    <ul class="menu__list">
+      {
+        menuLinks.map((link) => (
+          <li data-menu-item>
+            <a
+              class:list={['t-title', 'link-hook', { 'is-drawn': isCurrent(link.href) }]}
+              href={link.href}
+              aria-current={isCurrent(link.href) ? 'page' : undefined}
+            >
+              {link.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <div class="menu__contact">
+      <a class="menu__channel" href={site.phone.href}>{site.phone.display}</a>
+      <a class="menu__channel" href={site.email.href}>{site.email.display}</a>
+    </div>
+  </div>
+</div>
+
+<style>
+  .site-header {
+    position: fixed;
+    inset-block-start: 0;
+    inset-inline: 0;
+    z-index: var(--z-header);
+    height: 64px;
+    background: var(--paper);
+    border-block-end: var(--border-hair) solid transparent;
+    transition: background-color var(--dur-base) var(--ease-out),
+                border-color var(--dur-base) var(--ease-out),
+                backdrop-filter var(--dur-base) var(--ease-out);
+  }
+
+  @media (min-width: 1024px) {
+    .site-header {
+      height: 76px;
+    }
+  }
+
+  .site-header.is-transparent {
+    background: transparent;
+  }
+
+  /* Toggled by the scroll handler in Base.astro at 72px. */
+  .site-header.is-stuck {
+    background: var(--paper);
+    border-block-end-color: var(--rule);
+    backdrop-filter: blur(8px);
+  }
+
+  .site-header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-5);
+    height: 100%;
+  }
+
+  .lockup {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-3);
+    text-decoration: none;
+    color: var(--text);
+  }
+
+  .lockup__mark {
+    flex: none;
+  }
+
+  .lockup__words {
+    display: flex;
+    flex-direction: column;
+    font-family: var(--font-display);
+    font-variation-settings: var(--vf-ui-strong);
+    font-size: 15px;
+    line-height: 1.05;
+    letter-spacing: var(--tr-subtitle);
+  }
+
+  /* The hero is dark behind a transparent header, so the lockup inverts with
+     it. It reverts the moment the header takes its ground. */
+  .site-header.is-transparent:not(.is-stuck) .lockup {
+    color: var(--text-on-dark);
+  }
+
+  .site-header.is-transparent:not(.is-stuck) .lockup__mark path {
+    stroke: var(--amber);
+  }
+
+  .site-nav {
+    display: none;
+    align-items: center;
+    gap: var(--s-6);
+  }
+
+  @media (min-width: 1024px) {
+    .site-nav {
+      display: flex;
+    }
+    .menu-trigger {
+      display: none;
+    }
+  }
+
+  .site-nav__list {
+    display: flex;
+    align-items: center;
+    gap: var(--s-6);
+  }
+
+  .site-nav__list a {
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .site-header.is-transparent:not(.is-stuck) .site-nav__list a {
+    color: var(--text-on-dark);
+  }
+
+  .site-nav__cta {
+    padding-block: 10px;
+    min-height: 44px;
+  }
+
+  .menu-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-2);
+    min-height: 44px;
+    padding-inline: var(--s-2);
+    color: var(--text);
+  }
+
+  .site-header.is-transparent:not(.is-stuck) .menu-trigger {
+    color: var(--text-on-dark);
+  }
+
+  /* ---- the overlay ---- */
+
+  .menu {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-overlay);
+    background: var(--ink);
+    overflow-y: auto;
+    padding-block: calc(64px + var(--s-8)) var(--s-8);
+  }
+
+  .menu[hidden] {
+    display: none;
+  }
+
+  .menu__inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-8);
+    min-height: 100%;
+  }
+
+  .menu__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-4);
+  }
+
+  .menu__list a {
+    color: var(--text-on-dark);
+    text-decoration: none;
+  }
+
+  .menu__contact {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-3);
+    margin-block-start: auto;
+    padding-block-start: var(--s-6);
+    border-block-start: var(--border-hair) solid var(--rule-on-dark);
+  }
+
+  .menu__channel {
+    font-family: var(--font-display);
+    font-size: var(--fs-subtitle);
+    font-variation-settings: var(--vf-subtitle);
+    line-height: var(--lh-subtitle);
+    color: var(--link-on-dark);
+    text-decoration: none;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+</style>

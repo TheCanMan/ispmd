@@ -753,6 +753,22 @@ main:focus {
   outline: none;
 }
 
+/* The header is fixed (7.1), so content clears it. The homepage hero owns the
+   full viewport and sits underneath a transparent header instead. */
+main {
+  padding-block-start: 64px;
+}
+
+@media (min-width: 1024px) {
+  main {
+    padding-block-start: 76px;
+  }
+}
+
+body.has-transparent-header main {
+  padding-block-start: 0;
+}
+
 /* =====================================================================
    4.3  SECTION DIVIDER
    A 1px rule whose left 140px resolves into three cells of the lattice.
@@ -1586,6 +1602,35 @@ a.hairline-row {
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
   }
+}
+
+/* =====================================================================
+   5.2  ENTRANCE START-STATES
+
+   These apply only under .js-motion, which an inline script in Base.astro
+   adds and removes again after 2.5s. A visitor with JavaScript disabled, or
+   one whose motion module never loads, gets the site with no entrances
+   rather than a page of invisible elements.
+
+   The tweens in motion.ts are fromTo, not from, precisely because the CSS
+   start state is opacity 0: a `from` tween would animate back to 0 and leave
+   the element hidden for good.
+   ===================================================================== */
+
+.js-motion [data-motion="line-rise"],
+.js-motion [data-motion="body-rise"],
+.js-motion [data-motion="tile-in"] {
+  opacity: 0;
+}
+
+.js-motion [data-divider] .divider__rule {
+  transform: scaleX(0);
+}
+
+/* SplitText's line masks. Each line clips its own overflow so the rise reads
+   as text arriving from behind an edge rather than sliding over one. */
+.split-line {
+  will-change: transform;
 }
 
 /* =====================================================================

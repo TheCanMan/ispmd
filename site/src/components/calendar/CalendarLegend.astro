@@ -1,0 +1,35 @@
+---
+/**
+ * DESIGN.md 7.7 and 10 - colour alone never carries meaning, so the band
+ * always ships with this.
+ *
+ * Order and wording from COPY.md: CLASS · NO SCHOOL · MILESTONE · RAMADAN.
+ */
+interface Props {
+  class?: string;
+}
+
+const { class: className = '' } = Astro.props;
+
+const items = [
+  { label: 'Class', fill: 'var(--fill-apricot)' },
+  { label: 'No school', fill: 'var(--fill-sage)' },
+  { label: 'Milestone', fill: 'var(--fill-amber)' },
+  { label: 'Ramadan', fill: 'transparent', rule: true },
+];
+---
+
+<ul class={`cal-legend ${className}`}>
+  {
+    items.map((item) => (
+      <li class="cal-legend__item">
+        <span
+          class="cal-legend__swatch"
+          style={`background:${item.fill};${item.rule ? 'border-color: var(--text-amber); border-width: 2px;' : ''}`}
+          aria-hidden="true"
+        />
+        <span class="t-label">{item.label}</span>
+      </li>
+    ))
+  }
+</ul>

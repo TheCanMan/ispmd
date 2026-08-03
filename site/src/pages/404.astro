@@ -1,0 +1,90 @@
+---
+/**
+ * DESIGN.md 14.9. Copy from COPY.md, verbatim.
+ *
+ * The numeral sits behind the text block in --fs-mega at 0.08 opacity,
+ * clipped by the left container edge - the only use of --fs-mega on the site,
+ * and one of exactly two places centred display type appears (17).
+ */
+import Base from '../layouts/Base.astro';
+import Button from '../components/Button.astro';
+import { labels } from '../data/site';
+---
+
+<Base
+  title="Page not found - Islamic School of Potomac"
+  description="That page is not here."
+>
+  <section class="notfound section-lg ground-paper">
+    <div class="lattice lattice--quiet" aria-hidden="true"></div>
+
+    <div class="container notfound__inner">
+      <p class="t-mega notfound__numeral" aria-hidden="true">404</p>
+
+      <div class="notfound__block">
+        <h1 class="t-display" data-motion="line-rise">That page isn't here.</h1>
+        <p class="t-body" data-motion="body-rise">
+          The pattern continues, though. One of these will get you where you were going.
+        </p>
+
+        <div class="notfound__links" data-motion="body-rise">
+          <Button href="/" variant="quiet" icon="arrow-right">{labels.home404}</Button>
+          <Button href="/program" variant="quiet" icon="arrow-right">{labels.program}</Button>
+          <Button href="/calendar" variant="quiet" icon="arrow-right">{labels.calendar}</Button>
+          <Button href="/contact" variant="quiet" icon="arrow-right">{labels.contact}</Button>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .notfound {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    min-height: 70svh;
+    display: flex;
+    align-items: center;
+  }
+
+  .notfound__inner {
+    position: relative;
+    z-index: var(--z-content);
+  }
+
+  /* Clipped by the left container edge, behind the type. */
+  .notfound__numeral {
+    position: absolute;
+    inset-block-start: 50%;
+    inset-inline-start: calc(var(--gutter) * -1);
+    transform: translateY(-50%);
+    color: var(--text);
+    opacity: 0.08;
+    pointer-events: none;
+    user-select: none;
+    z-index: var(--z-base);
+  }
+
+  .notfound__block {
+    position: relative;
+    z-index: var(--z-content);
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-5);
+    max-width: var(--measure);
+  }
+
+  @media (min-width: 1024px) {
+    .notfound__block {
+      margin-inline-start: 10%;
+    }
+  }
+
+  .notfound__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-5) var(--s-7);
+    margin-block-start: var(--s-4);
+  }
+</style>

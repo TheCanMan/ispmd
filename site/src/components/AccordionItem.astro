@@ -1,0 +1,43 @@
+---
+/**
+ * One question and answer. DESIGN.md 7.6.
+ *
+ * The trigger is a full-width <button> inside an <h3>, so the question is a
+ * real heading in the document outline and still operable by keyboard.
+ * Minimum target 44px including padding.
+ */
+interface Props {
+  question: string;
+  id: string;
+  open?: boolean;
+  class?: string;
+}
+
+const { question, id, open = false, class: className = '' } = Astro.props;
+const panelId = `${id}-panel`;
+---
+
+<div class={`accordion__item ${className}`}>
+  <h3 class="accordion__heading">
+    <button
+      class="accordion__trigger t-subtitle"
+      type="button"
+      id={id}
+      aria-expanded={open ? 'true' : 'false'}
+      aria-controls={panelId}
+      data-accordion-trigger
+    >
+      <span>{question}</span>
+      <svg class="accordion__indicator" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+        <line x1="1" y1="8" x2="15" y2="8" />
+        <line class="v" x1="8" y1="1" x2="8" y2="15" />
+      </svg>
+    </button>
+  </h3>
+
+  <div class="accordion__panel" id={panelId} role="region" aria-labelledby={id} hidden={!open}>
+    <div class="accordion__panel-inner flow">
+      <slot />
+    </div>
+  </div>
+</div>

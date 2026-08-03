@@ -1,0 +1,46 @@
+---
+/**
+ * The Quranic epigraph, 20:114.
+ *
+ * DESIGN.md 3, Arabic mechanics: the string is copied verbatim and never
+ * retyped, carries lang="ar" dir="rtl", is never letter-spaced (it breaks the
+ * joins) and never text-transformed. It is set in Amiri, which is used in
+ * exactly two places site-wide.
+ *
+ * Arabic appears in exactly four places on this site: the homepage epigraph,
+ * the footer epigraph, and the two Program section marks. Nowhere else.
+ */
+import { epigraph } from '../data/site';
+
+interface Props {
+  align?: 'start' | 'end' | 'center';
+  class?: string;
+}
+
+const { align = 'start', class: className = '' } = Astro.props;
+---
+
+<div class={`epigraph epigraph--${align} ${className}`} data-motion="body-rise">
+  <p class="t-arabic epigraph__arabic" lang="ar" dir="rtl">{epigraph.arabic}</p>
+  <p class="t-body t-italic epigraph__english">{epigraph.english}</p>
+  <p class="t-label">{epigraph.reference}</p>
+</div>
+
+<style>
+  .epigraph {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-3);
+  }
+
+  /* The Arabic sits right-aligned and the English left-aligned beneath it
+     (14.1 section 3). The two scripts read from opposite ends and the block
+     says so rather than pretending otherwise. */
+  .epigraph--start .epigraph__arabic { text-align: end; }
+  .epigraph--start .epigraph__english { text-align: start; }
+
+  .epigraph--end { text-align: end; }
+  .epigraph--end .epigraph__english { text-align: end; }
+
+  .epigraph--center { align-items: center; text-align: center; }
+</style>

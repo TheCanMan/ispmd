@@ -1,0 +1,221 @@
+---
+/**
+ * DESIGN.md 7.2.
+ *
+ * The lattice runs across the top 40% at --pattern-strong and TERMINATES
+ * MID-CELL at the bottom of the visible area - clipped, not faded. The
+ * pattern visibly continues past the edge. This is the site's closing
+ * statement and the only place the lattice is allowed to be large and quiet
+ * at the same time.
+ *
+ * The footer carries both channels and no street address. ISP has no address
+ * of its own: the P.O. Box is mail only, and the building where class meets
+ * belongs to another organisation.
+ */
+import { site, footerNav, epigraph, labels } from '../data/site';
+import Button from './Button.astro';
+---
+
+<footer class="site-footer on-dark">
+  <div class="site-footer__lattice lattice lattice--strong lattice--lg" aria-hidden="true"></div>
+
+  <div class="site-footer__inner container">
+    <div class="site-footer__grid grid">
+      <div class="site-footer__col site-footer__col--identity">
+        <div class="site-footer__wordmark">
+          <span>{site.wordmark[0]}</span>
+          <span>{site.wordmark[1]}</span>
+        </div>
+
+        <div class="site-footer__channels">
+          <a class="site-footer__channel" href={site.phone.href}>{site.phone.display}</a>
+          <a class="site-footer__channel" href={site.email.href}>{site.email.display}</a>
+        </div>
+
+        <address class="site-footer__mail">
+          <span class="t-label">Mail only</span>
+          {site.mail.lines.map((line) => <span class="t-small">{line}</span>)}
+        </address>
+      </div>
+
+      <nav class="site-footer__col site-footer__col--links" aria-label="Footer">
+        <ul>
+          {footerNav.primary.map((link) => (
+            <li><a class="t-ui link-hook" href={link.href}>{link.label}</a></li>
+          ))}
+        </ul>
+        <ul>
+          {footerNav.secondary.map((link) => (
+            <li><a class="t-ui link-hook" href={link.href}>{link.label}</a></li>
+          ))}
+        </ul>
+      </nav>
+
+      <div class="site-footer__col site-footer__col--legal">
+        <p class="t-label">
+          {site.nonprofit.statement} Donations are tax-deductible.
+        </p>
+        <p class="t-label">EIN {site.nonprofit.ein}</p>
+
+        <Button href="/give" variant="ghost-on-dark">{labels.give}</Button>
+
+        <div class="site-footer__social">
+          <a class="t-ui link-hook" href={site.social.instagram} rel="noopener noreferrer" target="_blank">Instagram</a>
+          <a class="t-ui link-hook" href={site.social.facebook} rel="noopener noreferrer" target="_blank">Facebook</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="site-footer__epigraph">
+      <p class="t-arabic" lang="ar" dir="rtl">{epigraph.arabic}</p>
+      <p class="t-small t-italic">{epigraph.english}</p>
+      <p class="t-label">{epigraph.reference}</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: var(--ink);
+    color: var(--ctx-text-soft);
+    padding-block: calc(var(--section-y) + var(--s-9)) var(--section-y);
+  }
+
+  /* Clipped at 40%, mid-cell. Not faded. */
+  .site-footer__lattice {
+    inset-block-end: auto;
+    height: 40%;
+  }
+
+  .site-footer__inner {
+    position: relative;
+    z-index: var(--z-content);
+  }
+
+  .site-footer__grid {
+    row-gap: var(--s-8);
+  }
+
+  .site-footer__col {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-5);
+  }
+
+  .site-footer__col--identity { grid-column: 1 / -1; }
+  .site-footer__col--links    { grid-column: 1 / -1; }
+  .site-footer__col--legal    { grid-column: 1 / -1; }
+
+  @media (min-width: 1024px) {
+    .site-footer__col--identity { grid-column: 1 / 5; }
+    .site-footer__col--links    { grid-column: 5 / 8; }
+    .site-footer__col--legal    { grid-column: 8 / 11; }
+  }
+
+  .site-footer__wordmark {
+    display: flex;
+    flex-direction: column;
+    font-family: var(--font-display);
+    font-variation-settings: var(--vf-subtitle);
+    font-size: var(--fs-subtitle);
+    line-height: 1.05;
+    letter-spacing: var(--tr-subtitle);
+    color: var(--text-on-dark);
+  }
+
+  .site-footer__channels {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-2);
+  }
+
+  .site-footer__channel {
+    font-family: var(--font-display);
+    font-size: var(--fs-subtitle);
+    font-variation-settings: var(--vf-subtitle);
+    line-height: var(--lh-subtitle);
+    color: var(--link-on-dark);
+    text-decoration: none;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+  }
+
+  .site-footer__mail {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-1);
+    font-style: normal;
+    color: var(--text-on-dark-soft);
+  }
+
+  .site-footer__mail .t-small {
+    color: var(--text-on-dark-soft);
+  }
+
+  .site-footer__col--links {
+    flex-direction: row;
+    gap: var(--s-8);
+  }
+
+  .site-footer__col--links ul {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-3);
+  }
+
+  .site-footer__col--links a {
+    color: var(--text-on-dark-soft);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  .site-footer__col--legal .t-label {
+    color: var(--text-on-dark-faint);
+    max-width: 34ch;
+  }
+
+  .site-footer__col--legal :global(.btn) {
+    align-self: start;
+  }
+
+  .site-footer__social {
+    display: flex;
+    gap: var(--s-5);
+  }
+
+  .site-footer__social a {
+    color: var(--text-on-dark-soft);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  /* 17 - centred display type appears exactly twice on this site. This is
+     one of them; the 404 is the other. */
+  .site-footer__epigraph {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--s-3);
+    margin-block-start: var(--s-10);
+    padding-block-start: var(--s-7);
+    border-block-start: var(--border-hair) solid var(--rule-on-dark);
+    text-align: center;
+  }
+
+  .site-footer__epigraph .t-arabic {
+    color: var(--text-on-dark-soft);
+  }
+
+  .site-footer__epigraph .t-small {
+    color: var(--text-on-dark-soft);
+  }
+</style>

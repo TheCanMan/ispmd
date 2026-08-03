@@ -1,0 +1,31 @@
+---
+/**
+ * DESIGN.md 7.5. There is ONE card.
+ *
+ * --vellum on --paper, --paper on warm/cool grounds, raised ink or slate on
+ * dark ones - all handled by the ground classes in global.css.
+ *
+ * No card ever contains an icon in a coloured circle. No card ever sits in a
+ * three-up grid. Both are banned in 12.4 and both are the first thing a
+ * template reaches for.
+ */
+interface Props {
+  href?: string;
+  class?: string;
+  as?: 'div' | 'article' | 'aside' | 'li';
+  external?: boolean;
+}
+
+const { href, class: className = '', as = 'div', external = false } = Astro.props;
+const Tag = href ? 'a' : as;
+---
+
+<Tag
+  class:list={['card', { 'card--link': !!href }, className]}
+  href={href}
+  rel={external ? 'noopener noreferrer' : undefined}
+  target={external ? '_blank' : undefined}
+  data-motion="tile-in"
+>
+  <slot />
+</Tag>

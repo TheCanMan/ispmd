@@ -1,0 +1,171 @@
+---
+/**
+ * DESIGN.md 13.3, "The masthead band".
+ *
+ * On every interior page the shader occupies a band, never the full page:
+ * 52svh at >=768px, 44svh below, --ratio-band maximum. The page title sits
+ * over it. Six of the eight bands are light; Give and Contact are dark.
+ *
+ * That is the site's rhythm: an overture on every page, a full-viewport hero
+ * on exactly one.
+ *
+ *   <Masthead preset="story" label="ABOUT THE SCHOOL" lines={['More than', 'a Sunday school.']} />
+ *
+ * The canvas is aria-hidden and tabindex="-1". No information exists only in
+ * it, and the CSS gradient behind it is a complete, good-looking fallback
+ * rather than an apology.
+ */
+import type { PresetName } from '../scripts/webgl';
+
+interface Props {
+  preset: PresetName;
+  label?: string;
+  /** COPY.md breaks these lines deliberately. Break them exactly there. */
+  lines: string[];
+  /** Give and Contact. Puts the band on the dark side of 6.2. */
+  dark?: boolean;
+  /** The Calendar masthead is shorter than the others (14.4). */
+  short?: boolean;
+  class?: string;
+}
+
+const {
+  preset,
+  label,
+  lines,
+  dark = false,
+  short = false,
+  class: className = '',
+} = Astro.props;
+---
+
+<section
+  class:list={['shader-band', 'masthead', { 'on-dark': dark, 'masthead--short': short }, className]}
+>
+  <div class:list={['shader-band__fallback', `masthead__fallback--${preset}`]} aria-hidden="true"></div>
+
+  <canvas
+    class="shader-band__canvas"
+    aria-hidden="true"
+    tabindex="-1"
+    data-field-canvas
+    data-field-preset={preset}></canvas>
+
+  <div class="shader-band__inner container">
+    <div class="masthead__type grid">
+      <div class="masthead__block">
+        {label && <p class="t-label" data-motion="body-rise">{label}</p>}
+        <h1 class="t-hero" data-motion="line-rise">
+          {lines.map((line, i) => (
+            <>
+              {i > 0 && <br />}
+              {line}
+            </>
+          ))}
+        </h1>
+      </div>
+      <slot />
+    </div>
+  </div>
+</section>
+
+<script>
+  /**
+   * Three.js is dynamically imported, so a page that never scrolls its band
+   * into view on a slow connection never pays for it.
+   */
+  import { mountField, type PresetName } from '../scripts/webgl';
+
+  for (const canvas of document.querySelectorAll<HTMLCanvasElement>('[data-field-canvas]')) {
+    const preset = canvas.dataset.fieldPreset as PresetName | undefined;
+    if (!preset) continue;
+
+    mountField(canvas, {
+      preset,
+      onFallback: () => canvas.classList.remove('is-live'),
+    }).catch(() => {
+      /* Leave the gradient. A masthead that fails to compile a shader is a
+         page with a slightly plainer band, not a broken page. */
+      canvas.classList.remove('is-live');
+    });
+  }
+</script>
+
+<style>
+  .masthead {
+    /* 4.2 - the masthead is the page's first section and carries its own
+       rhythm rather than a --section-y on top of the band height. */
+    margin-block-end: 0;
+  }
+
+  .masthead--short {
+    min-height: 44svh;
+  }
+
+  .masthead__type {
+    align-items: end;
+  }
+
+  .masthead__block {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-3);
+  }
+
+  @media (min-width: 1024px) {
+    .masthead__block {
+      grid-column: 1 / 8;
+    }
+  }
+
+  /**
+   * Tier 3, and the ground the shader paints over on tiers 1 and 2.
+   * Layered radial gradients in the preset's own three palette stops, so the
+   * page looks composed even with no WebGL at all.
+   */
+  .shader-band__fallback {
+    background-color: var(--paper);
+  }
+
+  .masthead__fallback--story {
+    background:
+      radial-gradient(120% 90% at 22% 30%, var(--fill-sky) 0%, transparent 62%),
+      linear-gradient(160deg, var(--paper) 0%, var(--paper-warm) 100%);
+  }
+  .masthead__fallback--program {
+    background:
+      radial-gradient(120% 90% at 50% 18%, var(--sienna) 0%, transparent 58%),
+      linear-gradient(160deg, var(--paper-warm) 0%, var(--fill-apricot) 100%);
+  }
+  .masthead__fallback--calendar {
+    background:
+      radial-gradient(120% 90% at 78% 22%, var(--slate) 0%, transparent 58%),
+      linear-gradient(160deg, var(--paper-cool) 0%, var(--fill-sky) 100%);
+  }
+  .masthead__fallback--enroll {
+    background:
+      radial-gradient(120% 90% at 30% 55%, var(--sienna) 0%, transparent 58%),
+      linear-gradient(160deg, var(--paper) 0%, var(--amber) 100%);
+  }
+  .masthead__fallback--faqs {
+    background:
+      radial-gradient(120% 90% at 50% 10%, var(--paper-warm) 0%, transparent 62%),
+      linear-gradient(160deg, var(--paper) 0%, var(--paper-cool) 100%);
+  }
+  .masthead__fallback--give {
+    background:
+      radial-gradient(140% 100% at 50% 100%, var(--amber) 0%, var(--sienna) 42%, transparent 78%),
+      linear-gradient(180deg, var(--ink) 0%, var(--ink) 100%);
+  }
+  .masthead__fallback--contact {
+    background:
+      radial-gradient(120% 90% at 50% 62%, var(--fill-sky) 0%, transparent 58%),
+      linear-gradient(160deg, var(--slate-deep) 0%, var(--slate) 100%);
+  }
+  .masthead__fallback--notfound {
+    background:
+      radial-gradient(120% 90% at 50% 50%, var(--amber) 0%, transparent 58%),
+      linear-gradient(160deg, var(--paper) 0%, var(--sienna) 100%);
+  }
+</style>

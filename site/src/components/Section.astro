@@ -1,0 +1,62 @@
+---
+/**
+ * DESIGN.md 4.2 - section rhythm.
+ *
+ * Grounds alternate on a fixed cycle so the page has a pulse without anyone
+ * deciding case by case:
+ *
+ *   paper -> paper-warm -> paper -> dark -> paper -> paper-cool -> paper -> dark footer
+ *
+ * Two rules this component cannot enforce and you must:
+ *   - at most TWO dark sections per page, footer included
+ *   - never two coloured grounds adjacent without a --paper section between
+ */
+export type Ground = 'paper' | 'warm' | 'cool' | 'ink' | 'slate';
+
+interface Props {
+  ground?: Ground;
+  /** 'lg' for the set-pieces in section 13, 'sm' for lists and calendars. */
+  rhythm?: 'default' | 'lg' | 'sm';
+  /** Wraps children in .container by default; 'narrow' for long-form prose. */
+  container?: 'default' | 'narrow' | 'wide' | 'none';
+  /** Adds the ten-column grid inside the container. */
+  grid?: boolean;
+  id?: string;
+  class?: string;
+  as?: 'section' | 'div' | 'article' | 'aside';
+  labelledby?: string;
+}
+
+const {
+  ground = 'paper',
+  rhythm = 'default',
+  container = 'default',
+  grid = false,
+  id,
+  class: className = '',
+  as: Tag = 'section',
+  labelledby,
+} = Astro.props;
+
+const rhythmClass = rhythm === 'lg' ? 'section-lg' : rhythm === 'sm' ? 'section-sm' : 'section';
+const isDark = ground === 'ink' || ground === 'slate';
+
+const sectionClass = [rhythmClass, `ground-${ground}`, isDark ? 'on-dark' : '', className]
+  .filter(Boolean)
+  .join(' ');
+
+const containerClass =
+  container === 'narrow'
+    ? 'container-narrow'
+    : container === 'wide'
+      ? 'container-wide'
+      : container === 'none'
+        ? ''
+        : 'container';
+
+const innerClass = [containerClass, grid ? 'grid' : ''].filter(Boolean).join(' ');
+---
+
+<Tag class={sectionClass} id={id} aria-labelledby={labelledby}>
+  {innerClass ? <div class={innerClass}><slot /></div> : <slot />}
+</Tag>
