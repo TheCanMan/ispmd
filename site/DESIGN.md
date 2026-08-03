@@ -739,7 +739,9 @@ Current page: the hooked underline is drawn and static, in `--sienna`.
 Contact and Enroll are reachable from the footer, from inline copy, and from the mobile menu; they are not in the desktop bar.
 
 **Below 1024px** the links collapse to a button labelled `Menu` (text, not a hamburger glyph alone - though a 3-line glyph may sit beside it).
-The overlay is full-screen, `background: var(--ink)`, and contains all eight page links at `--fs-title` in `--text-on-dark`, plus `info@ispmd.org` at `.t-label-lg`.
+The overlay is full-screen, `background: var(--ink)`, and contains all eight page links at `--fs-title` in `--text-on-dark`. Beneath a `--rule-on-dark` hairline it carries both contact channels as tap targets: `(301) 929-1441` as a `tel:` link and `info@ispmd.org` as a `mailto:` link, each at `--fs-subtitle` in `--link-on-dark`.
+
+**The phone number is not in the desktop header.** Six items are already there, and a phone number in a desktop nav bar is the posture of an organisation with a receptionist. It earns its place on mobile - where a parent wondering whether class is on actually wants to tap it - in the footer, and on the Contact page.
 Links `tile-in` with `--stagger-slow`.
 Focus is trapped, `Esc` closes, the trigger regains focus on close, `body` gets `overflow: hidden`.
 
@@ -753,7 +755,7 @@ Grid, `.container`, 10 columns:
 
 | Span (>=1024px) | Content |
 |---|---|
-| `1 / 5` | Wordmark lockup in `--text-on-dark`. Below it: `info@ispmd.org` as a `mailto:` link at `--fs-subtitle`. Below that, the mailing address in `.t-small`, `--text-on-dark-soft`, with the words `Mail only` in `.t-label`. |
+| `1 / 5` | Wordmark lockup in `--text-on-dark`. Below it, two contact lines at `--fs-subtitle` in `--link-on-dark`, stacked with `var(--s-2)` between them: `(301) 929-1441` as a `tel:+13019291441` link, then `info@ispmd.org` as a `mailto:` link. Below those, the mailing address in `.t-small`, `--text-on-dark-soft`, with the words `Mail only` in `.t-label`. |
 | `5 / 8` | Two link columns: `Our Story / Program / Calendar / FAQs` and `Enroll / Give / Contact`. `.t-ui`, `--text-on-dark-soft`. |
 | `8 / 11` | `Islamic School of Potomac is a 501(c)(3) non-profit organization.` / `EIN 52-1989063` in `.t-label`. Below: a `.btn-ghost-on-dark` reading `Support the school`. Below that: `Instagram` and `Facebook` as text links. |
 
@@ -762,7 +764,7 @@ Below 768px: single column, in that order.
 Bottom band, above a `--rule-on-dark` hairline, centred:
 the Arabic epigraph in `.t-arabic` at `--text-on-dark-soft`, the English translation beneath in Literata italic `.t-small`, and the reference `20:114` in `.t-label`.
 
-**No phone number anywhere in the footer, and no gap where one would go.** The contact column is email-first by design; see 14.8.
+The footer carries both channels and no street address. ISP has no address of its own: the P.O. Box is mail only, and the building where class meets belongs to another organisation. See 14.8.
 
 ### 7.3 Buttons
 
@@ -1492,7 +1494,7 @@ The page with the most operational value on the site, and the one a parent will 
 | 4 | **Semester 1** | `--paper` | Full list, 14 rows. Section head carries a 3px `--sienna` top rule - their colour. Each row: date in mono spanning `1 / 3`, title spanning `3 / 8`, kind label spanning `8 / 11` right-aligned. Rows are hairline-separated; `no-school` rows set their title in `--text-faint`. |
 | 5 | **Semester 2** | `--paper` | Same, 19 rows, 3px `--slate` top rule. The two Ramadan rows carry a `RAMADAN` `.t-label` in `--text-amber`. |
 | 6 | The three moments | `--paper-warm` | Deen Showcase, Arabic Final Exams, Quran Competition. Three `1/1` photos with copy, spanning `1 / 4`, `4 / 7`, `8 / 11`. |
-| 7 | Where and when | `--paper` | The confirmed logistics, in one block spanning `2 / 8`: Sundays, 10:00 AM until Salat al-Dhuhr, September through May, classes held at the Islamic Education Center. Link to `/contact`. |
+| 7 | Where and when | `--paper` | The confirmed logistics, in one block spanning `2 / 8`: Sundays, 10:00 AM until Salat al-Dhuhr, September through May, classes held at the Islamic Education Center. Both contact channels appear here in `--font-mono` at `--fs-lead`, because "is there class this Sunday" is the single most likely reason anyone reaches for a phone on this site, and this is the page they will already be on. Link to `/contact`. |
 | 8 | CTA | `--paper` | `.btn-quiet` to `/enroll`. |
 
 **Print stylesheet.** Parents will print this page and put it on a fridge. `@media print`: hide the header, footer, shader canvas, grain and all buttons; force `--paper` to white and all text to `--ink`; keep the semester fill colours (`print-color-adjust: exact`); set both semester lists side by side in two columns; add the school name and `ispmd.org` as a print-only header. It should fit on one sheet of US Letter.
@@ -1533,30 +1535,33 @@ The page does the persuading before it shows the form.
 
 ### 14.8 Contact - `/contact`
 
-**The design problem.** ISP has no publishable phone number, no street address of its own, no staff names, and an Instagram that last posted in May 2023. All it owns is one email address, a P.O. Box, and the fact that classes are held somewhere else.
+**The design problem.** ISP has a phone number and an email address, no street address of its own, no staff names, and an Instagram that last posted in May 2023. Classes are held in a building belonging to a different organisation.
 
-A conventional contact page presents channels, so a page with one channel reads as a page with things missing. This one is organised by **intent** instead, which is what a visitor actually arrives with, and by that measure it is complete.
+A conventional contact page presents channels, which invites the reader to audit what is missing. This one is organised by **intent** - what a visitor actually arrived wanting to do - and by that measure it is complete rather than short.
 
-The other decision that makes it work: **the email is the largest element on the page.** One address, given the weight a phone number usually gets, reads as confidence. The same address in a small grey line at the bottom reads as an apology.
+**Both channels get equal typographic weight**, at `--fs-title`, side by side in the reading order rather than one above a smaller other. That is not a compromise; a phone and an email genuinely do different jobs here, and saying so plainly is more useful to a parent than picking a favourite. Each carries one line about when to use it.
+
+The tone rule for this page: **set expectations without apologising.** Nobody staffs a phone at a school this size, and saying so warmly ("there is no phone tree and no office here") reads as honest rather than thin. Never write anything that promises a response time.
 
 Layout is a single editorial column at `.container-narrow` - the colophon page of a book, where short is correct. Dark masthead, paper body, hairline rows.
 
 | # | Section | Ground | Structure |
 |---|---|---|---|
 | 1 | Masthead | shader `contact`, dark | `.t-hero` spanning `1 / 8`, `--text-on-dark`. |
-| 2 | **Write to us** | `--paper` | `info@ispmd.org` as a `mailto:` link at `--fs-display` in `--font-display`, `--vf-display`, `--text-link-warm`, with the hooked underline drawn at rest and animating on hover. Beneath, two `.t-body` sentences about who reads it. Then three `mailto:` links with pre-filled subjects, as hairline rows with `arrow-right`: `Enrolling a child` (`?subject=Enrolling%20a%20child`), `A question about the program`, `I'd like to volunteer`. Those three rows are the page's real navigation: they route intent, they lower the cost of writing, and they mean the page has three calls to action instead of one bare address. |
+| 2 | **Reach us** | `--paper` | Two hairline rows, equal weight. Row one: `(301) 929-1441` as a `tel:+13019291441` link at `--fs-title` in `--font-display`, `--vf-title`, `--text-link-warm`, with a `.t-body` line beneath. Row two: `info@ispmd.org` as a `mailto:` link, identical treatment. Both carry the hooked underline drawn at rest, animating on hover. Display the number formatted as `(301) 929-1441`; the `href` is unformatted. Nested beneath the email row and indented by `var(--s-5)`, three `mailto:` links with pre-filled subjects as `.t-subtitle` hairline rows with `arrow-right`: `Enrolling a child` (`?subject=Enrolling%20a%20child`), `A question about the program`, `I'd like to volunteer`. They route intent and lower the cost of writing, so the page has five ways in rather than two. |
 | 3 | **Where class meets** | `--paper-warm` | The venue, framed correctly per `COPY.md`: classes are *held at* the Islamic Education Center, 7917 Montrose Rd, Potomac, MD 20854, and ISP is a separate organisation. Address in `--font-mono`. Times beneath: Sundays, 10:00 AM until Salat al-Dhuhr, September through May. One text link `Open in maps` (a plain URL, no embedded map, no third-party script). A `5/4` `cool-grade` photo spans the right of the block at >=1024px. **The IEC's phone number does not appear on this page or anywhere on this site.** |
 | 4 | **Post** | `--paper` | P.O. Box 833, Rockville, MD 20848-0833 in `--font-mono`, with the `Mail only` `.t-label`, and one sentence saying plainly that it is a mailbox rather than a classroom. Naming the limitation is what makes it read as deliberate, and it stops someone driving to a P.O. Box. |
-| 5 | **Come on a Sunday** | `--paper-cool` | The strongest thing available in place of a phone number, and it costs nothing: an invitation. `.t-display` plus two sentences. For a volunteer school that cannot staff a phone, this is a better answer than a number nobody would pick up. |
+| 5 | **Come on a Sunday** | `--paper-cool` | The third channel, and the best one. `.t-display` plus two paragraphs, one of which names the Deen Showcase as the morning to pick. This section is not compensating for anything now; it is the answer a small school can give that a large one cannot, and it stays exactly as generous as it was. |
 | 6 | **Elsewhere** | `--paper` | Instagram and Facebook as two plain text links. No embedded feed - an embed would advertise how long it has been since the last post. No claims about activity. |
 
-**No contact form.** There is no server, and a form that silently fails is worse than an address that works. The three `mailto:` rows are the form. Do not build one.
+**No contact form.** There is no server, and a form that silently fails is worse than a channel that works. The three `mailto:` rows are the form. Do not build one.
 
 **Schema.org** on this page only:
 
 ```
 EducationalOrganization
   name        "Islamic School of Potomac"
+  telephone   "+1-301-929-1441"
   email       "info@ispmd.org"
   url         site URL
   address     PostalAddress { postOfficeBoxNumber "833",
@@ -1570,7 +1575,10 @@ EducationalOrganization
   taxID       "52-1989063"
 ```
 
-No `telephone` property. Not empty, not `"TBD"` - absent.
+`telephone` is ISP's own line. The Islamic Education Center's number must never appear in this block or anywhere else on the site - it belongs to a different legal entity and publishing it routes parents to the wrong organisation.
+
+`address` is the P.O. Box and nothing else. The residential street address tied to ISP's phone number in third-party directories is **not** publishable in any form, including structured data.
+
 `location` is a separate `Place` node and must never be written as the organisation's `address`; the two organisations are legally distinct.
 
 ### 14.9 404
@@ -1649,7 +1657,7 @@ A short list of the specific failures most likely to happen with four implemente
 - **Using `--amber` as text on paper.** Use `--text-amber`.
 - **Letting the pattern become wallpaper.** It appears in nine places (9.3) and nowhere else.
 - **Centring everything.** The grid is ten columns so that thirds are impossible and asymmetry is the default. Centred display type appears exactly twice on this site: the footer epigraph and the 404.
-- **Adding a phone number, a street address for ISP, or staff names.** None exist. See 14.8.
+- **Publishing the wrong number or any street address for ISP.** ISP's line is `(301) 929-1441` and it is publishable. The Islamic Education Center's `(301) 340-2070` is not - different organisation, different EIN. ISP has no street address at all: the P.O. Box is mail only, the residential address that third-party directories tie to ISP's number is off-limits, and the IEC's address is the venue, never "our address." Staff names do not exist. See 14.8.
 - **Implementing `prefers-reduced-motion` in CSS only.** It must be checked in JS too, and it changes `uConstruction` (5.4).
 - **Treating the montage and the 3D hero as alternatives.** They are one surface (13.2).
 

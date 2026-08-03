@@ -20,21 +20,21 @@ Everything else is written to sit beside those without embarrassing them.
 
 - Plain sentences. Short ones. No copywriter cadence, no "nurturing young minds", no "journey".
 - Concrete over aspirational. `Thirty-three Sundays` beats `a full year of enriching experiences`.
-- Never oversell. This is a small volunteer school with $60 tuition and it is more persuasive when it says so.
+- Never oversell. This is a small school with $60 tuition and it is more persuasive when it says so.
 - One exclamation mark exists on this site, in the teaching-philosophy line. It is theirs. Do not add another.
 - American spelling throughout (`enroll`, `enrollment`, `color`).
 - No em dashes. Plain hyphens or a full stop.
 
 ## Facts this copy is allowed to state
 
-Tuition $60 per student and $100 per family, financial assistance available · kindergarten minimum at age 5 · ages 5 through 18 · Arabic placement by test, Deen placement by age · classes held at the Islamic Education Center, 7917 Montrose Rd, Potomac, MD 20854 · Sundays, 10:00 AM until Salat al-Dhuhr · September through May · 501(c)(3) with EIN 52-1989063 · mailing address P.O. Box 833, Rockville, MD 20848-0833 · info@ispmd.org · the full 2026-2027 calendar.
+Tuition $60 per student and $100 per family, financial assistance available · kindergarten minimum at age 5 · ages 5 through 18 · Arabic placement by test, Deen placement by age · classes held at the Islamic Education Center, 7917 Montrose Rd, Potomac, MD 20854 · Sundays, 10:00 AM until Salat al-Dhuhr · September through May · 501(c)(3) with EIN 52-1989063 · mailing address P.O. Box 833, Rockville, MD 20848-0833 · **phone (301) 929-1441** · info@ispmd.org · the full 2026-2027 calendar.
 
 ## Facts this copy must never state
 
 | Not stated | Why |
 |---|---|
-| **Any phone number** | ISP has none published. (301) 340-2070 belongs to the Islamic Education Center, a legally separate organization with its own EIN. Publishing it routes parents to the wrong place. A second listing resolves to what is almost certainly a board member's home and is off-limits. There is no phone number on this site, in any page, footer, or schema block, and no placeholder where one would go. |
-| **A street address for ISP** | ISP has none. Classes are *held at* the IEC; the P.O. Box is mail only. |
+| **The Islamic Education Center's number, (301) 340-2070** | It belongs to a legally separate organization with its own EIN (52-1485374). Publishing it as the school's number routes parents to a different organization. ISP's own line, **(301) 929-1441**, is the only telephone number that appears anywhere on this site, including the schema block. |
+| **Any street address for ISP** | ISP has none. Third-party directories tie ISP's phone number to a residential address in Rockville; the *number* was cleared for publication and the *address* was not. It is off-limits in every form, including structured data and OG tags. The P.O. Box is mail and donations only. Classes are *held at* the IEC, and that address is the venue, never "our address." |
 | **Staff, teacher or board names** | None published. |
 | **Founding year, student count, alumni count, years of operation** | Unknown. Do not estimate. |
 | **A class-by-class schedule** | Only the 10:00 AM start and the Salat al-Dhuhr close are confirmed. |
@@ -73,6 +73,7 @@ None of these block the build. All are single-line edits.
 | Mobile menu trigger | `Menu` |
 | Mobile menu close | `Close` |
 | Mobile menu extra links | `Enroll` · `Contact` |
+| Mobile menu contact row | `(301) 929-1441` · `info@ispmd.org` |
 | Skip link | `Skip to main content` |
 
 ## Footer
@@ -83,6 +84,7 @@ None of these block the build. All are single-line edits.
 Islamic School
 of Potomac
 
+(301) 929-1441
 info@ispmd.org
 
 MAIL ONLY
@@ -139,6 +141,7 @@ Use these exact labels wherever the element recurs. Shorten only if space genuin
 | To the give page | `Support the school` |
 | PayPal | `Give through PayPal` |
 | To contact | `Get in touch` |
+| Phone link label | `(301) 929-1441` - `href="tel:+13019291441"` |
 | Email link label | `info@ispmd.org` |
 | Direct JotForm link | `Open the enrollment form in a new tab` |
 | Back home from 404 | `Go to the homepage` |
@@ -154,7 +157,7 @@ Use these exact labels wherever the element recurs. Shorten only if space genuin
 | Enroll | `Enroll - Islamic School of Potomac` | `Tuition is $60 for one student and $100 for a family, and financial assistance is available. Here is how to enroll for 2026-2027.` |
 | FAQs | `FAQs - Islamic School of Potomac` | `Ages, tuition, placement, what a Sunday looks like, and how to get involved. The questions families ask us most.` |
 | Give | `Give - Islamic School of Potomac` | `Tuition is $60 a student. It does not cover a year. The Islamic School of Potomac is a 501(c)(3) non-profit, EIN 52-1989063.` |
-| Contact | `Contact - Islamic School of Potomac` | `Write to info@ispmd.org, or come and find us on a Sunday morning. Classes are held at the Islamic Education Center in Potomac, Maryland.` |
+| Contact | `Contact - Islamic School of Potomac` | `Call (301) 929-1441, write to info@ispmd.org, or come and find us on a Sunday morning. Classes are held at the Islamic Education Center in Potomac, Maryland.` |
 | 404 | `Page not found - Islamic School of Potomac` | `That page is not here.` |
 
 Open Graph title and description mirror the above. OG image: the generated girih field poster, `og-default.jpg`, 1200 x 630.
@@ -752,6 +755,12 @@ September through May.
 Class begins at 10:00 AM and runs until Salat al-Dhuhr. Classes are held at the Islamic Education Center, 7917 Montrose Rd, Potomac, MD 20854. The Islamic School of Potomac is a separate organization and meets there.
 ```
 
+**Second paragraph** (`.t-body`)
+
+```
+If you need to check whether class is on, call (301) 929-1441 or write to info@ispmd.org.
+```
+
 **Button:** `Get in touch`
 
 ## 8. CTA
@@ -858,7 +867,7 @@ Questions before you enroll?
 **Body** (`.t-body`)
 
 ```
-Most of them are already answered on the FAQs page. If yours isn't, write to info@ispmd.org and a person will read it.
+Most of them are already answered on the FAQs page. If yours isn't, call (301) 929-1441 or write to info@ispmd.org and a person will read it.
 ```
 
 **Buttons:** `Read the FAQs` · `info@ispmd.org`
@@ -979,7 +988,11 @@ Yes. The Islamic School of Potomac is a 501(c)(3) non-profit organization, EIN 5
 **How do I reach the school?**
 
 ```
-By email, at info@ispmd.org. It is the only address the school runs, a person reads it, and it reaches the people who actually run the Sunday morning.
+By phone at (301) 929-1441, or by email at info@ispmd.org. Both reach the people who actually run the Sunday morning.
+```
+
+```
+There is no office and no phone tree. If nobody picks up, write instead.
 ```
 
 ## 3. Aside (pull quote)
@@ -1135,7 +1148,7 @@ Parent feedback and volunteering is encouraged, and it is meant literally. The p
 # Contact - `/contact`
 
 The page is organized by what a visitor wants to do, not by which channels exist.
-Nothing on this page apologizes for what the school does not have, and nothing on it hints at a missing phone number.
+Nothing on this page apologizes for what the school does not have. Both channels carry equal weight, and expectations are set plainly rather than hedged.
 
 ## 1. Masthead
 
@@ -1144,25 +1157,39 @@ Nothing on this page apologizes for what the school does not have, and nothing o
 **Headline** (`.t-hero`, `--text-on-dark`)
 
 ```
-One address,
-and a Sunday morning.
+Call, write, or come
+on a Sunday.
 ```
 
-## 2. Write to us
+## 2. Reach us
 
-**Email, set as the largest element on the page**
+Two rows, equal typographic weight, in this order.
+
+**Row one - phone** (`.t-title`, `href="tel:+13019291441"`)
+
+```
+(301) 929-1441
+```
+
+**Beneath it** (`.t-body`)
+
+```
+There is no phone tree and no office here, so if nobody picks up, write instead. It reaches exactly the same people.
+```
+
+**Row two - email** (`.t-title`, `href="mailto:info@ispmd.org"`)
 
 ```
 info@ispmd.org
 ```
 
-**Beneath it** (`.t-body`, two sentences, no more)
+**Beneath it** (`.t-body`)
 
 ```
 A person reads this. It goes to the people who actually run the Sunday morning, so an answer usually comes back with something useful in it rather than a form reply.
 ```
 
-**Three intent rows** (each a `mailto:` with a pre-filled subject)
+**Three intent rows**, nested under the email row (each a `mailto:` with a pre-filled subject)
 
 | Row label (`.t-subtitle`) | `mailto:` subject |
 |---|---|
@@ -1222,21 +1249,21 @@ This is a mailbox, not a classroom. Checks and paperwork go here; nobody is stan
 **Headline** (`.t-display`)
 
 ```
-The surest way to
-reach us is to come.
+Better than either:
+come and see.
 ```
 
 **Body** (`.t-body`)
 
 ```
-Sunday mornings between September and May, at the Islamic Education Center on Montrose Road. Write first so we know to look out for you, and someone will meet you at the door.
+Sunday mornings between September and May, at the Islamic Education Center on Montrose Road. Call or write first so we know to look out for you, and someone will meet you at the door.
 ```
 
 ```
 If you want one morning to pick, make it the Deen Showcase on December 13. It is the day the school is most itself.
 ```
 
-**Button:** `info@ispmd.org`
+**Buttons:** `(301) 929-1441` · `info@ispmd.org`
 
 ## 6. Elsewhere
 
@@ -1282,7 +1309,7 @@ The pattern continues, though. One of these will get you where you were going.
 3. **The three verbatim lines** in the Voice section above are quoted exactly as the school wrote them. Do not correct, modernize or shorten them, including the capital S in "Sunday School" where it appears in the tagline.
 4. **The Arabic string** is copied, never retyped. It appears twice: the homepage epigraph and the footer. The Program masthead reuses the same string.
 5. **`{N} days`** on the calendar page is the only computed string in this file. Handle 0 and 1 as written.
-6. **Every `mailto:`** goes to `info@ispmd.org`. There are eleven of them across the site and no other address exists.
+6. **Every `mailto:` goes to `info@ispmd.org` and every `tel:` to `+13019291441`.** No other address or number exists anywhere on this site. The phone number is always *displayed* as `(301) 929-1441` and the `href` is always unformatted.
 7. **Three sentences are flagged for confirmation** and are the only ones in this file that make a claim the school has not published:
    - `Enroll` section 3: "No child has ever been turned away from this school over $60."
    - `Enroll` section 5, step 02: "The school writes back" and its body, which describes a process rather than a published fact.
