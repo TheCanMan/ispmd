@@ -82,32 +82,37 @@ const jsonLd = educationalOrganization(Astro.site!.href);
     </div>
   </Section>
 
-  {/* 3. Where class meets */}
-  <Section ground="warm" container="narrow">
-    <div class="venue">
-      <div class="venue__text">
-        <SectionHeader label="WHERE CLASS MEETS" />
-        <p class="t-num venue__address">
-          {site.venue.name}<br />
-          {site.venue.streetAddress}<br />
-          {site.venue.addressLocality}, {site.venue.addressRegion} {site.venue.postalCode}
-        </p>
-        <p class="t-body" data-motion="body-rise">
-          Classes are held at the Islamic Education Center. The Islamic School of Potomac is a
-          separate organization and meets there; the building is not ours and the Center's staff
-          do not run our school.
-        </p>
-        <p class="t-subtitle venue__times">
-          Sundays, 10:00 AM until Salat al-Dhuhr<br />September through May
-        </p>
-        <Button href={site.venue.mapsUrl} variant="quiet" external>
-          Open in maps
-        </Button>
-      </div>
+  {/*
+    3. Where class meets. DESIGN.md 14.8 calls for .container-narrow
+    "throughout", so this stays inside the 760px column rather than breaking
+    out to the wide container - the previous 33%/67% split just left too
+    little of that narrow width for the photo (a real, previously reported
+    bug: it rendered at 209x167). A closer-to-even split fixes the size
+    without abandoning the narrow column the rest of the page uses.
+  */}
+  <Section ground="warm" container="narrow" grid>
+    <div class="venue__text">
+      <SectionHeader label="WHERE CLASS MEETS" />
+      <p class="t-num venue__address">
+        {site.venue.name}<br />
+        {site.venue.streetAddress}<br />
+        {site.venue.addressLocality}, {site.venue.addressRegion} {site.venue.postalCode}
+      </p>
+      <p class="t-body" data-motion="body-rise">
+        Classes are held at the Islamic Education Center. The Islamic School of Potomac is a
+        separate organization and meets there; the building is not ours and the Center's staff
+        do not run our school.
+      </p>
+      <p class="t-subtitle venue__times">
+        Sundays, 10:00 AM until Salat al-Dhuhr<br />September through May
+      </p>
+      <Button href={site.venue.mapsUrl} variant="quiet" external>
+        Open in maps
+      </Button>
+    </div>
 
-      <div class="venue__media">
-        <Media slotId="contact.venue" sizes="(min-width: 1024px) 33vw, 90vw" />
-      </div>
+    <div class="venue__media">
+      <Media slotId="contact.venue" sizes="(min-width: 768px) 380px, 90vw" />
     </div>
   </Section>
 
@@ -189,10 +194,9 @@ const jsonLd = educationalOrganization(Astro.site!.href);
 
   /* ---- 3. Where class meets ---- */
 
-  .venue {
-    display: flex;
-    flex-direction: column;
-    gap: var(--s-6);
+  .venue__text,
+  .venue__media {
+    grid-column: 1 / -1;
   }
 
   .venue__text {
@@ -202,24 +206,18 @@ const jsonLd = educationalOrganization(Astro.site!.href);
     gap: var(--s-4);
   }
 
+  .venue__media {
+    align-self: start;
+    margin-block-start: var(--s-6);
+  }
+
   .venue__times {
     margin-block-start: var(--s-2);
   }
 
-  @media (min-width: 1024px) {
-    .venue {
-      flex-direction: row;
-      align-items: start;
-      gap: var(--s-8);
-    }
-
-    .venue__text {
-      flex: 1 1 auto;
-    }
-
-    .venue__media {
-      flex: 0 0 33%;
-    }
+  @media (min-width: 768px) {
+    .venue__text { grid-column: 1 / 6; }
+    .venue__media { grid-column: 6 / 11; margin-block-start: 0; }
   }
 
   /* ---- 4. Post ---- */

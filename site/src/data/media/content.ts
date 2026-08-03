@@ -20,12 +20,16 @@ export const contentMedia = defineMedia({
     minWidth: 2400,
     minHeight: 1029,
     treatment: 'ink-duotone',
-    focal: '50% 40%',
+    focal: '50% 45%',
     status: 'placeholder',
     src: 'placeholder/story-opening.jpg',
-    alt: 'Two tall lit doorways in a dark wall',
+    alt: 'A long glass-walled corridor leading to a set of double doors',
     realAlt: 'A doorway with people arriving',
-    shotNote: 'The first thing that happens on a Sunday.',
+    shotNote:
+      'The first thing that happens on a Sunday. The previous placeholder here was a ' +
+      'stereoscopic card (the same doorway photographed twice, side by side) that read as a ' +
+      'duplicated-frame rendering bug rather than a photograph - checked for that specifically ' +
+      'this time.',
   },
 
   'story.families': {
@@ -59,16 +63,24 @@ export const contentMedia = defineMedia({
 
   'program.arabic': {
     kind: 'image',
-    ratio: '4/5',
-    minWidth: 1200,
-    minHeight: 1500,
+    ratio: '5/4',
+    minWidth: 1080,
+    minHeight: 864,
     treatment: 'warm-grade',
-    focal: '50% 35%',
+    focal: '50% 55%',
     status: 'placeholder',
     src: 'placeholder/program-arabic.jpg',
-    alt: "A child's hand tracing letters along a ruled line on a page",
+    alt: 'A hand holding open a blank grid-paper notebook outdoors',
     realAlt: 'A child tracing letters on a page',
-    shotNote: 'Letterforms must be legible in frame.',
+    shotNote:
+      'Letterforms must be legible in frame - but only if they are genuinely Arabic. The ' +
+      'previous placeholder here showed a child writing Latin cursive under an Arabic heading, ' +
+      'which is a wrong-language claim, not a stand-in. This placeholder shows blank pages ' +
+      'instead: no legible text in any language, so nothing false is asserted while the slot ' +
+      'waits for a real photo of a child actually tracing Arabic letters. Ratio changed from ' +
+      '4/5 to 5/4 and minWidth lowered to 1080/864 to match the honest replacement - the ' +
+      'available CC0 source for this content topped out at 1300px wide; raise both back once a ' +
+      'higher-resolution or real photo lands.',
   },
 
   'program.deen': {
@@ -133,12 +145,18 @@ export const contentMedia = defineMedia({
     minWidth: 2400,
     minHeight: 1029,
     treatment: 'ink-duotone',
-    focal: '50% 50%',
+    focal: '50% 55%',
     status: 'placeholder',
     src: 'placeholder/give-impact.jpg',
-    alt: 'A theatre auditorium of empty seats seen from the stage',
+    alt: 'Rows of plain stacking chairs facing a small stage in a wood-panelled hall',
     realAlt: 'A full room seen from the back',
-    shotNote: 'Scale. This is the "your gift reaches this many people" frame.',
+    shotNote:
+      'Scale. This is the "your gift reaches this many people" frame - but it has to read as ' +
+      'modest scale, not grand scale. The previous placeholder here was the Hollywood Pantages, ' +
+      'an ornate Art Deco movie palace, directly above copy that says there is no endowment and ' +
+      'no marketing budget. This placeholder is a plain multi-purpose hall with stacking chairs: ' +
+      'restraint over subject-matter literalism. Do not source a grand auditorium, theatre or ' +
+      'anything ornate for this slot, whatever the real photo ends up being.',
   },
 
   'give.classroom': {
@@ -164,9 +182,16 @@ export const contentMedia = defineMedia({
     focal: '50% 50%',
     status: 'placeholder',
     src: 'placeholder/contact-venue.jpg',
-    alt: 'The upper storeys of a plain modern building against a bright sky',
-    realAlt: 'The exterior of a building on a bright morning',
+    alt: 'An empty classroom with rows of chairs, lit by a shaft of morning light across the wall',
+    realAlt: 'An ordinary room, seen in morning light',
     shotNote:
-      'The Islamic Education Center from the street, so a new family recognises it.',
+      'This slot sits directly beside the IEC street address, so a photo here reads as "this ' +
+      'is that building" to any sighted visitor - a real risk given how carefully the rest of ' +
+      'the site handles the two-organisation problem. The previous placeholder was a generic ' +
+      'office block that asserted exactly that. Do not source an exterior "the IEC from the ' +
+      'street" photo unless it is verified to actually be the Islamic Education Center - a wrong ' +
+      'specific building is worse than a neutral room. This placeholder is deliberately an ' +
+      'interior with no identifying architecture. If no verified photo of the real building ever ' +
+      'arrives, dropping this slot entirely is preferable to guessing.',
   },
 });
