@@ -2,9 +2,9 @@
 /**
  * Enroll - DESIGN.md 14.5. Copy from COPY.md, Enroll, verbatim.
  *
- * The live JotForm is multi-step. This page deliberately uses the specified
- * plain fixed-height iframe branch: no resize handler, no third-party script,
- * and no page-scroll jump when the form changes steps.
+ * The live JotForm is multi-step and long. JotForm's official embed handler
+ * grows the iframe to each step's natural height, so enrollment stays in the
+ * page's normal scroll rather than inside a nested scrolling porthole.
  */
 import Base from '../layouts/Base.astro';
 import Masthead from '../components/Masthead.astro';
@@ -17,6 +17,10 @@ import HairlineList from '../components/HairlineList.astro';
 import HairlineRow from '../components/HairlineRow.astro';
 
 import { labels, site } from '../data/site';
+
+const jotformIframeId = `JotFormIFrame-${site.enrollFormId}`;
+const jotformSelector = `iframe[id='${jotformIframeId}']`;
+const jotformOrigin = `${new URL(site.enrollFormUrl).origin}/`;
 ---
 
 <Base
@@ -120,19 +124,27 @@ import { labels, site } from '../data/site';
     </div>
   </Section>
 
-  {/* 6. The form. Fixed height keeps step changes inside the iframe. */}
+  {/* 6. The form. JotForm's handler owns the height across step changes. */}
   <Section ground="cool" container="narrow">
     <p class="t-label form__label" data-motion="body-rise">ENROLLMENT FORM</p>
 
     <div class="jotform-frame" data-motion="body-rise">
       <iframe
+        id={jotformIframeId}
         class="jotform-frame__iframe"
         src={site.enrollFormUrl}
         title="ISP Registration 2026-27 - Step 1"
         loading="lazy"
+        scrolling="no"
+        allow="geolocation; microphone; camera; fullscreen; payment"
         referrerpolicy="strict-origin-when-cross-origin"
       ></iframe>
     </div>
+
+    <script is:inline src="https://cdn.jotfor.ms/s/umd/latest/for-form-embed-handler.js"></script>
+    <script is:inline define:vars={{ jotformSelector, jotformOrigin }}>
+      window.jotformEmbedHandler(jotformSelector, jotformOrigin);
+    </script>
 
     <div class="jotform-fallback" data-motion="body-rise">
       <p class="t-small">Having trouble with the form?</p>
@@ -229,7 +241,6 @@ import { labels, site } from '../data/site';
     display: block;
     width: 100%;
     max-width: 100%;
-    height: var(--container-narrow);
     min-height: var(--container-narrow);
     border: 0;
     background: var(--paper);
