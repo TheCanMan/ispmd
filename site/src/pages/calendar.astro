@@ -67,6 +67,14 @@ const displayNote = (session: Session) => {
     <CalendarBand sessions={sessions} variant="grid" legend />
   </Section>
 
+  <script is:inline>
+    const calendarScroller = document.querySelector('[data-calendar-band] .cal-band__scroller');
+    if (calendarScroller) {
+      calendarScroller.setAttribute('role', 'region');
+      calendarScroller.setAttribute('tabindex', '0');
+    }
+  </script>
+
   {/* 4-5. The two semester lists become two columns on paper. */}
   <div class="semester-lists">
     <Section ground="paper" rhythm="sm" class="semester-list semester-list--one">
@@ -182,8 +190,9 @@ const displayNote = (session: Session) => {
         </p>
         <p class="t-body">
           If you need to check whether class is on, call
-          <a class="link t-num" href={site.phone.href}>{site.phone.display}</a> or write to
-          <a class="link t-num" href={site.email.href}>{site.email.display}</a>.
+          <a class="link t-num practical__channel" href={site.phone.href}>{site.phone.display}</a> or
+          write to
+          <a class="link t-num practical__channel" href={site.email.href}>{site.email.display}</a>.
         </p>
       </div>
 
@@ -212,6 +221,16 @@ const displayNote = (session: Session) => {
 <style>
   .print-header {
     display: none;
+  }
+
+  /* Calendar fills always use full ink. The 70% month treatment and amber
+     Ramadan label both miss 4.5:1 on at least one of the school's fills. */
+  :global(.calendar-page .cal-cell__month) {
+    opacity: 1;
+  }
+
+  :global(.calendar-page .cal-cell__ramadan) {
+    color: var(--text);
   }
 
   .calendar-masthead__subline {
@@ -269,6 +288,13 @@ const displayNote = (session: Session) => {
     font-family: var(--font-mono);
     font-size: var(--fs-lead);
     line-height: var(--lh-lead);
+  }
+
+  .practical__channel,
+  .practical__contacts a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
   }
 
   .calendar-cta {

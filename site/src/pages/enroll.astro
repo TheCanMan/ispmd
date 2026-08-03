@@ -165,9 +165,10 @@ const jotformOrigin = `${new URL(site.enrollFormUrl).origin}/`;
       <SectionHeader headline="Questions before you enroll?" role="t-title" />
       <p class="t-body" data-motion="body-rise">
         Most of them are already answered on the FAQs page. If yours isn't, call
-        <a class="link t-num" href={site.phone.href}>{site.phone.display}</a> or write to
-        <a class="link t-num" href={site.email.href}>{site.email.display}</a> and a person will read
-        it.
+        <a class="link t-num questions__channel" href={site.phone.href}>{site.phone.display}</a> or
+        write to
+        <a class="link t-num questions__channel" href={site.email.href}>{site.email.display}</a> and
+        a person will read it.
       </p>
       <div class="questions__links" data-motion="body-rise">
         <Button href="/faqs" variant="quiet" icon="arrow-right">Read the FAQs</Button>
@@ -264,6 +265,12 @@ const jotformOrigin = `${new URL(site.enrollFormUrl).origin}/`;
     display: flex;
     flex-wrap: wrap;
     gap: var(--s-3) var(--s-6);
+  }
+
+  .questions__channel {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
   }
 
   @media (min-width: 1024px) {
