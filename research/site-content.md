@@ -22,15 +22,35 @@ Captured 2026-08-03.
 | Donation | PayPal hosted button `24GHPP5NMDF74` | `/donate` |
 | Squarespace site id | `5f24b7d1da8fe325a80a9724` | CDN URLs |
 
-### UNVERIFIED - third-party sources only, never stated on ispmd.org
+### CONFIRMED BY AMIN 2026-08-03 - safe to publish
 
-| Fact | Value | Source |
-|---|---|---|
-| Class location | Islamic Education Center, 7917 Montrose Rd, Potomac MD 20854 | Yelp / IEC site |
-| Class times | Sundays, 10:00 AM until Salat al-Dhuhr | iec-md.com |
-| School year | September through May | iec-md.com |
-| Phone | (301) 340-2070 | appears to be the IEC main line, not ISP's |
-| Age range | 5 through 18 | iec-md.com (kindergarten minimum IS confirmed on `/faqs`) |
+| Fact | Value |
+|---|---|
+| Class venue | Islamic Education Center, 7917 Montrose Rd, Potomac MD 20854 |
+| Class times | Sundays, 10:00 AM until Salat al-Dhuhr |
+| School year | September through May |
+| Age range | 5 through 18 |
+
+**Framing rule.** ISP *meets at* the IEC. It does not *own* that address.
+Copy must say "classes are held at the Islamic Education Center" or equivalent, never "our address is."
+See the two-organization finding below for why this distinction is load-bearing.
+
+### DO NOT PUBLISH - phone numbers
+
+ISP and the Islamic Education Center are **legally separate organizations**:
+
+| Organization | EIN | Address | Phone |
+|---|---|---|---|
+| Islamic School of Potomac Inc | **52-1989063** | PO Box 833, Rockville MD 20848 | none published |
+| Islamic Education Center Inc | **52-1485374** | 7917 Montrose Rd, Potomac MD 20854 | 301-340-2070 |
+
+Verified against Charity Navigator and ProPublica Nonprofit Explorer under each organization's own EIN.
+
+**(301) 340-2070 is IEC's main line, not ISP's.** Publishing it as the school's number routes parents to a different organization. Do not use it as ISP's contact number. If the venue's number appears at all, it must be explicitly labelled as the venue's.
+
+A separate listing shows **(301) 929-1441 at 15216 Red Clover Dr, Rockville MD 20853** for ISP. Red Clover Dr is a residential street, so this is almost certainly a board member's or registered agent's home address - normal for a small volunteer nonprofit. **Do not publish either the number or that address.** Pending an explicit decision from Amin.
+
+**Consequence for design and copy:** ISP has no publishable phone number. `info@ispmd.org` is the only confirmed contact channel the school owns. Header, footer, contact page and schema.org markup must all work without a phone number, and must not leave a visible gap where one was assumed.
 
 ---
 
