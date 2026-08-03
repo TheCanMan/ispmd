@@ -248,6 +248,44 @@ export function prefersReducedMotion(): boolean {
 }
 
 /* ------------------------------------------------------------------ */
+/* Reaching a mounted field from page code.                             */
+
+/**
+ * Masthead.astro mounts the field, so without a registry the FieldHandle is
+ * only reachable from inside that component and the two scroll-linked shader
+ * behaviours DESIGN.md specifies cannot be written at all:
+ *
+ *   13.4  /program  uDensity   4.6 -> 3.2 -> 2.0 as the three sections pass
+ *   13.3  /give     uLightOrigin.y  0.02 -> 0.5 across the page's scroll
+ *
+ * onField resolves whether it is called before or after the mount, which
+ * matters because Three.js is dynamically imported and the page script may
+ * win the race. On Tier 3 there is no shader and the callback never fires,
+ * which is the correct outcome: no canvas, nothing to scrub, and the CSS
+ * gradient underneath is already the complete fallback.
+ */
+const mountedFields = new Map<string, FieldHandle>();
+const fieldWaiters = new Map<string, Array<(handle: FieldHandle) => void>>();
+
+export function registerField(key: string, handle: FieldHandle): void {
+  mountedFields.set(key, handle);
+  const waiting = fieldWaiters.get(key);
+  if (waiting) {
+    fieldWaiters.delete(key);
+    for (const cb of waiting) cb(handle);
+  }
+}
+
+export function onField(key: string, cb: (handle: FieldHandle) => void): void {
+  const existing = mountedFields.get(key);
+  if (existing) {
+    cb(existing);
+    return;
+  }
+  fieldWaiters.set(key, [...(fieldWaiters.get(key) ?? []), cb]);
+}
+
+/* ------------------------------------------------------------------ */
 
 export interface FieldHandle {
   /** Push a normalised aperture rect. w = 0 disables it. */

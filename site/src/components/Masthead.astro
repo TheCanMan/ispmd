@@ -79,7 +79,7 @@ const {
    * Three.js is dynamically imported, so a page that never scrolls its band
    * into view on a slow connection never pays for it.
    */
-  import { mountField, type PresetName } from '../scripts/webgl';
+  import { mountField, registerField, type PresetName } from '../scripts/webgl';
 
   for (const canvas of document.querySelectorAll<HTMLCanvasElement>('[data-field-canvas]')) {
     const preset = canvas.dataset.fieldPreset as PresetName | undefined;
@@ -88,11 +88,18 @@ const {
     mountField(canvas, {
       preset,
       onFallback: () => canvas.classList.remove('is-live'),
-    }).catch(() => {
-      /* Leave the gradient. A masthead that fails to compile a shader is a
-         page with a slightly plainer band, not a broken page. */
-      canvas.classList.remove('is-live');
-    });
+    })
+      .then((handle) => {
+        /* Publish the handle so page code can scrub its uniforms - 13.3's
+           rising light on /give and 13.4's loosening density on /program are
+           specified motion, and they cannot be written from inside here. */
+        if (handle) registerField(preset, handle);
+      })
+      .catch(() => {
+        /* Leave the gradient. A masthead that fails to compile a shader is a
+           page with a slightly plainer band, not a broken page. */
+        canvas.classList.remove('is-live');
+      });
   }
 </script>
 
@@ -116,6 +123,49 @@ const {
     display: flex;
     flex-direction: column;
     gap: var(--s-3);
+  }
+
+  /*
+   * The same defect as the hero, five pages over. A masthead band is either a
+   * light field or a photograph, and neither is dark enough or light enough
+   * anywhere in particular - measured over the shader, --text-on-dark landed
+   * at 1.10:1 on /give and --text at 2.17:1 on /our-story.
+   *
+   * The scrim resolves to the exact ground each colour was VERIFIED against in
+   * 6.3: --paper under dark type, --ink under cream type. That makes the whole
+   * of 6.3 hold by construction rather than by whatever the field happens to
+   * be doing at that pixel, and it works identically over a shader and over a
+   * photograph because it never looks at what is behind it.
+   *
+   * It is applied to every direct child of .masthead__type, not just the
+   * headline block, so anything a page slots into a masthead is covered too.
+   * A solid inset to twice its own blur radius keeps the core at full ground
+   * across the element and puts the entire feather outside the text.
+   */
+  /* :global on the CHILD, not the parent. Astro compiles `.masthead__type > *`
+     into `.masthead__type[cid] > [cid]`, and slotted content carries the
+     PAGE's cid, so the rule silently skipped exactly the elements it was
+     written for - the /program epigraph and the /give sub-line. Scoping the
+     parent and globalising the child keeps it to this component's mastheads. */
+  .masthead__type > :global(*) {
+    position: relative;
+  }
+
+  .masthead__type > :global(*:not(:empty))::before {
+    content: "";
+    position: absolute;
+    inset: calc(var(--s-11) * -1);
+    z-index: -1;
+    pointer-events: none;
+    background: var(--paper);
+    /* Same radius as the hero. Over a shader a 64px blur was enough; over a
+       photograph with a hard bright region (/contact's sky) the rectangle was
+       still legible, and the band clips whatever spills. */
+    filter: blur(var(--s-9));
+  }
+
+  .masthead.on-dark .masthead__type > :global(*:not(:empty))::before {
+    background: var(--ink);
   }
 
   @media (min-width: 1024px) {

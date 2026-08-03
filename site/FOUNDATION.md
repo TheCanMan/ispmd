@@ -43,6 +43,16 @@ lives inside a child component. The rule does not error, it just does nothing.
 :global(.year__milestone--1) { grid-column: 1 / 4; }  /* works */
 ```
 
+The same thing bites **slotted content**, and it is easier to miss because the
+selector looks like it is about the parent:
+
+```css
+.masthead__type > * { ... }                  /* compiles to `> [cid]`, so page
+                                                content slotted in never matches */
+.masthead__type > :global(*) { ... }         /* works, and stays scoped to this
+                                                component's own instances */
+```
+
 ---
 
 ## Tokens and utilities - `src/styles/global.css`
@@ -132,6 +142,39 @@ Contact page only: `<Base jsonLd={educationalOrganization(Astro.site.href)}>`.
   Group tiles under `[data-stagger-vector]` so the 36° ordering is per grid.
 - `src/scripts/webgl.ts` - `mountField(canvas, { preset })`, all ten §13.3 presets, `detectTier()`,
   `cappedDpr()`. Do not write a second WebGL stack.
+
+  **Driving a masthead's shader from page code.** `Masthead.astro` mounts the field, so use
+  `onField(preset, handle => ...)` to reach it. It resolves whether you call it before or after
+  the mount. On Tier 3 there is no shader and the callback simply never fires, which is correct.
+
+  ```ts
+  import { onField } from '../scripts/webgl';
+  import { gsap, ScrollTrigger, prefersReducedMotion } from '../scripts/motion';
+
+  // §13.3 - /give: light rises through the section as you read.
+  onField('give', (field) => {
+    if (prefersReducedMotion()) return;
+    ScrollTrigger.create({
+      trigger: document.querySelector('.masthead'),
+      start: 'top top', end: 'bottom top', scrub: 0.6,
+      onUpdate: (self) => field.setUniform('uLightOrigin', [0.5, 0.02 + self.progress * 0.48]),
+    });
+  });
+
+  // §13.4 - /program: the pattern loosens as the content loosens.
+  onField('program', (field) => {
+    if (prefersReducedMotion()) return;
+    for (const [sel, density] of [['#arabic', 4.6], ['#deen', 3.2], ['#between', 2.0]]) {
+      ScrollTrigger.create({
+        trigger: sel, start: 'top 60%',
+        onEnter: () => gsap.to({ v: 0 }, {
+          duration: 0.62, ease: 'expo.out',
+          onUpdate() { field.setUniform('uDensity', density); },
+        }),
+      });
+    }
+  });
+  ```
 - `src/scripts/hero-field.ts` - the homepage only.
 - `src/pages/ispmd-2026-27.ics.ts` and `src/pages/calendar.json.ts` - already built. Link the
   `.ics` with `site.icsPath`.
@@ -163,3 +206,10 @@ Short version of §17, plus what Phase 1 hit in practice:
 - Implementing reduced motion in CSS only. It must be checked in JS and it changes
   `uConstruction`.
 - Publishing the wrong phone number or any street address for ISP.
+- **Assuming a token's annotated contrast holds on every ground.** §1's comments were written
+  against `--paper` only, and §4.2 alternates grounds on every page. `--text-faint` was corrected
+  for exactly this; if you introduce a pairing that is not in §6.3, measure it.
+- **Putting text over the field shader or a photograph without a scrim.** Neither is reliably
+  light or dark anywhere in particular. `Masthead.astro` already handles this for anything inside
+  a masthead; anywhere else, resolve the background to the ground the colour was verified against
+  rather than tuning against what the field happens to be doing.

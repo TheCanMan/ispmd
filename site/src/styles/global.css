@@ -105,7 +105,14 @@
      ========================================================== */
   --text:             #281E14;   /* 15.4:1 on --paper */
   --text-soft:        #5A4A3A;   /*  8.0:1 on --paper */
-  --text-faint:       #7A6857;   /*  5.0:1 on --paper */
+  /* CORRECTED. #7A6857 was annotated "5.0:1 on --paper", which was true and
+     was the only ground it was ever checked against. 4.2 alternates grounds on
+     every page, and on --paper-warm, --paper-cool and --vellum it measured
+     4.39, 4.39 and 4.18 - below AA at the 13px this token is mostly used at.
+     #6B5A4B clears 4.5 on ALL FOUR: 6.21 / 5.43 / 5.43 / 5.18. The annotation
+     now states the WORST ground, because quoting the best is what made this
+     invisible for eight pages. */
+  --text-faint:       #6B5A4B;   /*  5.2:1 on --vellum, the worst light ground */
   --text-link:        #3C6482;   /*  5.9:1 on --paper */
   --text-link-warm:   #8F4A16;   /*  6.3:1 on --paper */
   --text-amber:       #8A5D12;   /*  5.4:1 on --paper - the only amber-family text colour */
@@ -390,9 +397,17 @@
   --ctx-accent:      var(--sienna);
 }
 
+/*
+ * `color` is declared here, not only the --ctx-* aliases. Without it, the type
+ * roles that take their colour from context (.t-mega, .t-hero, .t-ui, the
+ * Arabic roles) inherited whatever the light-ground body colour was and
+ * rendered dark-on-dark. Hero.astro happened to hardcode its own colour and so
+ * never showed the bug; Masthead.astro did.
+ */
 .on-dark,
 .ground-ink,
 .ground-slate {
+  color: var(--ctx-text-soft);
   --ctx-text:        var(--text-on-dark);
   --ctx-text-soft:   var(--text-on-dark-soft);
   --ctx-text-faint:  var(--text-on-dark-faint);
@@ -516,7 +531,7 @@ hr {
   font-variation-settings: var(--vf-mega);
   line-height: var(--lh-mega);
   letter-spacing: var(--tr-mega);
-  color: inherit;
+  color: var(--ctx-text);
 }
 
 .t-hero {
@@ -525,7 +540,7 @@ hr {
   font-variation-settings: var(--vf-hero);
   line-height: var(--lh-hero);
   letter-spacing: var(--tr-hero);
-  color: inherit;
+  color: var(--ctx-text);
 }
 
 .t-display {
@@ -827,9 +842,16 @@ body.has-transparent-header main {
 /* Nav and editorial index link: the hooked underline.
    A 1.5px rule draws from the left, and at its right end kicks up 36 degrees
    for 6px - the turn of an interlace. Never on inline prose links. */
+/* 5.3 says the hooked underline is a WAYFINDING signal and is never used on
+   inline prose links, so every .link-hook is a standalone target and can carry
+   the 44px minimum from 10 at source. .link keeps no minimum on purpose: it is
+   the inline-prose class, and WCAG exempts a target whose size is constrained
+   by the line-height of the sentence around it. */
 .link-hook {
   position: relative;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   text-decoration: none;
   padding-block-end: 0.18em;
 }
@@ -1264,6 +1286,11 @@ a.card,
   }
 }
 
+/* 1.5: "--text on any of them clears 8:1 - use it for labels inside cells."
+   7.7's cell diagram softens the month to 70%, which drops it to 4.35:1 on
+   --fill-apricot and 4.28:1 on --fill-amber, under AA at 13px. Full strength
+   clears 8.39:1 on the worst fill. The 80% on a no-school title is fine at
+   6.04:1 and stays. */
 .cal-cell__month {
   font-family: var(--font-mono);
   font-size: var(--fs-label);
@@ -1272,7 +1299,6 @@ a.card,
   letter-spacing: var(--tr-label);
   text-transform: uppercase;
   color: var(--text);
-  opacity: 0.7;
 }
 
 .cal-cell__day {
@@ -1320,9 +1346,11 @@ a.card,
   white-space: nowrap;
 }
 
+/* 6.2, final row: on a --fill-* ground every text colour is --text.
+   --text-amber measured 2.95-4.00:1 across the four fills. */
 .cal-cell__ramadan {
   margin-block-start: auto;
-  color: var(--text-amber);
+  color: var(--text);
 }
 
 .cal-legend {

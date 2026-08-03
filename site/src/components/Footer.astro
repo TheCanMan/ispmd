@@ -84,10 +84,22 @@ import Button from './Button.astro';
     padding-block: calc(var(--section-y) + var(--s-9)) var(--section-y);
   }
 
-  /* Clipped at 40%, mid-cell. Not faded. */
+  /*
+   * 9.1 rule 2: the pattern is NEVER placed over body copy. At 40% of the
+   * footer it ran straight behind the link columns and the two contact lines,
+   * and a --paper stroke at --pattern-strong composites to rgb(112,104,96)
+   * over --ink - which put --link-on-dark at 2.81:1 on the phone number and
+   * the email address, the two most important things in this footer.
+   *
+   * The height is now the footer's own top padding, so the lattice terminates
+   * exactly where the content begins. Still clipped mid-cell rather than
+   * faded, still the closing statement of 7.2, and no longer behind type. The
+   * boundary comes from the layout rather than from a percentage that has to
+   * be guessed against content height.
+   */
   .site-footer__lattice {
     inset-block-end: auto;
-    height: 40%;
+    height: calc(var(--section-y) + var(--s-9));
   }
 
   .site-footer__inner {

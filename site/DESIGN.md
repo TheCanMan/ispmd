@@ -49,7 +49,10 @@ Nothing is imported from outside their palette.
      ========================================================== */
   --text:             #281E14;   /* 15.4:1 on --paper */
   --text-soft:        #5A4A3A;   /*  8.0:1 on --paper */
-  --text-faint:       #7A6857;   /*  5.0:1 on --paper */
+  --text-faint:       #6B5A4B;   /*  5.2:1 on --vellum - the WORST light ground.
+                                    5.0:1 was quoted for --paper only; the
+                                    original #7A6857 measured 4.18:1 on
+                                    --vellum and failed AA there. */
   --text-link:        #3C6482;   /*  5.9:1 on --paper */
   --text-link-warm:   #8F4A16;   /*  6.3:1 on --paper */
   --text-amber:       #8A5D12;   /*  5.4:1 on --paper - the only amber-family text colour */
@@ -664,7 +667,9 @@ Every combination the site actually uses, computed:
 |---|---|---|---|
 | `--text` `#281E14` | `--paper` `#FBF8F2` | 15.4:1 | AAA |
 | `--text-soft` `#5A4A3A` | `--paper` | 8.0:1 | AAA |
-| `--text-faint` `#7A6857` | `--paper` | 5.0:1 | AA |
+| `--text-faint` `#6B5A4B` | `--paper` | 6.2:1 | AAA |
+| `--text-faint` `#6B5A4B` | `--paper-warm` / `--paper-cool` | 5.4:1 | AA |
+| `--text-faint` `#6B5A4B` | `--vellum` | 5.2:1 | AA |
 | `--text-link` `#3C6482` | `--paper` | 5.9:1 | AA |
 | `--text-link-warm` `#8F4A16` | `--paper` | 6.3:1 | AA |
 | `--text-amber` `#8A5D12` | `--paper` | 5.4:1 | AA |
