@@ -88,7 +88,14 @@ const chords = walk.map((k, i) => {
 </div>
 
 <script>
-  import { gsap, ScrollTrigger, prefersReducedMotion, SplitText } from '../../scripts/motion';
+  import {
+    gsap,
+    ScrollTrigger,
+    prefersReducedMotion,
+    SplitText,
+    openMasks,
+    maskedTravel,
+  } from '../../scripts/motion';
 
   const root = document.querySelector<HTMLElement>('[data-homework]');
 
@@ -108,22 +115,46 @@ const chords = walk.map((k, i) => {
       const setupLines = new SplitText(setup, { type: 'lines', mask: 'lines', aria: 'none' }).lines;
       const punchLines = new SplitText(punchline, { type: 'lines', mask: 'lines', aria: 'none' }).lines;
 
+      /* SplitText clips each line to the line box; --lh-hero is 0.92em. See
+         the measured table in motion.ts. */
+      openMasks(setupLines);
+      openMasks(punchLines);
+
       gsap.set([setup, punchline], { opacity: 1 });
       gsap.set([...straps, chord], { drawSVG: '0%' });
 
+      /*
+       * 13.4 fixes the PROPORTIONS inside this timeline - setup in the first
+       * 20%, strapwork 20-70%, the chord 70-90%, the punchline at 75% - but
+       * not what stretch of scrolling they map onto. Mapped to
+       * `top 80% -> bottom 60%`, the punchline's 75% landed only once the
+       * section was three-quarters of the way out of the viewport, so at the
+       * natural reading position the four lines were still 32-120px below
+       * their marks and "the parents!" was rendering on top of the paragraph
+       * beneath it. The line the whole design exists to carry never finished
+       * arriving while anyone was looking at it.
+       *
+       * Ending at `center center` means the timeline completes as the section
+       * reaches the middle of the viewport - the moment it is being read.
+       */
       const timeline = gsap.timeline({
-        scrollTrigger: { trigger: root, start: 'top 80%', end: 'bottom 60%', scrub: 0.6 },
+        scrollTrigger: { trigger: root, start: 'top 85%', end: 'center center', scrub: 0.6 },
       });
 
       timeline
-        .fromTo(setupLines, { yPercent: 108, rotate: 1.4 }, { yPercent: 0, rotate: 0, stagger: 0.055 }, 0)
+        .fromTo(
+          setupLines,
+          { y: (_i: number, el: Element) => maskedTravel(el), rotate: 1.4 },
+          { y: 0, rotate: 0, stagger: 0.055 },
+          0
+        )
         /* 20% to 70%: the strapwork draws outward. */
         .to(straps, { drawSVG: '100%', stagger: 0.04 }, 0.2)
         /* 75%: the four punchline lines land. */
         .fromTo(
           punchLines,
-          { yPercent: 108, rotate: 1.4 },
-          { yPercent: 0, rotate: 0, stagger: 0.055 },
+          { y: (_i: number, el: Element) => maskedTravel(el), rotate: 1.4 },
+          { y: 0, rotate: 0, stagger: 0.055 },
           0.75
         )
         /* 70% to 90%: the missing chord draws in, and the star closes. */

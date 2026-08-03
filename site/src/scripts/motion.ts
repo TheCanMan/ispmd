@@ -92,6 +92,59 @@ export function orderAlongPatternVector(elements: Element[]): Element[] {
     .map((b) => b.el);
 }
 
+/**
+ * SplitText's `mask: "lines"` sizes each line's clip to the LINE BOX, and this
+ * site sets line-heights below 1 (--lh-hero 0.92, --lh-title 1.06). Descenders
+ * and the deeper italic forms fall outside and are shaved off.
+ *
+ * Measured at rest with the entrance complete, glyph pixels destroyed:
+ *
+ *              margin 0     0.06em   0.10em   0.14em
+ *   /our-story  714          392      164        0
+ *   /faqs       152           84       34        0
+ *   /  hero      30            0        0        0
+ *
+ * 0.18em is 0.14 plus a little headroom. It is deliberately NOT larger: the
+ * clip is also what stops a still-rising line painting over the paragraph
+ * beneath it, so every extra em is spill during the scroll-in.
+ *
+ * overflow-clip-margin expands the clip WITHOUT touching layout, which is what
+ * makes this safe between stacked lines - padding and a negative margin would
+ * perturb the box model instead.
+ */
+const CLIP_MARGIN_EM = 0.18;
+
+export function openMasks(lines: Element[]): void {
+  const supported =
+    typeof CSS !== 'undefined' && CSS.supports?.('overflow-clip-margin', '1px');
+
+  for (const line of lines) {
+    const mask = (line as HTMLElement).parentElement;
+    if (!mask) continue;
+    if (supported) {
+      mask.style.overflowClipMargin = `${CLIP_MARGIN_EM}em`;
+    } else {
+      /* Pre-Safari-16. Losing the reveal edge on that line is a far smaller
+         loss than shaving the glyphs. */
+      mask.style.overflow = 'visible';
+    }
+  }
+}
+
+/**
+ * Far enough that the line's ink starts fully below its own clip region.
+ * 5.2's flat `yPercent: 108` assumed the clip equalled the line box; with the
+ * clip opened it needs a little more, and computing it per line keeps it right
+ * for every type role and every breakpoint rather than per-role constants.
+ */
+export function maskedTravel(line: Element): number {
+  const el = line as HTMLElement;
+  const mask = el.parentElement;
+  const height = mask?.offsetHeight ?? el.offsetHeight;
+  const fontSize = parseFloat(getComputedStyle(el).fontSize) || 0;
+  return height + 2 * CLIP_MARGIN_EM * fontSize;
+}
+
 /** A. line-rise. Split into lines, each inside its own overflow: hidden box. */
 export function lineRise(target: HTMLElement, trigger?: Element) {
   const split = new SplitText(target, {
@@ -114,6 +167,8 @@ export function lineRise(target: HTMLElement, trigger?: Element) {
     aria: 'none',
   });
 
+  openMasks(split.lines);
+
   /* The element itself is hidden by .js-motion until its entrance is wired,
      so a script that never loads cannot leave text invisible. */
   gsap.set(target, { opacity: 1 });
@@ -122,9 +177,9 @@ export function lineRise(target: HTMLElement, trigger?: Element) {
      would animate back to 0 and leave the line hidden forever. */
   return gsap.fromTo(
     split.lines,
-    { yPercent: 108, rotate: 1.4 },
+    { y: (_i: number, el: Element) => maskedTravel(el), rotate: 1.4 },
     {
-      yPercent: 0,
+      y: 0,
       rotate: 0,
       duration: DUR.reveal,
       ease: EASE.out,

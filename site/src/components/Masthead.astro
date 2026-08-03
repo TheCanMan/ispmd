@@ -149,6 +149,14 @@ const {
      parent and globalising the child keeps it to this component's mastheads. */
   .masthead__type > :global(*) {
     position: relative;
+    /*
+     * `filter` makes each ::before its own stacking context, but the CHILD it
+     * sits inside is not one, so a negative-z scrim can paint past its own
+     * parent and over an earlier sibling's text - /calendar and /program both
+     * put two blocks in this grid. Isolating each child makes that
+     * structurally impossible rather than accidentally fine.
+     */
+    isolation: isolate;
   }
 
   .masthead__type > :global(*:not(:empty))::before {
