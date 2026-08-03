@@ -1,0 +1,397 @@
+---
+/**
+ * Program - DESIGN.md 14.3. Copy from COPY.md, "Program", verbatim.
+ *
+ * Section rhythm: shader masthead -> paper -> paper -> paper-warm -> paper ->
+ * paper-cool -> ink -> paper -> paper. Section 7 (Homework, restated) is the
+ * page's only dark section - two would be one too many alongside the footer.
+ *
+ * NOT IMPLEMENTED, and reported rather than worked around: 13.4 "The Program
+ * sequence" asks for uDensity to tween (4.6 -> 3.2 -> 2.0) as each of the
+ * three parts scrolls into view. mountField() in webgl.ts already exposes a
+ * setUniform() for exactly this, but the handle it returns is only reachable
+ * from Masthead.astro's own <script>, which is frozen/read-only to this page
+ * agent - there is no hook to reach it from here without editing a shared
+ * component. The masthead ships with the static `program` preset for the
+ * whole page instead.
+ */
+import Base from '../layouts/Base.astro';
+import Masthead from '../components/Masthead.astro';
+import Section from '../components/Section.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import Epigraph from '../components/Epigraph.astro';
+import HairlineList from '../components/HairlineList.astro';
+import HairlineRow from '../components/HairlineRow.astro';
+import Media from '../components/Media.astro';
+import Button from '../components/Button.astro';
+
+import { labels } from '../data/site';
+
+const arabicList = [
+  'Recitation, taught through the Noorani method',
+  'Basic Quranic vocabulary',
+  'The shorter suras, committed to memory',
+  'A love for the Quran as a book of guidance',
+];
+
+const moments = [
+  {
+    date: 'DECEMBER 13, 2026',
+    title: 'Deen Showcase',
+    body: 'The end of the first semester. The children present what they have been working on since September, to each other and to their families.',
+  },
+  {
+    date: 'MAY 9, 2027',
+    title: 'Arabic Final Exams',
+    body: 'A year of reading, in one morning.',
+  },
+  {
+    date: 'MAY 16, 2027',
+    title: 'Quran Competition',
+    body: 'The last day of school, and the one the whole year points at.',
+  },
+];
+---
+
+<Base
+  title="Program - Islamic School of Potomac"
+  description={'Arabic, Deen, and "...and in between." How the Islamic School of Potomac teaches children ages 5 to 18, one morning a week.'}
+>
+  {/* 1. Masthead */}
+  <Masthead preset="program" label="WHAT WE TEACH" lines={['Arabic, Deen,', 'and in between.']}>
+    <div class="masthead-epigraph">
+      <Epigraph align="end" />
+    </div>
+  </Masthead>
+
+  {/* 2. How the program is built */}
+  <Section ground="paper" grid>
+    <p class="t-lead intro__lead" data-motion="body-rise">
+      The program has three parts. Two of them have names the school chose carefully. The third
+      has a name the school gave up on choosing, which turns out to be the most accurate one.
+    </p>
+  </Section>
+
+  {/* 3. Arabic */}
+  <Section ground="paper" grid>
+    <p class="t-label part__index" data-motion="body-rise">01</p>
+
+    <div class="part__text">
+      <p class="t-arabic-kufi part__mark part__mark--sienna" lang="ar" dir="rtl" data-motion="body-rise">
+        العربية
+      </p>
+      <h2 class="t-display" data-motion="line-rise">Arabic</h2>
+      <div class="flow">
+        <p class="t-body" data-motion="body-rise">
+          The goal is not fluency in a modern spoken language. The goal is that a child can open
+          the Quran and read it without an intermediary. Everything in this half of the program
+          serves that.
+        </p>
+        <p class="t-body" data-motion="body-rise">
+          Classes are grouped by a placement test rather than by age, so a nine-year-old who reads
+          well and a thirteen-year-old who is starting out are each in the right room.
+        </p>
+      </div>
+
+      <HairlineList class="part__list">
+        {arabicList.map((item) => <HairlineRow title={item} />)}
+      </HairlineList>
+    </div>
+
+    <div class="part__media">
+      <Media slotId="program.arabic" sizes="(min-width: 1024px) 28vw, 90vw" />
+    </div>
+  </Section>
+
+  {/* 4. Deen */}
+  <Section ground="warm" grid>
+    <div class="part__media part__media--deen">
+      <Media slotId="program.deen" sizes="(min-width: 1024px) 33vw, 90vw" />
+    </div>
+
+    <p class="t-label part__index part__index--deen" data-motion="body-rise">02</p>
+
+    <div class="part__text part__text--deen">
+      <p class="t-arabic-kufi part__mark part__mark--slate" lang="ar" dir="rtl" data-motion="body-rise">
+        الدين
+      </p>
+      <h2 class="t-display" data-motion="line-rise">Deen</h2>
+      <div class="flow">
+        <p class="t-body" data-motion="body-rise">
+          Deen is taught thematically rather than by textbook. The school picks a theme and every
+          grade takes it on in a way its age can hold, which means a family with three children of
+          different ages is having one conversation at home instead of three.
+        </p>
+        <p class="t-body" data-motion="body-rise">
+          Classes are grouped by age, because the questions a child asks about how to live change
+          faster than their reading does.
+        </p>
+      </div>
+    </div>
+  </Section>
+
+  {/* 5. ...and in between */}
+  <Section ground="paper" grid>
+    <p class="t-label part__index" data-motion="body-rise">03</p>
+
+    <h2 class="t-display t-italic between__headline" data-motion="line-rise">...and in between</h2>
+
+    <div class="flow between__text">
+      <p class="t-body" data-motion="body-rise">
+        This is the school's own name for it, and it is the part no curriculum can be written for.
+      </p>
+      <p class="t-body" data-motion="body-rise">
+        It is the friendship a child makes with someone they would never have met at their weekday
+        school. It is the question asked in the hallway that the class was too shy for. It is a
+        teenager who has been coming since kindergarten helping a five-year-old find the right
+        room. It is the habit of showing up on a Sunday morning when you could be anywhere else.
+      </p>
+      <p class="t-body" data-motion="body-rise">
+        It is also, in the school's experience, the part children remember longest.
+      </p>
+    </div>
+
+    <div class="between__media">
+      <Media slotId="program.between" sizes="(min-width: 1024px) 42vw, 90vw" />
+    </div>
+  </Section>
+
+  {/* 6. Placement */}
+  <Section ground="cool" grid>
+    <div class="placement__list">
+      <SectionHeader label="HOW CHILDREN ARE PLACED" />
+      <HairlineList>
+        <HairlineRow title="Arabic: by placement test">
+          <p class="t-body">
+            A short test before the year starts, so a child sits with others reading at the same
+            level. It is not an exam and nobody passes or fails it.
+          </p>
+        </HairlineRow>
+        <HairlineRow title="Deen: by age">
+          <p class="t-body">Deen classes are grouped by the age of the student.</p>
+        </HairlineRow>
+      </HairlineList>
+    </div>
+  </Section>
+
+  {/* 7. Homework, restated */}
+  <Section ground="ink" rhythm="lg" grid>
+    <div class="restated">
+      <p class="t-label">OUR TEACHING PHILOSOPHY</p>
+      <h2 class="t-display restated__headline" data-motion="line-rise">
+        Children have enough <br />homework during the week. <br />We don't give homework to <br
+        />children. We give it to the parents<span class="t-mark">!</span>
+      </h2>
+      <div class="flow restated__body">
+        <p class="t-body" data-motion="body-rise">
+          What that means in practice: the school asks parents to reinforce what is taught by
+          doing it, not by quizzing. Praying as a family. Giving as a family. Serving the
+          community as a family.
+        </p>
+        <p class="t-body" data-motion="body-rise">
+          A child who is told about charity learns a word. A child who watches a parent give
+          learns a habit. The school has decided which of those it is in the business of.
+        </p>
+      </div>
+    </div>
+  </Section>
+
+  {/* 8. The year's three moments */}
+  <Section ground="paper">
+    <SectionHeader label="WHAT THE YEAR BUILDS TOWARD" class="moments__header" />
+    <HairlineList>
+      {
+        moments.map((moment) => (
+          <HairlineRow marker={moment.date} title={moment.title} href="/calendar">
+            <p class="t-body">{moment.body}</p>
+          </HairlineRow>
+        ))
+      }
+    </HairlineList>
+    <div class="moments__cta">
+      <Button href="/calendar" variant="quiet" icon="arrow-right">{labels.calendar}</Button>
+    </div>
+  </Section>
+
+  {/* 9. CTA */}
+  <Section ground="paper">
+    <div class="cta">
+      <SectionHeader lines={['Thirty-three Sundays', 'start in September.']} />
+      <div class="cta__actions" data-motion="body-rise">
+        <Button href="/enroll" variant="primary">{labels.enrollPrimary}</Button>
+        <Button href="/calendar" variant="quiet" icon="arrow-right">{labels.calendar}</Button>
+      </div>
+    </div>
+  </Section>
+</Base>
+
+<style>
+  /* ---- Masthead epigraph ---- */
+
+  .masthead-epigraph {
+    grid-column: 1 / -1;
+    margin-block-start: var(--s-6);
+  }
+
+  @media (min-width: 768px) {
+    .masthead-epigraph { grid-column: 4 / 11; }
+  }
+
+  @media (min-width: 1024px) {
+    .masthead-epigraph { grid-column: 6 / 11; }
+  }
+
+  /* ---- 2. How the program is built ---- */
+
+  .intro__lead {
+    grid-column: 1 / -1;
+  }
+
+  @media (min-width: 768px) {
+    .intro__lead { grid-column: 1 / 8; }
+  }
+
+  @media (min-width: 1024px) {
+    .intro__lead { grid-column: 2 / 9; }
+  }
+
+  /* ---- 3. Arabic / 4. Deen shared part layout ---- */
+
+  .part__index,
+  .part__text,
+  .part__media {
+    grid-column: 1 / -1;
+  }
+
+  .part__text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-5);
+  }
+
+  .part__mark--sienna { color: var(--sienna); }
+  .part__mark--slate { color: var(--slate); }
+
+  .part__list {
+    margin-block-start: var(--s-3);
+    max-width: var(--measure);
+  }
+
+  @media (min-width: 768px) {
+    .part__index { grid-column: 1 / 2; }
+    .part__text { grid-column: 2 / 7; }
+    .part__media { grid-column: 7 / 11; }
+  }
+
+  @media (min-width: 1024px) {
+    .part__index { grid-column: 1 / 2; }
+    .part__text { grid-column: 2 / 6; }
+    .part__media { grid-column: 7 / 11; }
+  }
+
+  /* 4. Deen is mirrored: media on the left, text on the right. */
+  .part__media--deen {
+    order: -1;
+  }
+
+  @media (min-width: 768px) {
+    .part__media--deen { grid-column: 1 / 5; }
+    .part__index--deen { grid-column: 5 / 6; }
+    .part__text--deen { grid-column: 6 / 11; }
+  }
+
+  @media (min-width: 1024px) {
+    .part__media--deen { grid-column: 1 / 5; }
+    .part__index--deen { grid-column: 5 / 6; }
+    .part__text--deen { grid-column: 6 / 10; }
+  }
+
+  /* ---- 5. ...and in between ---- */
+
+  .between__headline,
+  .between__text,
+  .between__media {
+    grid-column: 1 / -1;
+  }
+
+  .between__headline {
+    margin-block-end: var(--s-2);
+  }
+
+  .between__text {
+    max-width: var(--measure);
+  }
+
+  @media (min-width: 768px) {
+    .between__text { grid-column: 1 / 6; }
+    .between__media { grid-column: 6 / 11; }
+  }
+
+  @media (min-width: 1024px) {
+    .between__text { grid-column: 2 / 7; }
+    .between__media { grid-column: 6 / 11; }
+  }
+
+  /* ---- 6. Placement ---- */
+
+  .placement__list {
+    grid-column: 1 / -1;
+  }
+
+  @media (min-width: 768px) {
+    .placement__list { grid-column: 1 / 9; }
+  }
+
+  @media (min-width: 1024px) {
+    .placement__list { grid-column: 2 / 9; }
+  }
+
+  /* ---- 7. Homework, restated ---- */
+
+  .restated {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-5);
+  }
+
+  .restated__headline {
+    color: var(--text-on-dark);
+  }
+
+  .restated__body {
+    color: var(--text-on-dark-soft);
+    max-width: var(--measure);
+  }
+
+  .restated__body p {
+    color: var(--text-on-dark-soft);
+  }
+
+  @media (min-width: 768px) {
+    .restated { grid-column: 1 / 9; }
+  }
+
+  @media (min-width: 1024px) {
+    .restated { grid-column: 2 / 9; }
+  }
+
+  /* ---- 8. The year's three moments ---- */
+
+  :global(.moments__header) {
+    margin-block-end: var(--s-6);
+  }
+
+  .moments__cta {
+    margin-block-start: var(--s-6);
+  }
+
+  /* ---- 9. CTA ---- */
+
+  .cta__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-5) var(--s-7);
+    margin-block-start: var(--s-5);
+  }
+</style>

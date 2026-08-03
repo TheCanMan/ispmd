@@ -1,0 +1,269 @@
+---
+/**
+ * Contact - DESIGN.md 14.8. Copy from COPY.md, "Contact", verbatim.
+ *
+ * Organized by visitor INTENT, not by channel (14.8). Both the phone and
+ * email rows carry equal --fs-title weight; neither is the smaller, secondary
+ * channel. There is no contact form: no server exists, and a form that fails
+ * silently is worse than a channel that works.
+ *
+ * The IEC's own phone number never appears here or anywhere on this site -
+ * it belongs to a legally separate 501(c)(3). Every fact below comes from
+ * src/data/site.ts, never retyped.
+ *
+ * Single editorial column at .container-narrow throughout, per 14.8: "the
+ * colophon page of a book, where short is correct."
+ */
+import Base from '../layouts/Base.astro';
+import Masthead from '../components/Masthead.astro';
+import Section from '../components/Section.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import HairlineList from '../components/HairlineList.astro';
+import HairlineRow from '../components/HairlineRow.astro';
+import Media from '../components/Media.astro';
+import Button from '../components/Button.astro';
+
+import { site } from '../data/site';
+import { educationalOrganization } from '../data/schema';
+
+const intents = [
+  'Enrolling a child',
+  'A question about the program',
+  "I'd like to volunteer",
+].map((subject) => ({
+  subject,
+  href: `mailto:${site.email.address}?subject=${encodeURIComponent(subject)}`,
+}));
+
+const jsonLd = educationalOrganization(Astro.site!.href);
+---
+
+<Base
+  title="Contact - Islamic School of Potomac"
+  description="Call (301) 929-1441, write to info@ispmd.org, or come and find us on a Sunday morning. Classes are held at the Islamic Education Center in Potomac, Maryland."
+  jsonLd={jsonLd}
+>
+  {/* 1. Masthead */}
+  <Masthead
+    preset="contact"
+    dark
+    label="CONTACT"
+    lines={['Call, write, or come', 'on a Sunday.']}
+  />
+
+  {/* 2. Reach us */}
+  <Section ground="paper" container="narrow" rhythm="sm">
+    <div class="reach">
+      <div class="reach__row">
+        <a class="reach__link link-hook is-drawn" href={site.phone.href}>{site.phone.display}</a>
+        <p class="t-body" data-motion="body-rise">
+          There is no phone tree and no office here, so if nobody picks up, write instead. It
+          reaches exactly the same people.
+        </p>
+      </div>
+
+      <div class="reach__row">
+        <a class="reach__link link-hook is-drawn" href={site.email.href}>{site.email.display}</a>
+        <p class="t-body" data-motion="body-rise">
+          A person reads this. It goes to the people who actually run the Sunday morning, so an
+          answer usually comes back with something useful in it rather than a form reply.
+        </p>
+
+        <div class="reach__intents">
+          <HairlineList>
+            {
+              intents.map((intent) => (
+                <HairlineRow title={intent.subject} href={intent.href} />
+              ))
+            }
+          </HairlineList>
+        </div>
+      </div>
+    </div>
+  </Section>
+
+  {/* 3. Where class meets */}
+  <Section ground="warm" container="narrow">
+    <div class="venue">
+      <div class="venue__text">
+        <SectionHeader label="WHERE CLASS MEETS" />
+        <p class="t-num venue__address">
+          {site.venue.name}<br />
+          {site.venue.streetAddress}<br />
+          {site.venue.addressLocality}, {site.venue.addressRegion} {site.venue.postalCode}
+        </p>
+        <p class="t-body" data-motion="body-rise">
+          Classes are held at the Islamic Education Center. The Islamic School of Potomac is a
+          separate organization and meets there; the building is not ours and the Center's staff
+          do not run our school.
+        </p>
+        <p class="t-subtitle venue__times">
+          Sundays, 10:00 AM until Salat al-Dhuhr<br />September through May
+        </p>
+        <a class="link" href={site.venue.mapsUrl} rel="noopener noreferrer" target="_blank">
+          Open in maps
+        </a>
+      </div>
+
+      <div class="venue__media">
+        <Media slotId="contact.venue" sizes="(min-width: 1024px) 33vw, 90vw" />
+      </div>
+    </div>
+  </Section>
+
+  {/* 4. Post */}
+  <Section ground="paper" container="narrow">
+    <SectionHeader label="MAIL ONLY" />
+    <p class="t-num post__address" data-motion="body-rise">
+      {site.mail.lines[0]}<br />{site.mail.lines[1]}<br />{site.mail.lines[2]}
+    </p>
+    <p class="t-small" data-motion="body-rise">
+      This is a mailbox, not a classroom. Checks and paperwork go here; nobody is standing behind
+      it.
+    </p>
+  </Section>
+
+  {/* 5. Come on a Sunday */}
+  <Section ground="cool" container="narrow">
+    <div class="sunday">
+      <h2 class="t-display" data-motion="line-rise">Better than either: <br />come and see.</h2>
+      <p class="t-body" data-motion="body-rise">
+        Sunday mornings between September and May, at the Islamic Education Center on Montrose
+        Road. Call or write first so we know to look out for you, and someone will meet you at
+        the door.
+      </p>
+      <p class="t-body" data-motion="body-rise">
+        If you want one morning to pick, make it the Deen Showcase on December 13. It is the day
+        the school is most itself.
+      </p>
+      <div class="sunday__actions" data-motion="body-rise">
+        <Button href={site.phone.href} variant="ghost">{site.phone.display}</Button>
+        <Button href={site.email.href} variant="ghost">{site.email.display}</Button>
+      </div>
+    </div>
+  </Section>
+
+  {/* 6. Elsewhere */}
+  <Section ground="paper" container="narrow">
+    <SectionHeader label="ELSEWHERE" />
+    <div class="elsewhere">
+      <a class="link" href={site.social.instagram} rel="noopener noreferrer" target="_blank">
+        Instagram
+      </a>
+      <a class="link" href={site.social.facebook} rel="noopener noreferrer" target="_blank">
+        Facebook
+      </a>
+    </div>
+  </Section>
+</Base>
+
+<style>
+  /*
+   * Masthead.astro's h1 uses `.t-hero { color: inherit; }`, and `.on-dark`
+   * only redefines the --ctx-* custom properties, not `color` itself, so the
+   * inherited value stays whatever body resolved to and the headline never
+   * actually turns light on a dark masthead. Hero.astro on the homepage
+   * works around the same gap by hardcoding color: var(--text-on-dark) on
+   * its own headline class; Masthead.astro has no equivalent for its `dark`
+   * variant, and that file is frozen to this page agent.
+   */
+  :global(.masthead.on-dark .t-hero) {
+    color: var(--text-on-dark);
+  }
+
+  /* ---- 2. Reach us ---- */
+
+  .reach {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .reach__row {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-3);
+    padding-block: var(--s-6);
+    border-block-end: var(--border-hair) solid var(--rule);
+  }
+
+  .reach__row:first-child {
+    border-block-start: var(--border-hair) solid var(--rule);
+  }
+
+  a.reach__link.link-hook.is-drawn {
+    font-family: var(--font-display);
+    font-variation-settings: var(--vf-title);
+    font-size: var(--fs-title);
+    line-height: var(--lh-title);
+    color: var(--text-link-warm);
+    width: fit-content;
+  }
+
+  .reach__intents {
+    margin-block-start: var(--s-4);
+    padding-inline-start: var(--s-5);
+  }
+
+  /* ---- 3. Where class meets ---- */
+
+  .venue {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-6);
+  }
+
+  .venue__text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-4);
+  }
+
+  .venue__times {
+    margin-block-start: var(--s-2);
+  }
+
+  @media (min-width: 1024px) {
+    .venue {
+      flex-direction: row;
+      align-items: start;
+      gap: var(--s-8);
+    }
+
+    .venue__text {
+      flex: 1 1 auto;
+    }
+
+    .venue__media {
+      flex: 0 0 33%;
+    }
+  }
+
+  /* ---- 4. Post ---- */
+
+  .post__address {
+    margin-block-start: var(--s-4);
+  }
+
+  /* ---- 5. Come on a Sunday ---- */
+
+  .sunday {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-5);
+  }
+
+  .sunday__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-4) var(--s-6);
+    margin-block-start: var(--s-2);
+  }
+
+  /* ---- 6. Elsewhere ---- */
+
+  .elsewhere {
+    display: flex;
+    gap: var(--s-6);
+    margin-block-start: var(--s-4);
+  }
+</style>

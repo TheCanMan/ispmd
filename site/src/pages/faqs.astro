@@ -1,0 +1,221 @@
+---
+/**
+ * FAQs - DESIGN.md 14.6. Copy from COPY.md, "FAQs", verbatim.
+ *
+ * The quietest masthead on the site, then one Accordion (7.6) holding all
+ * three question groups so the strap-draw divider between groups is the
+ * only rule doing the separating - three separate <Accordion>s would each
+ * add their own plain top hairline on top of it.
+ */
+import Base from '../layouts/Base.astro';
+import Masthead from '../components/Masthead.astro';
+import Section from '../components/Section.astro';
+import Accordion from '../components/Accordion.astro';
+import AccordionItem from '../components/AccordionItem.astro';
+import Divider from '../components/Divider.astro';
+import Media from '../components/Media.astro';
+import Button from '../components/Button.astro';
+
+import { site, labels } from '../data/site';
+---
+
+<Base
+  title="FAQs - Islamic School of Potomac"
+  description="Ages, tuition, placement, what a Sunday looks like, and how to get involved. The questions families ask us most."
+>
+  {/* 1. Masthead */}
+  <Masthead preset="faqs" label="QUESTIONS" lines={['What families', 'ask us.']} />
+
+  {/* 2. The list */}
+  <Section ground="paper" container="narrow" rhythm="sm">
+    <Accordion>
+      <p class="t-label faq-group">ENROLLING</p>
+
+      <AccordionItem question="How old does my child need to be?" id="faq-age" open>
+        <p class="t-body">
+          Our classes begin at kindergarten, with 5 year-olds. The school teaches children through
+          age 18.
+        </p>
+      </AccordionItem>
+
+      <AccordionItem question="How much does it cost?" id="faq-cost">
+        <p class="t-body">
+          The cost is $60 for one student and $100 for a family. Financial assistance is
+          available.
+        </p>
+      </AccordionItem>
+
+      <AccordionItem question="What if tuition is a difficulty for us?" id="faq-tuition">
+        <p class="t-body">
+          Say so when you enroll. Financial assistance is available and it is handled quietly. It
+          is a normal part of how this school works, not an exception to it.
+        </p>
+      </AccordionItem>
+
+      <AccordionItem question="How are children placed in classes?" id="faq-placement">
+        <p class="t-body">
+          Arabic class placement is determined by placement test. Deen class placement is
+          determined by the age of the student.
+        </p>
+        <p class="t-body">
+          The Arabic test is short, it happens before the year starts, and nobody passes or fails
+          it. It exists so a child sits with others reading at the same level rather than others
+          born the same year.
+        </p>
+      </AccordionItem>
+
+      <AccordionItem question="How do I enroll?" id="faq-how-to-enroll">
+        <p class="t-body">
+          Through the enrollment form on this site. It takes a few minutes, and someone from the
+          school will write back about placement.
+        </p>
+      </AccordionItem>
+
+      <Divider />
+      <p class="t-label faq-group">THE PROGRAM</p>
+
+      <AccordionItem question="What is the Noorani method?" id="faq-noorani">
+        <p class="t-body">
+          A well-established approach to teaching Arabic recitation, which builds up from letters
+          and their sounds to reading whole words and verses. It is what we use to teach children
+          to read the Quran.
+        </p>
+      </AccordionItem>
+
+      <AccordionItem question="What does Deen class cover?" id="faq-deen">
+        <p class="t-body">
+          Deen is taught thematically rather than from a fixed textbook. The school takes a theme
+          and every grade works on it in a way that suits its age, so a family with children of
+          different ages is having one conversation at home rather than several.
+        </p>
+      </AccordionItem>
+
+      <AccordionItem question={'What is "...and in between"?'} id="faq-between">
+        <p class="t-body">
+          The school's own name for the part of the program that is on no syllabus. The
+          friendships, the questions asked in hallways, the habit of showing up. It is not
+          scheduled and it is not optional.
+        </p>
+      </AccordionItem>
+
+      <AccordionItem question="Do you give homework?" id="faq-homework">
+        <p class="t-body">
+          Children have enough homework during the week. We don't give homework to children - we
+          give it to the parents!
+        </p>
+        <p class="t-body">
+          In practice: the school asks families to reinforce what is taught by doing it together.
+          Praying, giving, serving the community. A child who is told about charity learns a word.
+          A child who watches a parent give learns a habit.
+        </p>
+      </AccordionItem>
+
+      <Divider />
+      <p class="t-label faq-group">PRACTICAL</p>
+
+      <AccordionItem question="When and where does class meet?" id="faq-when">
+        <p class="t-body">Sundays, from 10:00 AM until Salat al-Dhuhr, September through May.</p>
+        <p class="t-body">
+          Classes are held at the Islamic Education Center, 7917 Montrose Rd, Potomac, MD 20854.
+          The Islamic School of Potomac is a separate organization and meets there.
+        </p>
+      </AccordionItem>
+
+      <AccordionItem question="Can I get involved?" id="faq-involved">
+        <p class="t-body">Parent feedback and volunteering is encouraged.</p>
+        <p class="t-body">
+          The school is run by the families in it. If you have an hour, a skill, or a strong
+          opinion about how something should be done, the school would rather hear it than not.
+          Write to info@ispmd.org.
+        </p>
+      </AccordionItem>
+
+      <AccordionItem question="Is my donation tax-deductible?" id="faq-tax">
+        <p class="t-body">
+          Yes. The Islamic School of Potomac is a 501(c)(3) non-profit organization, EIN
+          52-1989063. You can give through PayPal or by check.
+        </p>
+      </AccordionItem>
+
+      <AccordionItem question="How do I reach the school?" id="faq-reach">
+        <p class="t-body">
+          By phone at {site.phone.display}, or by email at {site.email.display}. Both reach the
+          people who actually run the Sunday morning.
+        </p>
+        <p class="t-body">There is no office and no phone tree. If nobody picks up, write instead.</p>
+      </AccordionItem>
+    </Accordion>
+  </Section>
+
+  {/* 3. Aside */}
+  <Section ground="warm" grid>
+    <blockquote class="aside__quote">
+      <p class="t-title t-italic" data-motion="line-rise">
+        We are more than a Sunday School. We are a community.
+      </p>
+    </blockquote>
+
+    <div class="aside__media">
+      <Media slotId="faqs.aside" sizes="(min-width: 1024px) 33vw, 90vw" />
+    </div>
+  </Section>
+
+  {/* 4. Still asking */}
+  <Section ground="paper">
+    <div class="still">
+      <h2 class="t-display" data-motion="line-rise">Still asking?</h2>
+      <p class="t-body" data-motion="body-rise">
+        Write to info@ispmd.org. There is no wrong question and there is no queue.
+      </p>
+      <div class="still__actions" data-motion="body-rise">
+        <Button href={site.email.href} variant="ghost">{site.email.display}</Button>
+        <Button href="/contact" variant="quiet" icon="arrow-right">{labels.contact}</Button>
+      </div>
+    </div>
+  </Section>
+</Base>
+
+<style>
+  /* ---- 2. The list ---- */
+
+  .faq-group {
+    padding-block: var(--s-5) var(--s-2);
+  }
+
+  .faq-group:first-child {
+    padding-block-start: 0;
+  }
+
+  /* ---- 3. Aside ---- */
+
+  .aside__quote,
+  .aside__media {
+    grid-column: 1 / -1;
+  }
+
+  @media (min-width: 768px) {
+    .aside__quote { grid-column: 1 / 7; }
+    .aside__media { grid-column: 7 / 11; }
+  }
+
+  @media (min-width: 1024px) {
+    .aside__quote { grid-column: 2 / 6; }
+    .aside__media { grid-column: 7 / 11; }
+  }
+
+  /* ---- 4. Still asking ---- */
+
+  .still {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-5);
+    max-width: var(--measure);
+  }
+
+  .still__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-5) var(--s-7);
+    margin-block-start: var(--s-2);
+  }
+</style>

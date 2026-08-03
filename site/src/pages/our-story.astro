@@ -1,0 +1,306 @@
+---
+/**
+ * Our Story - DESIGN.md 14.2. Copy from COPY.md, "Our Story", verbatim.
+ *
+ * Section rhythm: shader masthead -> paper -> paper-warm -> paper -> paper ->
+ * paper-cool. Two --paper sections run back to back (4 and 5); that is fine,
+ * the rule only forbids two COLOURED grounds sitting adjacent.
+ *
+ * [HISTORY] (COPY.md, between the pull quote and section 3) is intentionally
+ * not rendered. No founding year exists in any source, COPY.md says not to
+ * invent one, and the page is written to read as complete without it.
+ */
+import Base from '../layouts/Base.astro';
+import Masthead from '../components/Masthead.astro';
+import Section from '../components/Section.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import Divider from '../components/Divider.astro';
+import HairlineList from '../components/HairlineList.astro';
+import HairlineRow from '../components/HairlineRow.astro';
+import Media from '../components/Media.astro';
+import Button from '../components/Button.astro';
+
+import { labels } from '../data/site';
+
+const moments = [
+  {
+    marker: '10:00 AM',
+    title: 'Class begins.',
+    body: 'Classes are held at the Islamic Education Center on Montrose Road in Potomac. The school does not own the building; it meets there.',
+  },
+  {
+    marker: 'THE MORNING',
+    title: 'Arabic and Deen.',
+    body: 'Arabic classes are grouped by a placement test, so a child sits with others reading at the same level. Deen classes are grouped by age, so a child sits with others asking the same questions.',
+  },
+  {
+    marker: 'SALAT AL-DHUHR',
+    title: 'The morning ends.',
+    body: 'Class runs until the midday prayer. Then everyone goes home to the rest of their Sunday, with something to do together during the week.',
+  },
+];
+---
+
+<Base
+  title="Our Story - Islamic School of Potomac"
+  description="We were founded to uplift every member of the family, not only the students registered in our school. This is what that means on a Sunday morning."
+>
+  {/* 1. Masthead */}
+  <Masthead preset="story" label="ABOUT THE SCHOOL" lines={['More than', 'a Sunday school.']} />
+
+  {/* 2. The founding commitment */}
+  <Section ground="paper" grid>
+    <p class="t-lead founding__lead" data-motion="body-rise">
+      Most Sunday schools are built around a student. This one was built around a family.
+    </p>
+
+    <div class="founding__col founding__col--1">
+      <p class="t-body" data-motion="body-rise">
+        The Islamic School of Potomac teaches children ages 5 through 18 for one morning a week,
+        September through May. Arabic, Deen, and a third part of the program the school has never
+        quite been able to name, so it calls it "...and in between."
+      </p>
+    </div>
+
+    <div class="founding__col founding__col--2">
+      <p class="t-body" data-motion="body-rise">
+        What holds those three together is not a curriculum. It is the understanding that a child
+        does not learn a way of living for two hours on a Sunday and then set it down. What the
+        school teaches has to be carried home, and the person who carries it is a parent.
+      </p>
+    </div>
+
+    <blockquote class="founding__quote">
+      <p class="t-title t-italic" data-motion="line-rise">
+        The Islamic School of Potomac was founded with a commitment to uplift every member of the
+        family, not just the students registered in our school.
+      </p>
+    </blockquote>
+  </Section>
+
+  {/* 3. A community, not a school */}
+  <Section ground="warm" container="none">
+    <div class="community">
+      {/* 4.5 - bleeds to the viewport edge on the LEFT only, mirroring the
+          homepage "Standing behind the school" row, which bleeds right. */}
+      <div class="community__media">
+        <Media slotId="story.opening" sizes="(min-width: 1024px) 50vw, 100vw" />
+      </div>
+
+      <div class="community__col">
+        <SectionHeader label="WHO IS HERE" headline="We are a community." class="community__header" />
+        <div class="flow community__body">
+          <p class="t-body" data-motion="body-rise">
+            The families who send their children here are the same people who set out the chairs,
+            teach the classes, run the Showcase and answer the email. That is not a shortage of
+            staff dressed up as a virtue. It is how a school this size stays honest: nobody here is
+            being paid to tell you it is going well.
+          </p>
+          <p class="t-body" data-motion="body-rise">
+            It also means the school is exactly as good as the people who show up for it, which is
+            the most persuasive thing we can say about it.
+          </p>
+        </div>
+      </div>
+    </div>
+  </Section>
+
+  {/* 4. What a Sunday is */}
+  <Section ground="paper" grid>
+    <div class="morning__header">
+      <SectionHeader
+        label="THE MORNING"
+        headline="One morning a week, for thirty-three weeks."
+      />
+    </div>
+
+    <div class="morning__list">
+      <Divider />
+      <HairlineList>
+        {
+          moments.map((moment) => (
+            <HairlineRow marker={moment.marker} title={moment.title}>
+              <p class="t-body">{moment.body}</p>
+            </HairlineRow>
+          ))
+        }
+      </HairlineList>
+    </div>
+  </Section>
+
+  {/* 5. Volunteers */}
+  <Section ground="paper" grid>
+    <div class="volunteers__text">
+      <SectionHeader
+        label="HOW IT RUNS"
+        headline="Parent feedback and volunteering is encouraged."
+      >
+        <p class="t-body" data-motion="body-rise">
+          That sentence has been on this school's FAQ page for years, and it is doing more work
+          than it looks like. Volunteering is not a way to help out at the margins here. It is the
+          mechanism. If you have an hour, a skill, or a strong opinion about how something should
+          be run, the school would rather hear it than not.
+        </p>
+        <div class="volunteers__cta" data-motion="body-rise">
+          <Button href="/contact" variant="quiet" icon="arrow-right">{labels.contact}</Button>
+        </div>
+      </SectionHeader>
+    </div>
+
+    {/*
+      DESIGN.md 14.2 asks for a 4/5 photo here; the only story-page slot for
+      this content (adults setting up a room) is story.volunteers, seeded at
+      its own 5/4. Per FOUNDATION.md the ratio belongs to the slot - the same
+      call ProgramBrief.astro makes on the homepage.
+    */}
+    <div class="volunteers__media">
+      <Media slotId="story.volunteers" sizes="(min-width: 1024px) 28vw, 90vw" />
+    </div>
+  </Section>
+
+  {/* 6. CTA */}
+  <Section ground="cool">
+    <div class="cta">
+      <SectionHeader headline="Come and see a Sunday." />
+      <p class="t-body" data-motion="body-rise">
+        Enrollment for 2026-2027 is open. Tuition is $60 for one student and $100 for a family, and
+        financial assistance is available to anyone who needs it.
+      </p>
+      <div class="cta__actions" data-motion="body-rise">
+        <Button href="/enroll" variant="primary">{labels.enrollPrimary}</Button>
+        <Button href="/program" variant="quiet" icon="arrow-right">{labels.program}</Button>
+      </div>
+    </div>
+  </Section>
+</Base>
+
+<style>
+  /* ---- 2. The founding commitment ---- */
+
+  .founding__lead,
+  .founding__col,
+  .founding__quote {
+    grid-column: 1 / -1;
+  }
+
+  .founding__quote {
+    margin: 0;
+    margin-block-start: var(--s-8);
+    padding-block-start: var(--s-6);
+    border-block-start: var(--border-thin) solid var(--rule-accent);
+  }
+
+  @media (min-width: 768px) {
+    .founding__lead { grid-column: 1 / 9; }
+    .founding__col--1 { grid-column: 1 / 6; }
+    .founding__col--2 { grid-column: 6 / 11; }
+    .founding__quote { grid-column: 1 / 11; }
+  }
+
+  @media (min-width: 1024px) {
+    .founding__lead { grid-column: 2 / 9; }
+    .founding__col--1 { grid-column: 2 / 7; }
+    .founding__col--2 { grid-column: 6 / 11; }
+    .founding__quote { grid-column: 2 / 11; }
+  }
+
+  /* ---- 3. A community, not a school ---- */
+
+  .community {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-7);
+  }
+
+  .community__col {
+    padding-inline: var(--gutter);
+  }
+
+  :global(.community__header) {
+    margin-block-end: var(--s-5);
+  }
+
+  .community__body {
+    max-width: var(--measure);
+  }
+
+  @media (min-width: 1024px) {
+    .community {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      align-items: center;
+      gap: var(--grid-gap);
+    }
+
+    /* The left column (the photo) already reaches the viewport edge; the
+       right column's inner edge aligns to the container's own gutter, same
+       maths as the homepage support row, mirrored left-to-right. */
+    .community__col {
+      margin-inline: 0;
+      margin-inline-end: max(var(--gutter), calc(50vw - var(--container) / 2));
+      padding-inline: 0;
+      max-width: calc(var(--container) / 2 - var(--gutter));
+    }
+  }
+
+  /* ---- 4. What a Sunday is ---- */
+
+  .morning__header,
+  .morning__list {
+    grid-column: 1 / -1;
+  }
+
+  .morning__list {
+    margin-block-start: var(--s-7);
+  }
+
+  @media (min-width: 768px) {
+    .morning__header { grid-column: 1 / 9; }
+    .morning__list { grid-column: 1 / 10; }
+  }
+
+  @media (min-width: 1024px) {
+    .morning__header { grid-column: 2 / 9; }
+    .morning__list { grid-column: 2 / 10; }
+  }
+
+  /* ---- 5. Volunteers ---- */
+
+  .volunteers__text,
+  .volunteers__media {
+    grid-column: 1 / -1;
+  }
+
+  .volunteers__cta {
+    margin-block-start: var(--s-2);
+  }
+
+  @media (min-width: 768px) {
+    .volunteers__text { grid-column: 1 / 6; }
+    .volunteers__media { grid-column: 6 / 11; }
+  }
+
+  @media (min-width: 1024px) {
+    .volunteers__text { grid-column: 1 / 5; }
+    .volunteers__media {
+      grid-column: 6 / 9;
+      margin-block-start: var(--s-8);
+    }
+  }
+
+  /* ---- 6. CTA ---- */
+
+  .cta {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-5);
+    max-width: var(--measure);
+  }
+
+  .cta__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-5) var(--s-7);
+    margin-block-start: var(--s-2);
+  }
+</style>

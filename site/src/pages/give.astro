@@ -1,0 +1,313 @@
+---
+/**
+ * Give - DESIGN.md 14.7. Copy from COPY.md, "Give", verbatim.
+ *
+ * Section rhythm: shader masthead (dark, give) -> paper -> paper-warm ->
+ * paper -> paper -> paper-cool -> ink footer. Two dark grounds total, footer
+ * included, which is the maximum 4.2 allows.
+ *
+ * NOT IMPLEMENTED, and reported rather than worked around: 13.3 says the give
+ * masthead's uLightOrigin.y should scrub from 0.02 to 0.5 across the page's
+ * scroll - the one interior page with scrubbed shader motion. That needs the
+ * FieldHandle mountField() returns, which is only reachable inside
+ * Masthead.astro's own <script>; that file is frozen/read-only to this page
+ * agent, so there is no hook to scrub the uniform from here. The masthead
+ * renders with the static `give` preset instead.
+ *
+ * The three suggested-amount tiles reuse MilestoneCard's asymmetric span
+ * (1/4, 4/7, 8/11 with a deliberate gap at column 7) rather than the shared
+ * <Card> component, matching how MilestoneCard itself is plain typography,
+ * not a bordered card - so this is not a three-up card grid (4.1, 7.5, 12.4).
+ */
+import Base from '../layouts/Base.astro';
+import Masthead from '../components/Masthead.astro';
+import Section from '../components/Section.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import Card from '../components/Card.astro';
+import Media from '../components/Media.astro';
+import Button from '../components/Button.astro';
+
+import { site } from '../data/site';
+
+const tiles = [
+  { amount: '$60', line: "One student's tuition for the year." },
+  { amount: '$100', line: "A family's tuition for the year." },
+  { amount: '$300', line: 'Five students, covered.' },
+];
+---
+
+<Base
+  title="Give - Islamic School of Potomac"
+  description="Tuition is $60 a student. It does not cover a year. The Islamic School of Potomac is a 501(c)(3) non-profit, EIN 52-1989063."
+>
+  {/* 1. Masthead */}
+  <Masthead preset="give" dark label="SUPPORT THE SCHOOL" lines={['A school with', '$60 tuition.']}>
+    <p class="t-lead give-sub" data-motion="body-rise">
+      The rest of it is made up by people who decided a community should have a school in it.
+    </p>
+  </Masthead>
+
+  {/* 2. Why */}
+  <Section ground="paper" grid>
+    <p class="t-lead why__lead" data-motion="body-rise">
+      The Islamic School of Potomac teaches children ages 5 through 18 for one morning a week,
+      thirty-three Sundays a year, and charges $60 a student to do it. That number is not an
+      accident and it is not going up. It is set where it is so that no family in this community
+      has to think twice about sending a child.
+    </p>
+
+    <div class="why__media">
+      <Media slotId="give.impact" sizes="100vw" />
+    </div>
+  </Section>
+
+  {/* 3. What $60 means here */}
+  <Section ground="warm" grid>
+    <div class="means__text">
+      <SectionHeader
+        label="WHERE THE MONEY GOES"
+        headline="There is no endowment and no marketing budget."
+        role="t-title"
+      >
+        <div class="flow">
+          <p class="t-body" data-motion="body-rise">
+            Money given to this school goes into the Sunday morning: the books a class reads, the
+            materials a teacher needs, the Deen Showcase in December, the Quran Competition in May.
+            It is a short list because it is a small school, and every item on it is something a
+            child touches.
+          </p>
+          <p class="t-body" data-motion="body-rise">
+            Nobody here is fundraising for a building. The school does not own one.
+          </p>
+        </div>
+      </SectionHeader>
+    </div>
+
+    <Card class="means__card">
+      <p class="t-num means__ein">
+        The Islamic School of Potomac is a<br />501(c)(3) non-profit organization.<br />Donations are
+        tax-deductible.
+      </p>
+      <p class="t-num means__ein-number">EIN 52-1989063</p>
+    </Card>
+  </Section>
+
+  {/* 4. Give */}
+  <Section ground="paper" grid>
+    <div class="tiles">
+      {
+        tiles.map((tile, i) => (
+          <div class={`tile tile--${i + 1}`}>
+            <p class="t-num tile__amount">{tile.amount}</p>
+            <p class="t-small tile__line">{tile.line}</p>
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="give__actions">
+      <p class="t-small give__note" data-motion="body-rise">
+        Any amount goes to the same place. Give once, or set up something monthly, with a card or
+        a PayPal balance.
+      </p>
+      <Button href={site.donateUrl} variant="primary" external>Give through PayPal</Button>
+    </div>
+  </Section>
+
+  {/* 5. By check */}
+  <Section ground="paper" grid>
+    <div class="check__text">
+      <SectionHeader label="BY CHECK" headline="A check in the mail still works." role="t-title" />
+      <p class="t-body" data-motion="body-rise">
+        For plenty of families it is the easier thing, so it is not a footnote here. Make it out
+        to the Islamic School of Potomac and send it to:
+      </p>
+    </div>
+
+    <Card class="check__card">
+      <p class="t-label">Mail only</p>
+      <p class="t-num">
+        Islamic School of Potomac<br />P.O. Box 833<br />Rockville, MD 20848-0833
+      </p>
+    </Card>
+  </Section>
+
+  {/* 6. Other ways */}
+  <Section ground="cool">
+    <div class="other">
+      <SectionHeader
+        label="OTHER WAYS TO HELP"
+        headline="Money is not the only thing the school runs on."
+        role="t-title"
+      />
+      <p class="t-body" data-motion="body-rise">
+        Parent feedback and volunteering is encouraged, and it is meant literally. The people who
+        teach the classes, set out the chairs and run the Showcase are the same people who send
+        their children here. An hour of your Sunday is worth real money to a school this size.
+      </p>
+      <div class="other__cta" data-motion="body-rise">
+        <Button href="/contact" variant="quiet" icon="arrow-right">Get in touch</Button>
+      </div>
+    </div>
+  </Section>
+</Base>
+
+<style>
+  /*
+   * Masthead.astro's h1 uses `.t-hero { color: inherit; }`, and `.on-dark`
+   * only redefines the --ctx-* custom properties, not `color` itself - it
+   * never re-declares `color`, so `inherit` keeps whatever body's color
+   * resolved to, and the headline stays --text-soft even on a dark masthead.
+   * Hero.astro on the homepage works around the same gap by hardcoding
+   * color: var(--text-on-dark) on its own headline class; Masthead.astro has
+   * no such override for its `dark` variant. Masthead.astro is frozen to
+   * this page agent, so the fix has to live here instead.
+   */
+  :global(.masthead.on-dark .t-hero) {
+    color: var(--text-on-dark);
+  }
+
+  /* ---- Masthead sub-line ---- */
+
+  .give-sub {
+    grid-column: 1 / -1;
+    color: var(--text-on-dark-soft);
+    margin-block-start: var(--s-4);
+  }
+
+  @media (min-width: 768px) {
+    .give-sub { grid-column: 1 / 9; }
+  }
+
+  @media (min-width: 1024px) {
+    .give-sub { grid-column: 1 / 8; }
+  }
+
+  /* ---- 2. Why ---- */
+
+  .why__lead,
+  .why__media {
+    grid-column: 1 / -1;
+  }
+
+  .why__media {
+    margin-block-start: var(--s-7);
+  }
+
+  @media (min-width: 768px) {
+    .why__lead { grid-column: 1 / 9; }
+  }
+
+  @media (min-width: 1024px) {
+    .why__lead { grid-column: 2 / 9; }
+  }
+
+  /* ---- 3. What $60 means here ---- */
+
+  .means__text,
+  :global(.means__card) {
+    grid-column: 1 / -1;
+  }
+
+  :global(.means__card) {
+    margin-block-start: var(--s-6);
+  }
+
+  .means__ein,
+  .means__ein-number {
+    font-size: var(--fs-small);
+    line-height: var(--lh-small);
+  }
+
+  .means__ein-number {
+    margin-block-start: var(--s-4);
+  }
+
+  @media (min-width: 768px) {
+    .means__text { grid-column: 1 / 7; }
+    :global(.means__card) { grid-column: 7 / 11; margin-block-start: 0; }
+  }
+
+  @media (min-width: 1024px) {
+    .means__text { grid-column: 2 / 7; }
+    :global(.means__card) { grid-column: 7 / 11; }
+  }
+
+  /* ---- 4. Give ---- */
+
+  .tiles {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(10, minmax(0, 1fr));
+    gap: var(--grid-gap);
+    row-gap: var(--s-7);
+  }
+
+  .tile {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-2);
+    grid-column: span 10;
+  }
+
+  .tile__amount {
+    font-size: var(--fs-title);
+    line-height: var(--lh-title);
+  }
+
+  @media (min-width: 768px) {
+    .tile { grid-column: span 3; }
+  }
+
+  @media (min-width: 1024px) {
+    .tile--1 { grid-column: 1 / 4; }
+    .tile--2 { grid-column: 4 / 7; }
+    .tile--3 { grid-column: 8 / 11; }
+  }
+
+  .give__actions {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: var(--s-4);
+    margin-block-start: var(--s-8);
+  }
+
+  .give__note {
+    max-width: var(--measure-lead);
+  }
+
+  /* ---- 5. By check ---- */
+
+  .check__text,
+  :global(.check__card) {
+    grid-column: 1 / -1;
+  }
+
+  :global(.check__card) {
+    margin-block-start: var(--s-6);
+  }
+
+  @media (min-width: 768px) {
+    .check__text { grid-column: 1 / 7; }
+    :global(.check__card) { grid-column: 2 / 7; margin-block-start: var(--s-7); }
+  }
+
+  @media (min-width: 1024px) {
+    :global(.check__card) { grid-column: 2 / 7; }
+  }
+
+  /* ---- 6. Other ways ---- */
+
+  .other {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-5);
+    max-width: var(--measure);
+  }
+
+  .other__cta {
+    margin-block-start: var(--s-2);
+  }
+</style>
