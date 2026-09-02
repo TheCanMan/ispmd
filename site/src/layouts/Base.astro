@@ -95,19 +95,21 @@ const bodyClasses = [bodyClass, transparentHeader ? 'has-transparent-header' : '
   <body class={bodyClasses}>
     <a class="skip-link" href="#main">{labels.skip}</a>
 
-    {/*
-      8.1 - the ink-duotone filter. Luminance mapped onto a two-point ramp
-      from --ink to --paper with deliberately warm midtones (R > G > B),
-      which is what makes it read as ink on paper rather than a grey photo.
-      The endpoints are exactly --ink and --paper in 0-1 channel values.
-    */}
+    {/* 8.1 - the ink-duotone filter. */}
     <svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
       <filter id="ink-duotone" color-interpolation-filters="sRGB">
         <feColorMatrix type="saturate" values="0" />
+        {/*
+          Endpoints are exactly --ink and --paper in 0-1 channel values, so the
+          ramp lands on the palette rather than near it. The midpoints lean
+          GREEN now (G > B > R) where they used to lean warm - that is what
+          makes a duotone read as ink on paper rather than as a grey photo,
+          and the ink is pine.
+        */}
         <feComponentTransfer>
-          <feFuncR type="table" tableValues="0.157 0.60 0.984" />
-          <feFuncG type="table" tableValues="0.118 0.54 0.973" />
-          <feFuncB type="table" tableValues="0.078 0.44 0.949" />
+          <feFuncR type="table" tableValues="0.086 0.42 0.984" />
+          <feFuncG type="table" tableValues="0.161 0.52 0.973" />
+          <feFuncB type="table" tableValues="0.122 0.45 0.949" />
         </feComponentTransfer>
       </filter>
     </svg>

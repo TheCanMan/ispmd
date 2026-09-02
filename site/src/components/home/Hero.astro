@@ -16,7 +16,7 @@
  */
 import Button from '../Button.astro';
 import Icon from '../Icon.astro';
-import { labels } from '../../data/site';
+import { labels, epigraph } from '../../data/site';
 import { getSlot } from '../../data/media';
 
 /* 13.2 - State A while the montage is a placeholder: no video element, no
@@ -25,13 +25,31 @@ const montage = getSlot('home.hero.montage');
 const hasFootage = montage.status === 'real' && !!montage.src;
 ---
 
-<section class="hero" data-hero>
+<section class="hero" data-hero data-motion-group>
   <div class="hero__fallback" aria-hidden="true">
     <div class="lattice lattice--present lattice--on-dark lattice--lg"></div>
   </div>
 
   <canvas class="hero__canvas" aria-hidden="true" tabindex="-1" data-hero-canvas></canvas>
 
+
+  {/*
+    The epigraph the school already uses, 20:114. The client asked for it at
+    the top of the page, with the header, so it is the first thing in the
+    hero rather than a block three sections down.
+
+    It is an epigraph, not a banner: one quiet line under the header, in the
+    soft-on-dark colour, well below the headline in weight. The Arabic stays
+    Amiri and keeps lang="ar" dir="rtl"; it is never letter-spaced and never
+    transformed (3). This is now the ONLY place it appears on the homepage -
+    it used to sit in the manifesto section, and leaving both would have put
+    the same verse on one page twice.
+  */}
+  <div class="hero__epigraph on-dark">
+    <p class="t-arabic hero__epigraph-ar" lang="ar" dir="rtl">{epigraph.arabic}</p>
+    <p class="t-small t-italic hero__epigraph-en">{epigraph.english}</p>
+    <p class="t-label hero__epigraph-ref">{epigraph.reference}</p>
+  </div>
 
   <div class="hero__inner container">
     <div class="hero__grid grid">
@@ -173,28 +191,28 @@ const hasFootage = montage.status === 'real' && !!montage.src;
     overflow: hidden;
     /* The header is fixed and the hero sits under it, plus a little air so
        the eyebrow never sits flush against the header's bottom edge. */
-    padding-block-start: calc(64px + var(--s-6));
-    padding-block-end: var(--s-10);
+    padding-block-start: calc(64px + var(--s-10));
+    padding-block-end: var(--s-9);
   }
 
   @media (min-width: 1024px) {
     .hero {
-      padding-block-start: calc(76px + var(--s-6));
+      padding-block-start: calc(76px + var(--s-10));
     }
   }
 
   /**
-   * Tier 3, and the ground every other tier paints over. A layered radial
-   * gradient from --slate-deep through --sienna to --amber, plus the flat
-   * lattice at --pattern-present in --paper.
+   * Tier 3, and the ground every other tier paints over. It has to match the
+   * shader's own palette or a no-WebGL visitor gets a different site: deep
+   * pine, light coming through as terracotta rather than gold.
    */
   .hero__fallback {
     position: absolute;
     inset: 0;
     z-index: var(--z-base);
     background:
-      radial-gradient(120% 90% at 68% 46%, var(--amber) 0%, transparent 46%),
-      radial-gradient(140% 110% at 62% 52%, var(--sienna) 0%, transparent 62%),
+      radial-gradient(120% 90% at 68% 46%, var(--sienna) 0%, transparent 46%),
+      radial-gradient(140% 110% at 62% 52%, var(--slate) 0%, transparent 62%),
       linear-gradient(158deg, var(--slate-deep) 0%, var(--ink) 100%);
   }
 
@@ -265,6 +283,53 @@ const hasFootage = montage.status === 'real' && !!montage.src;
     inset: calc(var(--s-9) * -1);
     background: var(--ink);
     filter: blur(var(--s-7));
+  }
+
+  .hero__epigraph {
+    position: absolute;
+    inset-block-start: calc(64px + var(--s-7));
+    inset-inline: 0;
+    z-index: var(--z-content);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--s-2) var(--s-5);
+    padding-inline: var(--gutter);
+    max-width: var(--container);
+    margin-inline: auto;
+    color: var(--text-on-dark-soft);
+  }
+
+  @media (min-width: 1024px) {
+    .hero__epigraph {
+      inset-block-start: calc(76px + var(--s-7));
+    }
+  }
+
+  /* Same construction as the type block's scrim: a solid --ink rectangle
+     inset to twice its own blur radius, so the whole feather lands outside
+     the text and 6.3's verified pairings hold by construction. */
+  .hero__epigraph::before {
+    content: "";
+    position: absolute;
+    inset: calc(var(--s-9) * -1);
+    z-index: -1;
+    pointer-events: none;
+    background: var(--ink);
+    filter: blur(var(--s-7));
+  }
+
+  /* Quiet. The Arabic carries it; the English and the reference sit beside
+     it rather than stacking into a block that would read as a banner. */
+  .hero__epigraph-ar {
+    font-size: var(--fs-subtitle);
+    line-height: var(--lh-arabic);
+    color: var(--text-on-dark);
+  }
+
+  .hero__epigraph-en,
+  .hero__epigraph-ref {
+    color: var(--text-on-dark-soft);
   }
 
   .hero__inner {

@@ -39,14 +39,14 @@ import type {
 export const PALETTE = {
   paper: '#FBF8F2',
   paperWarm: '#F6E7D7',
-  paperCool: '#E4EBE6',
-  ink: '#281E14',
-  slateDeep: '#22394B',
+  paperCool: '#E2EAE3',
+  ink: '#16291F',
+  slateDeep: '#10231B',
   sienna: '#A85A1E',
-  slate: '#3C6482',
+  slate: '#3F6B57',
   amber: '#E8B05A',
-  fillApricot: '#E8B282',
-  fillSky: '#B9DEE4',
+  fillApricot: '#F2C9A0',
+  fillSky: '#A5CCB7',
 } as const;
 
 export function hexToVec3(hex: string): [number, number, number] {
@@ -199,18 +199,26 @@ export interface Preset {
 const P = PALETTE;
 
 export const PRESETS = {
-  /* uWindowRect is vec4(0) on every preset except the two homepage ones,
-     which are driven from the DOM by the hero (13.2). */
-  'home-backdrop': { a: P.slateDeep, b: P.sienna, c: P.amber, strap: P.paper, density: 3.2, strapWidth: 0.0, glow: 1.0, drift: 1.0, construction: 0.0, grain: 0.012, opacity: 1.0, lightOrigin: [0.5, 0.5] },
-  'home-flat':     { a: P.slateDeep, b: P.sienna, c: P.amber, strap: P.paper, density: 3.2, strapWidth: 0.014, glow: 0.9, drift: 1.0, construction: 0.3, grain: 0.012, opacity: 1.0, lightOrigin: [0.5, 0.5] },
+  /*
+   * uWindowRect is vec4(0) on every preset except the two homepage ones,
+   * which are driven from the DOM by the hero (13.2).
+   *
+   * The light end of every preset that reaches full brightness is TERRACOTTA,
+   * not gold. On a green site an amber light end is green-and-gold, which
+   * 12.4 refuses outright and which the hero - the largest surface here -
+   * would have stated on every visit. Amber survives as the milestone fill
+   * and the single homework chord, and nowhere in the light field.
+   */
+  'home-backdrop': { a: P.ink,       b: P.slate,  c: P.sienna, strap: P.paper, density: 3.2, strapWidth: 0.0, glow: 1.0, drift: 1.0, construction: 0.0, grain: 0.012, opacity: 1.0, lightOrigin: [0.5, 0.5] },
+  'home-flat':     { a: P.ink,       b: P.slate,  c: P.sienna, strap: P.paper, density: 3.2, strapWidth: 0.014, glow: 0.9, drift: 1.0, construction: 0.3, grain: 0.012, opacity: 1.0, lightOrigin: [0.5, 0.5] },
   story:    { a: P.paper,     b: P.paperWarm,   c: P.fillSky,  strap: P.ink,   density: 3.6, strapWidth: 0.006, glow: 0.25, drift: 0.35, construction: 1.0,  grain: 0.010, opacity: 0.55, lightOrigin: [0.22, 0.30] },
   program:  { a: P.paperWarm, b: P.fillApricot, c: P.sienna,   strap: P.paper, density: 3.0, strapWidth: 0.014, glow: 0.40, drift: 0.50, construction: 0.35, grain: 0.010, opacity: 0.50, lightOrigin: [0.50, 0.18] },
   calendar: { a: P.paperCool, b: P.fillSky,     c: P.slate,    strap: P.paper, density: 4.6, strapWidth: 0.010, glow: 0.30, drift: 0.30, construction: 0.25, grain: 0.010, opacity: 0.45, lightOrigin: [0.78, 0.22] },
-  enroll:   { a: P.paper,     b: P.amber,       c: P.sienna,   strap: P.paper, density: 2.6, strapWidth: 0.016, glow: 0.60, drift: 0.60, construction: 0.30, grain: 0.010, opacity: 0.55, lightOrigin: [0.30, 0.55] },
+  enroll:   { a: P.paper,     b: P.fillApricot, c: P.sienna,   strap: P.paper, density: 2.6, strapWidth: 0.016, glow: 0.60, drift: 0.60, construction: 0.30, grain: 0.010, opacity: 0.55, lightOrigin: [0.30, 0.55] },
   faqs:     { a: P.paper,     b: P.paperCool,   c: P.paperWarm, strap: P.ink,  density: 5.2, strapWidth: 0.008, glow: 0.15, drift: 0.25, construction: 0.20, grain: 0.008, opacity: 0.35, lightOrigin: [0.50, 0.10] },
-  give:     { a: P.ink,       b: P.sienna,      c: P.amber,    strap: P.paper, density: 3.2, strapWidth: 0.012, glow: 0.90, drift: 0.70, construction: 0.30, grain: 0.014, opacity: 1.00, lightOrigin: [0.50, 0.02] },
+  give:     { a: P.ink,       b: P.slate,       c: P.sienna,    strap: P.paper, density: 3.2, strapWidth: 0.012, glow: 0.90, drift: 0.70, construction: 0.30, grain: 0.014, opacity: 1.00, lightOrigin: [0.50, 0.02] },
   contact:  { a: P.slateDeep, b: P.slate,       c: P.fillSky,  strap: P.paper, density: 2.2, strapWidth: 0.010, glow: 0.50, drift: 0.40, construction: 0.30, grain: 0.012, opacity: 1.00, lightOrigin: [0.50, 0.62] },
-  notfound: { a: P.paper,     b: P.amber,       c: P.sienna,   strap: P.paper, density: 2.6, strapWidth: 0.016, glow: 0.60, drift: 0.60, construction: 0.30, grain: 0.010, opacity: 0.40, lightOrigin: [0.50, 0.50] },
+  notfound: { a: P.paper,     b: P.fillApricot, c: P.sienna,   strap: P.paper, density: 2.6, strapWidth: 0.016, glow: 0.60, drift: 0.60, construction: 0.30, grain: 0.010, opacity: 0.40, lightOrigin: [0.50, 0.50] },
 } satisfies Record<string, Preset>;
 
 export type PresetName = keyof typeof PRESETS;

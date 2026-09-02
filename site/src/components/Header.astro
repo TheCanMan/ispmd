@@ -148,15 +148,19 @@ const menuLinks = [{ label: 'Home', href: '/' }, ...primaryNav, ...secondaryNav]
     position: absolute;
     inset-block-start: 0;
     inset-inline: 0;
-    height: calc(100% + var(--s-9));
+    /* Just past the header's own box. It used to run 96px beyond, which put
+       it over the hero epigraph - the header is z-index 100, so its scrim
+       paints above everything in the hero regardless of the hero's own
+       stacking. Shortened, and the epigraph starts below it. */
+    height: calc(100% + var(--s-5));
     z-index: -1;
     pointer-events: none;
     background: linear-gradient(
       to bottom,
-      rgba(40, 30, 20, 0.86) 0%,
-      rgba(40, 30, 20, 0.68) 46%,
-      rgba(40, 30, 20, 0.32) 74%,
-      rgba(40, 30, 20, 0) 100%
+      rgba(22, 41, 31, 0.86) 0%,
+      rgba(22, 41, 31, 0.68) 46%,
+      rgba(22, 41, 31, 0.32) 74%,
+      rgba(22, 41, 31, 0) 100%
     );
   }
 
@@ -205,8 +209,9 @@ const menuLinks = [{ label: 'Home', href: '/' }, ...primaryNav, ...secondaryNav]
     color: var(--text-on-dark);
   }
 
+  /* Terracotta over the hero, not gold. --sienna keeps the mark on paper. */
   .site-header.is-transparent:not(.is-stuck) .lockup__mark path {
-    stroke: var(--amber);
+    stroke: var(--sienna-bright);
   }
 
   .site-nav {

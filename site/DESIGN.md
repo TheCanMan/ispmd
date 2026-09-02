@@ -24,8 +24,13 @@ Paste this block into `src/styles/global.css` as-is.
 **No colour, size, duration, easing, radius or z-index may be used anywhere in the site that is not in this block.**
 If you need a value that is not here, you have found a gap in the design - do not invent one; use the nearest token.
 
-Every colour is sampled from the school's own 2026-2027 calendar graphic (`research/calendar-2026-2027.png`) or derived from it for contrast compliance.
-Nothing is imported from outside their palette.
+**The palette is dark green at the school's request (client direction, superseding the sampled bistre-and-sienna scheme).**
+Deep pine carries every dark ground; the warm cream paper and the girih concept are unchanged.
+The three *meanings* the school's own calendar assigned survive - sienna for Semester 1, `--slate` for Semester 2, amber for milestones - only the hues carrying them moved.
+
+Amber is deliberately scarce. Green and gold together is the most exhausted look available and 12.4 refuses it, so amber survives as the milestone fill and the single homework chord and nowhere else: **terracotta, not gold, carries every action.**
+
+**Every ratio in this block is quoted against the WORST ground the token is allowed on, never the best.** Quoting `--paper` only is what hid `--text-faint` failing AA on three other grounds across eight pages. `npm run check:palette` recomputes the whole matrix and fails on any regression.
 
 ```css
 :root {
@@ -36,89 +41,101 @@ Nothing is imported from outside their palette.
      ========================================================== */
   --paper:            #FBF8F2;   /* default page ground */
   --paper-warm:       #F6E7D7;   /* alternating warm section ground */
-  --paper-cool:       #E4EBE6;   /* alternating cool section ground */
+  --paper-cool:       #E2EAE3;   /* alternating cool section ground */
   --vellum:           #F4E1CE;   /* cards and insets on warm grounds */
 
-  --ink:              #281E14;   /* warm bistre - primary dark ground */
-  --ink-raised:       #35291C;   /* cards sitting on --ink */
-  --slate-deep:       #22394B;   /* secondary dark ground */
-  --slate-raised:     #2C4759;   /* cards sitting on --slate-deep */
+  --ink:              #16291F;   /* deep pine - primary dark ground */
+  --ink-raised:       #1F3629;   /* cards sitting on --ink */
+  --slate-deep:       #10231B;   /* secondary dark ground, same family */
+  --slate-raised:     #1B3227;   /* cards sitting on --slate-deep */
 
   /* ==========================================================
      1.2  COLOUR - TEXT ON LIGHT GROUNDS
+
+     Every ratio below is quoted against the WORST ground the token is
+     allowed on, not the best. Quoting --paper only is what hid a token
+     failing AA on --paper-warm, --paper-cool and --vellum across eight
+     pages. `npm run check:palette` recomputes the whole matrix.
      ========================================================== */
-  --text:             #281E14;   /* 15.4:1 on --paper */
-  --text-soft:        #5A4A3A;   /*  8.0:1 on --paper */
-  --text-faint:       #6B5A4B;   /*  5.2:1 on --vellum - the WORST light ground.
-                                    5.0:1 was quoted for --paper only; the
-                                    original #7A6857 measured 4.18:1 on
-                                    --vellum and failed AA there. */
-  --text-link:        #3C6482;   /*  5.9:1 on --paper */
-  --text-link-warm:   #8F4A16;   /*  6.3:1 on --paper */
-  --text-amber:       #8A5D12;   /*  5.4:1 on --paper - the only amber-family text colour */
+  --text:             #16291F;   /* WORST light ground --vellum */
+  --text-soft:        #41544A;   /* WORST --vellum */
+  --text-faint:       #5A6960;   /* WORST --vellum */
+  --text-link:        #2A5F55;   /* WORST --vellum */
+  --text-link-warm:   #8F4A16;   /* WORST --vellum */
+  --text-amber:       #7C5A14;   /* WORST --vellum */
 
   /* ==========================================================
      1.3  COLOUR - TEXT ON DARK GROUNDS
      ========================================================== */
-  --text-on-dark:        #FBF8F2; /* 15.4:1 on --ink | 11.3:1 on --slate-deep */
-  --text-on-dark-soft:   #C9BCAB; /*  8.8:1 on --ink |  6.4:1 on --slate-deep */
-  --text-on-dark-faint:  #A99A86; /*  6.0:1 on --ink |  4.4:1 on --slate-deep - >=19px only */
-  --link-on-dark:        #E8B05A; /*  8.4:1 on --ink |  6.2:1 on --slate-deep */
-  --link-on-dark-cool:   #7FA6BF; /*  6.3:1 on --ink |  4.6:1 on --slate-deep */
+  --text-on-dark:        #FBF8F2;   /* WORST dark ground --slate-raised */
+  --text-on-dark-soft:   #C3CCC0;   /* WORST --slate-raised */
+  --text-on-dark-faint:  #9AA79B;   /* WORST --slate-raised, >=19px only */
+  --link-on-dark:        #E9A97F;   /* WORST --slate-raised */
+  --link-on-dark-cool:   #B4CDBB;   /* WORST --slate-raised */
 
   /* ==========================================================
      1.4  COLOUR - ACCENTS
-     Sienna is the school's Semester 1 colour. Slate is their Semester 2
-     colour. Amber is their milestone colour. Honour those meanings.
+
+     The three MEANINGS the school's own calendar assigned survive the
+     move to green; only the hues carrying them changed. Sienna is still
+     Semester 1, --slate is still Semester 2 (now a green), amber is still
+     the milestone colour.
+
+     Amber is deliberately scarce. Green and gold together, done freely, is
+     the most exhausted look available and 12.4 already refuses it - so
+     amber survives as the milestone fill and the single homework chord,
+     and nowhere else. Terracotta, not gold, carries every action.
      ========================================================== */
-  --sienna:           #A85A1E;   /* 4.8:1 on --paper - text >=16px, fills, rules */
-  --sienna-ink:       #8F4A16;   /* body-size sienna text and links */
-  --sienna-bright:    #C87A3A;   /* hover; text on --ink only, never on --slate-deep */
-  --slate:            #3C6482;
-  --slate-light:      #7FA6BF;
-  --amber:            #E8B05A;   /* FILL ONLY on light grounds. Text on dark grounds. */
+  --sienna:           #A85A1E;   /* WORST --vellum - >=16px text, fills, rules */
+  --sienna-ink:       #8F4A16;   /* WORST --vellum - body-size sienna text */
+  --sienna-bright:    #D08348;   /* behind --ink text; --ink grounds only */
+  --slate:            #3F6B57;   /* Semester 2 green - rules and marks */
+  --slate-light:      #8FB09B;
+  --amber:            #E8B05A;   /* FILL ONLY on light grounds. Scarce. */
   --amber-deep:       #C98F35;   /* fill / rule only, never text */
 
   /* ==========================================================
      1.5  COLOUR - FILLS
      These are NEVER text colours on a light ground.
-     --text (#281E14) on any of them clears 8:1 - use it for labels inside cells.
+     --text (#16291F) on any of them clears 6.9:1 - use it for labels inside
+     cells. --fill-sage now reads as ABSENCE rather than as a hue: on a green
+     site a green "no school" cell would have fought the brand.
      ========================================================== */
-  --fill-apricot:     #E8B282;   /* class Sundays (their colour) */
-  --fill-sage:        #B0D194;   /* no-school Sundays (their colour) */
-  --fill-sky:         #B9DEE4;   /* Semester 2 cells (their colour) */
-  --fill-amber:       #E8B05A;   /* milestone Sundays (their colour) */
-  --fill-mist:        #DCE5E0;   /* their tessellation ground */
+  --fill-apricot:     #F2C9A0;   /* class Sundays, Semester 1 */
+  --fill-sage:        #D6D8D1;   /* no-school - absence, not a hue */
+  --fill-sky:         #A5CCB7;   /* Semester 2 cells */
+  --fill-amber:       #E3A22F;   /* milestone Sundays */
+  --fill-mist:        #DCE3DB;   /* the loading ground */
 
   /* ==========================================================
      1.6  COLOUR - RULES, TINTS, STATES
      ========================================================== */
-  --rule:                 rgba(40, 30, 20, 0.14);
-  --rule-strong:          rgba(40, 30, 20, 0.28);
-  --rule-faint:           rgba(40, 30, 20, 0.07);
+  --rule:                 rgba(22, 41, 31, 0.14);
+  --rule-strong:          rgba(22, 41, 31, 0.28);
+  --rule-faint:           rgba(22, 41, 31, 0.07);
   --rule-accent:          rgba(168, 90, 30, 0.42);
   --rule-on-dark:         rgba(251, 248, 242, 0.16);
   --rule-on-dark-strong:  rgba(251, 248, 242, 0.34);
 
   --tint-sienna:      rgba(168, 90, 30, 0.08);
-  --tint-slate:       rgba(60, 100, 130, 0.08);
+  --tint-slate:       rgba(63, 107, 87, 0.08);
   --tint-amber:       rgba(232, 176, 90, 0.14);
-  --tint-sage:        rgba(176, 209, 148, 0.20);
-  --tint-ink:         rgba(40, 30, 20, 0.05);
+  --tint-sage:        rgba(217, 212, 198, 0.24);
+  --tint-ink:         rgba(22, 41, 31, 0.05);
   --tint-paper:       rgba(251, 248, 242, 0.07);
 
-  --state-ok:         #4E7B4A;   /* 4.7:1 on --paper */
-  --state-warn:       #8A5D12;   /* 5.4:1 on --paper */
-  --state-error:      #9B3218;   /* 6.9:1 on --paper */
+  --state-ok:         #3F6B4A;   /* WORST --vellum */
+  --state-warn:       #7C5A14;   /* WORST --vellum */
+  --state-error:      #9B3218;   /* WORST --vellum */
 
   /* ==========================================================
      1.7  COLOUR - SHADOW
      Shadows are ink-tinted. A black shadow on warm paper reads dirty.
      ========================================================== */
-  --shadow-sm:        0 1px 2px rgba(40, 30, 20, 0.06);
-  --shadow-md:        0 6px 20px -8px rgba(40, 30, 20, 0.14);
-  --shadow-lg:        0 24px 60px -24px rgba(40, 30, 20, 0.22);
-  --shadow-glow:      0 0 48px -8px rgba(232, 176, 90, 0.45);
+  --shadow-sm:        0 1px 2px rgba(22, 41, 31, 0.06);
+  --shadow-md:        0 6px 20px -8px rgba(22, 41, 31, 0.14);
+  --shadow-lg:        0 24px 60px -24px rgba(22, 41, 31, 0.22);
+  --shadow-glow:      0 0 48px -8px rgba(233, 169, 127, 0.42);
 
   /* ==========================================================
      2.1  TYPE - FAMILIES
@@ -308,8 +325,8 @@ Nothing is imported from outside their palette.
   /* ==========================================================
      10  FOCUS
      ========================================================== */
-  --focus-color:         #3C6482;   /* --slate, 5.9:1 on --paper */
-  --focus-color-on-dark: #E8B05A;   /* --amber, 8.4:1 on --ink */
+  --focus-color:         #2A5F55;   /* WORST --vellum */
+  --focus-color-on-dark: #E9A97F;   /* WORST --slate-raised */
   --focus-width:  2px;
   --focus-offset: 3px;
 }
@@ -661,36 +678,36 @@ Do not use them decoratively elsewhere.
 
 ### 6.3 Verified contrast
 
-Every combination the site actually uses, computed:
+Every pairing below is computed against the **worst ground the token is allowed on**, not the best.
+Regenerate with `npm run check:palette`, which fails the run on any regression.
 
 | Foreground | Background | Ratio | Verdict |
 |---|---|---|---|
-| `--text` `#281E14` | `--paper` `#FBF8F2` | 15.4:1 | AAA |
-| `--text-soft` `#5A4A3A` | `--paper` | 8.0:1 | AAA |
-| `--text-faint` `#6B5A4B` | `--paper` | 6.2:1 | AAA |
-| `--text-faint` `#6B5A4B` | `--paper-warm` / `--paper-cool` | 5.4:1 | AA |
-| `--text-faint` `#6B5A4B` | `--vellum` | 5.2:1 | AA |
-| `--text-link` `#3C6482` | `--paper` | 5.9:1 | AA |
-| `--text-link-warm` `#8F4A16` | `--paper` | 6.3:1 | AA |
-| `--text-amber` `#8A5D12` | `--paper` | 5.4:1 | AA |
-| `--sienna` `#A85A1E` | `--paper` | 4.8:1 | AA (>=16px) |
-| `--state-error` `#9B3218` | `--paper` | 6.9:1 | AA |
-| `--state-ok` `#4E7B4A` | `--paper` | 4.7:1 | AA |
-| `--text-on-dark` `#FBF8F2` | `--ink` `#281E14` | 15.4:1 | AAA |
-| `--text-on-dark-soft` `#C9BCAB` | `--ink` | 8.8:1 | AAA |
-| `--text-on-dark-faint` `#A99A86` | `--ink` | 6.0:1 | AA |
-| `--link-on-dark` `#E8B05A` | `--ink` | 8.4:1 | AAA |
-| `--link-on-dark-cool` `#7FA6BF` | `--ink` | 6.3:1 | AA |
-| `--sienna-bright` `#C87A3A` | `--ink` | 4.9:1 | AA |
-| `--text-on-dark` | `--slate-deep` `#22394B` | 11.3:1 | AAA |
-| `--text-on-dark-soft` | `--slate-deep` | 6.4:1 | AA |
-| `--link-on-dark` | `--slate-deep` | 6.2:1 | AA |
-| `--text` `#281E14` | `--fill-apricot` `#E8B282` | 8.7:1 | AAA |
-| `--text` | `--fill-sage` `#B0D194` | 9.6:1 | AAA |
-| `--text` | `--fill-sky` `#B9DEE4` | 11.4:1 | AAA |
-| `--text` | `--fill-amber` `#E8B05A` | 8.4:1 | AAA |
-| `--focus-color` `#3C6482` | `--paper` | 5.9:1 | passes 3:1 non-text |
-| `--focus-color-on-dark` `#E8B05A` | `--ink` | 8.4:1 | passes 3:1 non-text |
+| `--text` `#16291F` | `--vellum` (worst light) | 12.0:1 | AAA |
+| `--text-soft` `#41544A` | `--vellum` (worst light) | 6.4:1 | AA |
+| `--text-faint` `#5A6960` | `--vellum` (worst light) | 4.6:1 | AA |
+| `--text-link` `#2A5F55` | `--vellum` (worst light) | 5.8:1 | AA |
+| `--text-link-warm` `#8F4A16` | `--vellum` (worst light) | 5.2:1 | AA |
+| `--text-amber` `#7C5A14` | `--vellum` (worst light) | 5.0:1 | AA |
+| `--sienna` `#A85A1E` | `--vellum` (worst light) | 4.0:1 | AA large / non-text |
+| `--sienna-ink` `#8F4A16` | `--vellum` (worst light) | 5.2:1 | AA |
+| `--state-warn` `#7C5A14` | `--vellum` (worst light) | 5.0:1 | AA |
+| `--state-error` `#9B3218` | `--vellum` (worst light) | 5.8:1 | AA |
+| `--focus-color` `#2A5F55` | `--vellum` (worst light) | 5.8:1 | AA |
+| `--text-on-dark` `#FBF8F2` | `--ink-raised` (worst dark) | 12.2:1 | AAA |
+| `--text-on-dark-soft` `#C3CCC0` | `--ink-raised` (worst dark) | 7.9:1 | AAA |
+| `--text-on-dark-faint` `#9AA79B` | `--ink-raised` (worst dark) | 5.2:1 | AA |
+| `--link-on-dark` `#E9A97F` | `--ink-raised` (worst dark) | 6.5:1 | AA |
+| `--link-on-dark-cool` `#B4CDBB` | `--ink-raised` (worst dark) | 7.7:1 | AAA |
+| `--focus-color-on-dark` `#E9A97F` | `--ink-raised` (worst dark) | 6.5:1 | AA |
+| `--text` | `--fill-apricot` `#F2C9A0` | 9.9:1 | AAA |
+| `--text` | `--fill-sage` `#D6D8D1` | 10.7:1 | AAA |
+| `--text` | `--fill-sky` `#A5CCB7` | 8.7:1 | AAA |
+| `--text` | `--fill-amber` `#E3A22F` | 6.9:1 | AA |
+| `--paper` | `--sienna` (btn-primary) | 4.8:1 | AA |
+| `--ink` | `--sienna-bright` (btn-primary on dark) | 5.1:1 | AA |
+
+Anything not in this table is outside the system. If you need a new pairing, measure it first.
 
 ### 6.4 Surface treatment
 
@@ -903,9 +920,9 @@ Ship as an inline SVG filter in `Base.astro`:
   <filter id="ink-duotone" color-interpolation-filters="sRGB">
     <feColorMatrix type="saturate" values="0"/>
     <feComponentTransfer>
-      <feFuncR type="table" tableValues="0.157 0.60 0.984"/>
-      <feFuncG type="table" tableValues="0.118 0.54 0.973"/>
-      <feFuncB type="table" tableValues="0.078 0.44 0.949"/>
+      <feFuncR type="table" tableValues="0.086 0.42 0.984"/>
+      <feFuncG type="table" tableValues="0.161 0.52 0.973"/>
+      <feFuncB type="table" tableValues="0.122 0.45 0.949"/>
     </feComponentTransfer>
   </filter>
 </svg>
@@ -915,7 +932,7 @@ Ship as an inline SVG filter in `Base.astro`:
 .tr-ink-duotone { filter: url(#ink-duotone) contrast(1.04); }
 ```
 
-The endpoints are exactly `--ink` and `--paper` in 0-1 channel values. The midpoints are deliberately warm (R > G > B), which is what makes it read as ink on paper rather than as a grey photo.
+The endpoints are exactly `--ink` and `--paper` in 0-1 channel values. The midpoints lean green (G > B > R), which is what makes it read as ink on paper rather than as a grey photo. They were warm when the ink was bistre; the ramp follows the ink.
 
 ### 8.2 `warm-grade` - the workhorse
 

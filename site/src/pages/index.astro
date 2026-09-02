@@ -10,7 +10,6 @@
 import Base from '../layouts/Base.astro';
 import Section from '../components/Section.astro';
 import SectionHeader from '../components/SectionHeader.astro';
-import Epigraph from '../components/Epigraph.astro';
 import Divider from '../components/Divider.astro';
 import Media from '../components/Media.astro';
 import Button from '../components/Button.astro';
@@ -52,9 +51,12 @@ import { labels } from '../data/site';
       </p>
     </div>
 
+    {/* The 20:114 epigraph used to sit here. It now opens the page, at the
+        top with the header (see Hero.astro), because the same verse twice on
+        one page is one time too many. The divider stays: it is what closes
+        this section. */}
     <div class="manifesto__epigraph">
       <Divider />
-      <Epigraph align="start" />
     </div>
   </Section>
 

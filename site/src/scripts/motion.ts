@@ -277,14 +277,23 @@ export function initMotion(): void {
 
   reveal();
 
+  /*
+   * An element uses its nearest [data-motion-group] as its ScrollTrigger, so a
+   * whole section enters together. That also closes a real trap: the hero's
+   * buttons sat at y=728 in a 900px viewport, past the `top 78%` start, so they
+   * stayed at opacity 0 until the visitor scrolled - content above the fold
+   * waiting on a scroll it may never receive. Triggering on the section means
+   * anything inside a group that is on screen at load animates at load.
+   */
+  const groupOf = (el: Element) => el.closest('[data-motion-group]') ?? undefined;
+
   for (const el of document.querySelectorAll<HTMLElement>('[data-motion="line-rise"]')) {
-    lineRise(el);
+    lineRise(el, groupOf(el));
   }
 
-  const bodyTargets = Array.from(
-    document.querySelectorAll<HTMLElement>('[data-motion="body-rise"]')
-  );
-  for (const el of bodyTargets) bodyRise(el);
+  for (const el of document.querySelectorAll<HTMLElement>('[data-motion="body-rise"]')) {
+    bodyRise(el, groupOf(el));
+  }
 
   /* Tiles are grouped by their nearest [data-stagger-vector] container so the
      36-degree ordering is computed per grid, not across the whole page. */

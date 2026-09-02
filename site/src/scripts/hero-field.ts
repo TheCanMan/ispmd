@@ -335,7 +335,8 @@ export async function mountHeroField({
   const hairGeometry = new THREE.BufferGeometry();
   hairGeometry.setAttribute('position', new THREE.Float32BufferAttribute(hairPoints, 3));
   const hairMaterial = new THREE.LineBasicMaterial({
-    color: 0xe8b05a,
+    /* --sienna-bright: the construction arcs stay terracotta, not gold. */
+    color: 0xd08348,
     transparent: true,
     opacity: 0.35,
     depthWrite: false,
@@ -350,10 +351,14 @@ export async function mountHeroField({
   keyLight.position.set(-0.6, 0.9, 1.0);
   scene.add(keyLight);
 
-  const ambient = new THREE.HemisphereLight(0xb9dee4, 0xa85a1e, 0.45);
+  /* Sky is the new --fill-sky, ground stays --sienna: the ribbons are lit by
+     the palette they sit in, or the lattice reads grey against the pine. */
+  const ambient = new THREE.HemisphereLight(0xa5ccb7, 0xa85a1e, 0.45);
   scene.add(ambient);
 
-  const windowGlow = new THREE.PointLight(0xe8b05a, 2.2, 3.2);
+  /* --fill-apricot, matching the shader's light end. Amber here would put the
+     gold back exactly where 12.4 refuses it. */
+  const windowGlow = new THREE.PointLight(0xf2c9a0, 2.2, 3.2);
   windowGlow.position.set(0, 0, -0.9);
   scene.add(windowGlow);
 

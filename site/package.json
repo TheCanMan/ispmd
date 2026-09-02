@@ -12,7 +12,8 @@
     "astro": "astro",
     "check": "astro check",
     "check:media": "node scripts/check-media.mjs",
-    "gen:pattern": "node scripts/generate-pattern-assets.mjs"
+    "gen:pattern": "node scripts/generate-pattern-assets.mjs",
+    "check:palette": "node scripts/check-palette.mjs"
   },
   "dependencies": {
     "astro": "^7.1.6",
