@@ -56,10 +56,6 @@ const jsonLd = educationalOrganization(Astro.site!.href);
     <div class="reach">
       <div class="reach__row">
         <a class="reach__link link-hook is-drawn" href={site.phone.href}>{site.phone.display}</a>
-        <p class="t-body" data-motion="body-rise">
-          There is no phone tree and no office here, so if nobody picks up, write instead. It
-          reaches exactly the same people.
-        </p>
       </div>
 
       <div class="reach__row">
@@ -99,9 +95,7 @@ const jsonLd = educationalOrganization(Astro.site!.href);
         {site.venue.addressLocality}, {site.venue.addressRegion} {site.venue.postalCode}
       </p>
       <p class="t-body" data-motion="body-rise">
-        Classes are held at the Islamic Education Center. The Islamic School of Potomac is a
-        separate organization and meets there; the building is not ours and the Center's staff
-        do not run our school.
+        Classes are held at the Islamic Education Center.
       </p>
       <p class="t-subtitle venue__times">
         Sundays, 10:00 AM until Salat al-Dhuhr<br />September through May

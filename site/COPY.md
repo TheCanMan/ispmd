@@ -40,7 +40,7 @@ Tuition $60 per student and $100 per family, financial assistance available · k
 | **A class-by-class schedule** | Only the 10:00 AM start and the Salat al-Dhuhr close are confirmed. |
 | **Anything denominational or commemorative** | Settled positioning: broadly Muslim, no sectarian markers. |
 
-**The venue framing rule.** ISP *meets at* the Islamic Education Center. It does not own that address and is not that organization. Every reference reads "classes are held at the Islamic Education Center" or equivalent. Never "our address", never "visit us at", never anything implying the building is the school's. This wording appears in three places in this file and all three are already correct; do not paraphrase them.
+**The venue framing rule.** ISP *meets at* the Islamic Education Center. It does not own that address and is not that organization. Every reference reads "classes are held at the Islamic Education Center" or equivalent. Never "our address", never "visit us at", never anything implying the building is the school's. The school asked (2026, client call) that the site stop making a point of the two-organization distinction, so the explicit "is a separate organization" commentary that used to follow this fact on Calendar, FAQs and Contact has been cut. The venue fact itself - "classes are held at the Islamic Education Center" - is unaffected and remains everywhere it appeared.
 
 ## Marked for confirmation before launch
 
@@ -285,7 +285,7 @@ Thirty-three Sundays.
 **Body** (`.t-body`)
 
 ```
-The school meets on twenty-five of them. Eight Sundays are off, for holidays, for Camp NWMI, and for the Nights of Power. Three of the twenty-five the whole school looks forward to.
+The school meets on twenty-five of them. Eight Sundays are off, for holidays and for the Nights of Power. Three of the twenty-five the whole school looks forward to.
 ```
 
 **The three milestone cards**
@@ -346,7 +346,7 @@ Most Sunday schools are built around a student. This one was built around a fami
 **Column 1** (`.t-body`)
 
 ```
-The Islamic School of Potomac teaches children ages 5 through 18 for one morning a week, September through May. Arabic, Deen, and a third part of the program the school has never quite been able to name, so it calls it "...and in between."
+The Islamic School of Potomac teaches children ages 5 through 18, September through May. Arabic, Deen, and a third part of the program the school has never quite been able to name, so it calls it "...and in between."
 ```
 
 **Column 2** (`.t-body`)
@@ -396,7 +396,6 @@ for thirty-three weeks.
 
 | Marker | Line (`.t-subtitle`) | Body (`.t-body`) |
 |---|---|---|
-| `10:00 AM` | `Class begins.` | `Classes are held at the Islamic Education Center on Montrose Road in Potomac. The school does not own the building; it meets there.` |
 | `THE MORNING` | `Arabic and Deen.` | `Arabic classes are grouped by a placement test, so a child sits with others reading at the same level. Deen classes are grouped by age, so a child sits with others asking the same questions.` |
 | `SALAT AL-DHUHR` | `The morning ends.` | `Class runs until the midday prayer. Then everyone goes home to the rest of their Sunday, with something to do together during the week.` |
 
@@ -471,7 +470,7 @@ and in between.
 **Lead** (`.t-lead`)
 
 ```
-The program has three parts. Two of them have names the school chose carefully. The third has a name the school gave up on choosing, which turns out to be the most accurate one.
+The program has three parts. Two of them have names the school chose carefully.
 ```
 
 ## 3. Arabic
@@ -538,10 +537,6 @@ Classes are grouped by age, because the questions a child asks about how to live
 **Body** (`.t-body`)
 
 ```
-This is the school's own name for it, and it is the part no curriculum can be written for.
-```
-
-```
 It is the friendship a child makes with someone they would never have met at their weekday school. It is the question asked in the hallway that the class was too shy for. It is a teenager who has been coming since kindergarten helping a five-year-old find the right room. It is the habit of showing up on a Sunday morning when you could be anywhere else.
 ```
 
@@ -555,7 +550,7 @@ It is also, in the school's experience, the part children remember longest.
 
 | Title (`.t-subtitle`) | Body (`.t-body`) |
 |---|---|
-| `Arabic: by placement test` | `A short test before the year starts, so a child sits with others reading at the same level. It is not an exam and nobody passes or fails it.` |
+| `Arabic: by placement test` | `A short placement test on the first day of school, so a child sits with others reading at the same level. It is not an exam and nobody passes or fails it.` |
 | `Deen: by age` | `Deen classes are grouped by the age of the student.` |
 
 ## 7. Homework, restated
@@ -578,7 +573,7 @@ What that means in practice: the school asks parents to reinforce what is taught
 ```
 
 ```
-A child who is told about charity learns a word. A child who watches a parent give learns a habit. The school has decided which of those it is in the business of.
+A child who is told about charity learns a word. A child who watches a parent give learns a habit.
 ```
 
 ## 8. The year's three moments
@@ -674,7 +669,7 @@ Rows, in order. `Date` column is mono. The `Kind` column is the right-aligned la
 |---|---|---|
 | September 13, 2026 | Back to School Day | Milestone |
 | September 20, 2026 | Class | Class |
-| September 27, 2026 | Camp NWMI | No school |
+| September 27, 2026 | No School | No school |
 | October 4, 2026 | Class | Class |
 | October 11, 2026 | No School | No school |
 | October 18, 2026 | Class | Class |
@@ -752,7 +747,7 @@ September through May.
 **Body** (`.t-body`)
 
 ```
-Class begins at 10:00 AM and runs until Salat al-Dhuhr. Classes are held at the Islamic Education Center, 7917 Montrose Rd, Potomac, MD 20854. The Islamic School of Potomac is a separate organization and meets there.
+Class begins at 10:00 AM and runs until Salat al-Dhuhr. Classes are held at the Islamic Education Center, 7917 Montrose Rd, Potomac, MD 20854.
 ```
 
 **Second paragraph** (`.t-body`)
@@ -829,7 +824,7 @@ It is not a special case and it is not a favor. If tuition is a difficulty for y
 | Title (`.t-subtitle`) | Body (`.t-body`) |
 |---|---|
 | `Ages 5 through 18` | `Classes begin at kindergarten, with 5 year-olds, and run through high school.` |
-| `Arabic placement is by test` | `A short placement test before the year starts, so your child sits with others reading at the same level. Nobody passes or fails it.` |
+| `Arabic placement is by test` | `A short placement test on the first day of school, so your child sits with others reading at the same level. Nobody passes or fails it.` |
 | `Deen placement is by age` | `Deen classes are grouped by the age of the student.` |
 
 ## 5. Steps
@@ -908,7 +903,7 @@ The cost is $60 for one student and $100 for a family. Financial assistance is a
 **What if tuition is a difficulty for us?**
 
 ```
-Say so when you enroll. Financial assistance is available and it is handled quietly. It is a normal part of how this school works, not an exception to it.
+Financial assistance is available and it is handled quietly. It is a normal part of how this school works, not an exception to it.
 ```
 
 **How are children placed in classes?**
@@ -918,7 +913,7 @@ Arabic class placement is determined by placement test. Deen class placement is 
 ```
 
 ```
-The Arabic test is short, it happens before the year starts, and nobody passes or fails it. It exists so a child sits with others reading at the same level rather than others born the same year.
+The Arabic test is short, it happens on the first day of school, and nobody passes or fails it. It exists so a child sits with others reading at the same level rather than others born the same year.
 ```
 
 **How do I enroll?**
@@ -966,7 +961,7 @@ Sundays, from 10:00 AM until Salat al-Dhuhr, September through May.
 ```
 
 ```
-Classes are held at the Islamic Education Center, 7917 Montrose Rd, Potomac, MD 20854. The Islamic School of Potomac is a separate organization and meets there.
+Classes are held at the Islamic Education Center, 7917 Montrose Rd, Potomac, MD 20854.
 ```
 
 **Can I get involved?**
@@ -989,10 +984,6 @@ Yes. The Islamic School of Potomac is a 501(c)(3) non-profit organization, EIN 5
 
 ```
 By phone at (301) 929-1441, or by email at info@ispmd.org. Both reach the people who actually run the Sunday morning.
-```
-
-```
-There is no office and no phone tree. If nobody picks up, write instead.
 ```
 
 ## 3. Aside (pull quote)
@@ -1043,7 +1034,7 @@ The rest of it is made up by people who decided a community should have a school
 **Lead** (`.t-lead`)
 
 ```
-The Islamic School of Potomac teaches children ages 5 through 18 for one morning a week, thirty-three Sundays a year, and charges $60 a student to do it. That number is not an accident and it is not going up. It is set where it is so that no family in this community has to think twice about sending a child.
+The Islamic School of Potomac teaches children ages 5 through 18, thirty-three Sundays a year, and charges $60 a student to do it.
 ```
 
 ## 3. What $60 means here
@@ -1061,10 +1052,6 @@ and no marketing budget.
 
 ```
 Money given to this school goes into the Sunday morning: the books a class reads, the materials a teacher needs, the Deen Showcase in December, the Quran Competition in May. It is a short list because it is a small school, and every item on it is something a child touches.
-```
-
-```
-Nobody here is fundraising for a building. The school does not own one.
 ```
 
 **Card** (mono)
@@ -1138,7 +1125,7 @@ thing the school runs on.
 **Body** (`.t-body`)
 
 ```
-Parent feedback and volunteering is encouraged, and it is meant literally. The people who teach the classes, set out the chairs and run the Showcase are the same people who send their children here. An hour of your Sunday is worth real money to a school this size.
+Parent feedback and volunteering is encouraged. An hour of your Sunday is worth real money to a school this size.
 ```
 
 **Button:** `Get in touch`
@@ -1169,12 +1156,6 @@ Two rows, equal typographic weight, in this order.
 
 ```
 (301) 929-1441
-```
-
-**Beneath it** (`.t-body`)
-
-```
-There is no phone tree and no office here, so if nobody picks up, write instead. It reaches exactly the same people.
 ```
 
 **Row two - email** (`.t-title`, `href="mailto:info@ispmd.org"`)
@@ -1214,7 +1195,7 @@ Potomac, MD 20854
 **Body** (`.t-body`)
 
 ```
-Classes are held at the Islamic Education Center. The Islamic School of Potomac is a separate organization and meets there; the building is not ours and the Center's staff do not run our school.
+Classes are held at the Islamic Education Center.
 ```
 
 **Times** (`.t-subtitle`)

@@ -185,8 +185,7 @@ const displayNote = (session: Session) => {
       <div class="flow practical__copy" data-motion="body-rise">
         <p class="t-body">
           Class begins at 10:00 AM and runs until Salat al-Dhuhr. Classes are held at the Islamic
-          Education Center, 7917 Montrose Rd, Potomac, MD 20854. The Islamic School of Potomac is a
-          separate organization and meets there.
+          Education Center, 7917 Montrose Rd, Potomac, MD 20854.
         </p>
         <p class="t-body">
           If you need to check whether class is on, call{' '}
@@ -194,11 +193,6 @@ const displayNote = (session: Session) => {
           write to{' '}
           <a class="link t-num practical__channel" href={site.email.href}>{site.email.display}</a>.
         </p>
-      </div>
-
-      <div class="practical__contacts" data-motion="body-rise">
-        <a class="link t-num" href={site.phone.href}>{site.phone.display}</a>
-        <a class="link t-num" href={site.email.href}>{site.email.display}</a>
       </div>
 
       <div data-motion="body-rise">
@@ -281,17 +275,7 @@ const displayNote = (session: Session) => {
     gap: var(--s-5);
   }
 
-  .practical__contacts {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--s-3) var(--s-6);
-    font-family: var(--font-mono);
-    font-size: var(--fs-lead);
-    line-height: var(--lh-lead);
-  }
-
-  .practical__channel,
-  .practical__contacts a {
+  .practical__channel {
     display: inline-flex;
     align-items: center;
     min-height: 44px;
