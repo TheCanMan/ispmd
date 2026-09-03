@@ -331,7 +331,7 @@ a year.
 **Body** (`.t-body`)
 
 ```
-Donations cover the rest. The Islamic School of Potomac is a 501(c)(3) non-profit, and every dollar goes into the Sunday morning: the books, the room, the year.
+Donations cover the rest. The Islamic School of Potomac is a 501(c)(3) non-profit. Donations pay for books, materials, the Showcase and the Competition.
 ```
 
 **Button:** `Support the school`
@@ -476,7 +476,7 @@ and in between.
 **Lead** (`.t-lead`)
 
 ```
-The program has three parts. Two of them have names the school chose carefully. Children look forward to reading the Quran, the yearly theme they share with the whole school, the Showcase, the Competition, and the friendships in between.
+The program has three parts. Children look forward to reading the Quran, the yearly theme they share with the whole school, the Showcase, the Competition, and the friendships in between.
 ```
 
 ## 3. Arabic
@@ -526,7 +526,7 @@ Deen has a yearly theme. Every grade explores it at its own level, so a family w
 ```
 
 ```
-Classes are grouped by age, because the questions a child asks about how to live change faster than their reading does.
+Deen classes are grouped by age.
 ```
 
 ## 5. ...and in between
@@ -573,10 +573,6 @@ children. We give it to the parents!
 What that means in practice: the school asks parents to reinforce what is taught by doing it, not by quizzing. Praying as a family. Giving as a family. Serving the community as a family.
 ```
 
-```
-A child who is told about charity learns a word. A child who watches a parent give learns a habit.
-```
-
 ## 8. The year's three moments
 
 **Label:** `WHAT THE YEAR BUILDS TOWARD`
@@ -617,7 +613,7 @@ start in September.
 **Sub-line** (`.t-lead`)
 
 ```
-Thirty-three Sundays. The school meets on twenty-five of them.
+September through May.
 ```
 
 ## 2. Next class
@@ -1033,7 +1029,7 @@ Donations cover the rest.
 **Lead** (`.t-lead`)
 
 ```
-The Islamic School of Potomac teaches children ages 5 through 18, thirty-three Sundays a year, and charges $60 a student to do it.
+Tuition is $60 a student.
 ```
 
 ## 3. What $60 means here
@@ -1211,7 +1207,7 @@ Rockville, MD 20848-0833
 **Body** (`.t-small`)
 
 ```
-This is a mailbox, not a classroom. Checks and paperwork go here; nobody is standing behind it.
+Mail only. Checks and paperwork go here.
 ```
 
 ## 5. Come on a Sunday
@@ -1219,8 +1215,7 @@ This is a mailbox, not a classroom. Checks and paperwork go here; nobody is stan
 **Headline** (`.t-display`)
 
 ```
-Better than either:
-come and see.
+Come on a Sunday.
 ```
 
 **Body** (`.t-body`)
