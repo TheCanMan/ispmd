@@ -944,7 +944,7 @@ Children have enough homework during the week. We don't give homework to childre
 ```
 
 ```
-In practice: the school asks families to reinforce what is taught by doing it together. Praying, giving, serving the community. A child who is told about charity learns a word. A child who watches a parent give learns a habit.
+In practice: the school asks families to reinforce what is taught by doing it together. Praying, giving, serving the community.
 ```
 
 ### Group label: `PRACTICAL`
