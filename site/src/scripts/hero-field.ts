@@ -2,9 +2,10 @@
  * The Field - the homepage hero. DESIGN.md 13.1 and 13.2.
  *
  * A shallow slab of extruded girih strapwork, lit from behind by a slow field
- * of warm light, with a rectangular aperture cut into it where the pattern
- * does not close. The aperture is the Window, and it is where the video
- * montage will live.
+ * of green light, with a soft aperture opened in it where the pattern does not
+ * close. The aperture is the Window, and it is where the video montage will
+ * live. Its edge is a rounded distance field, not a rectangle: a box with hard
+ * corners read as a placeholder rather than as light.
  *
  * This is the one surface on the site where the interlace is REAL: the
  * ribbons genuinely weave over and under in z, which a flat SVG can never
@@ -299,8 +300,12 @@ export async function mountHeroField({
              vec2 uv = gl_FragCoord.xy / uRes;
              vec2 wmin = uWindowRect.xy;
              vec2 wmax = uWindowRect.xy + uWindowRect.zw;
-             vec2 e = min(uv - wmin, wmax - uv);
-             float inside = smoothstep(-0.055, 0.035, min(e.x, e.y));
+             vec2 centre = (wmin + wmax) * 0.5;
+             vec2 halfSize = (wmax - wmin) * 0.5;   // 'half' is reserved in GLSL ES
+             float r = min(halfSize.x, halfSize.y) * 0.75;
+             vec2 q = abs(uv - centre) - (halfSize - r);
+             float d = length(max(q, 0.0)) + min(max(q.x, q.y), 0.0) - r;
+             float inside = 1.0 - smoothstep(-0.11, 0.07, d);
              if (inside > 0.985) discard;
              vWindowFade = 1.0 - inside;
            }`
@@ -310,7 +315,9 @@ export async function mountHeroField({
     return material;
   }
 
-  const paper = new THREE.Color(0xfbf8f2);
+  /* --paper. The ribbons are the largest single surface in the hero, so a
+     warm cream here tinted the whole set-piece regardless of the tokens. */
+  const paper = new THREE.Color(0xf8faf7);
   const overMaterial = makeRibbonMaterial(paper.clone());
   /* 13.1 step 5 - under-ribbons are multiplied by 0.88. Faked ambient
      occlusion, cheaper and better-looking than a shadow map. */
@@ -351,8 +358,8 @@ export async function mountHeroField({
   const hairGeometry = new THREE.BufferGeometry();
   hairGeometry.setAttribute('position', new THREE.Float32BufferAttribute(hairPoints, 3));
   const hairMaterial = new THREE.LineBasicMaterial({
-    /* --sienna-bright: the construction arcs stay terracotta, not gold. */
-    color: 0xd08348,
+    /* --amber, the site's one accent: a leaf green. */
+    color: 0xa3dc7a,
     transparent: true,
     opacity: 0.35,
     depthWrite: false,
@@ -363,18 +370,19 @@ export async function mountHeroField({
   /* ---------------------------------------------------------------- */
   /* Lights. No shadow maps anywhere in this scene.                     */
 
-  const keyLight = new THREE.DirectionalLight(0xf6e7d7, 1.6);
+  /* --paper-warm. A cream key light was tinting the whole lattice warm. */
+  const keyLight = new THREE.DirectionalLight(0xeef3ec, 1.6);
   keyLight.position.set(-0.6, 0.9, 1.0);
   scene.add(keyLight);
 
-  /* Sky is the new --fill-sky, ground stays --sienna: the ribbons are lit by
-     the palette they sit in, or the lattice reads grey against the pine. */
-  const ambient = new THREE.HemisphereLight(0xa5ccb7, 0xa85a1e, 0.45);
+  /* --fill-sky above, --sienna below. Both greens now: the bounce light was
+     the last warm surface in the scene and it was tinting every ribbon. */
+  const ambient = new THREE.HemisphereLight(0x93c4b4, 0x2f6b45, 0.45);
   scene.add(ambient);
 
-  /* --fill-apricot, matching the shader's light end. Amber here would put the
-     gold back exactly where 12.4 refuses it. */
-  const windowGlow = new THREE.PointLight(0xf2c9a0, 2.2, 3.2);
+  /* --paper-warm, matching the shader's light end: the aperture is pale
+     green-white light, not a warm glow. */
+  const windowGlow = new THREE.PointLight(0xeef3ec, 2.2, 3.2);
   windowGlow.position.set(0, 0, -0.9);
   scene.add(windowGlow);
 

@@ -10,8 +10,8 @@
  * Thresholds: 4.5 for body-size text, 3.0 for >=24px and for non-text UI.
  */
 
-import { readFileSync } from 'node:fs';
-import { dirname, resolve } from 'node:path';
+import { readFileSync, readdirSync, statSync } from 'node:fs';
+import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -151,6 +151,87 @@ for (let i = 0; i < FILLS.length; i++) {
     console.log(`  ${close ? 'TOO CLOSE' : 'ok       '} ${FILLS[i].padEnd(12)} vs ${FILLS[j].padEnd(12)} dE ${d.toFixed(3)}`);
   }
 }
+
+/*
+ * NO WARM HUE, ANYWHERE. Client direction: the site reads green, and no token
+ * may be gold, bronze, brown, beige, sepia, terracotta, clay, apricot, amber
+ * or sienna. Several token NAMES still say otherwise - they are kept because
+ * page files reference them and renaming would break surfaces this file does
+ * not own - so the guard checks the VALUE, which is the thing that ships.
+ *
+ * Warm is defined as OKLCH hue 15-70 degrees with enough chroma to read as a
+ * hue rather than as a neutral. That band is orange through gold and yellow-ochre; the
+ * greens live at 120-165 and the neutral off-whites sit under the chroma
+ * floor.
+ */
+const WARM_HUE = [15, 100];
+const CHROMA_FLOOR = 0.02;
+
+/* --state-error is the one exemption and it is deliberate: an error signal in
+   green would be wrong, and red at hue ~25 is a universal convention rather
+   than a brand colour. It is currently unused on the site. */
+const HUE_EXEMPT = new Set(['state-error']);
+
+console.log('\nwarm-hue guard (OKLCH):');
+for (const [name, value] of Object.entries(T)) {
+  const [L, a, bb] = oklab(value);
+  const chroma = Math.hypot(a, bb);
+  let hue = (Math.atan2(bb, a) * 180) / Math.PI;
+  if (hue < 0) hue += 360;
+  const warm = hue >= WARM_HUE[0] && hue <= WARM_HUE[1] && chroma > CHROMA_FLOOR;
+  if (warm && !HUE_EXEMPT.has(name)) {
+    failures++;
+    console.log(`  WARM  --${name.padEnd(20)} ${value}  hue ${hue.toFixed(0)}  chroma ${chroma.toFixed(3)}`);
+  } else if (warm) {
+    console.log(`  exempt --${name.padEnd(19)} ${value}  hue ${hue.toFixed(0)}  chroma ${chroma.toFixed(3)}`);
+  }
+}
+console.log('  (nothing listed above means no warm token)');
+
+
+/* ------------------------------------------------------------------ *
+ * Hardcoded literals, everywhere except the token block.
+ *
+ * The guard above only sees :root, so it certified the palette clean
+ * while two warm colours were still shipping: a cream masthead scrim
+ * painted behind every page title on all eight pages, and the hero
+ * lattice ribbons. Both were raw literals inside a component, invisible
+ * to a check that reads tokens.
+ *
+ * A guard that only checks the palette does not check the site.
+ * ------------------------------------------------------------------ */
+const walk = (dir, out = []) => {
+  for (const name of readdirSync(dir)) {
+    const full = join(dir, name);
+    if (statSync(full).isDirectory()) walk(full, out);
+    else if (/\.(astro|ts|css|mjs|svg)$/.test(name)) out.push(full);
+  }
+  return out;
+};
+
+console.log('\nwarm-literal guard (source files):');
+let literalHits = 0;
+for (const file of [...walk(join(ROOT, 'src')), ...walk(join(ROOT, 'scripts')), ...walk(join(ROOT, 'public'))]) {
+  if (file.endsWith('global.css')) continue; /* the token block, checked above */
+  const text = readFileSync(file, 'utf8');
+  const seen = new Set();
+  for (const m of text.matchAll(/#([0-9A-Fa-f]{6})\b|0x([0-9a-fA-F]{6})\b/g)) seen.add((m[1] ?? m[2]).toLowerCase());
+  for (const m of text.matchAll(/rgba?\((\d+),\s*(\d+),\s*(\d+)/g))
+    seen.add([m[1], m[2], m[3]].map((n) => (+n).toString(16).padStart(2, '0')).join(''));
+
+  for (const hexv of seen) {
+    const [L, a, bb] = oklab('#' + hexv);
+    const chroma = Math.hypot(a, bb);
+    let hue = (Math.atan2(bb, a) * 180) / Math.PI;
+    if (hue < 0) hue += 360;
+    if (chroma > CHROMA_FLOOR && hue >= WARM_HUE[0] && hue <= WARM_HUE[1]) {
+      failures++;
+      literalHits++;
+      console.log(`  WARM  ${file.replace(ROOT + '/', '').padEnd(42)} #${hexv}  hue ${hue.toFixed(0)}  chroma ${chroma.toFixed(3)}`);
+    }
+  }
+}
+if (!literalHits) console.log('  no warm literal in any source file');
 
 console.log(failures ? `\n${failures} FAILURES\n` : '\npalette clean\n');
 process.exit(failures ? 1 : 0);

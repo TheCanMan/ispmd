@@ -37,16 +37,16 @@ import type {
 /* Tokens, as 0-1 vec3. These are the section 1 hexes and nothing else. */
 
 export const PALETTE = {
-  paper: '#FBF8F2',
-  paperWarm: '#F6E7D7',
-  paperCool: '#E2EAE3',
-  ink: '#16291F',
-  slateDeep: '#10231B',
-  sienna: '#A85A1E',
-  slate: '#3F6B57',
-  amber: '#E8B05A',
-  fillApricot: '#F2C9A0',
-  fillSky: '#A5CCB7',
+  paper: '#F8FAF7',
+  paperWarm: '#EEF3EC',
+  paperCool: '#E3EBE3',
+  ink: '#14261C',
+  slateDeep: '#0F1F17',
+  sienna: '#2F6B45',
+  slate: '#2C6157',
+  amber: '#A3DC7A',
+  fillApricot: '#D9EDC6',
+  fillSky: '#93C4B4',
 } as const;
 
 export function hexToVec3(hex: string): [number, number, number] {
@@ -164,10 +164,20 @@ export const FRAGMENT_SHADER = /* glsl */ `
     }
 
     // 5. the Window: light opens, pattern gets out of the way
+    //
+    // This was min(e.x, e.y) against a 0.05 feather - a SQUARE boundary with
+    // sharp corners, crisp on the three sides that fell inside the viewport
+    // and absent on the fourth, which is exactly why it read as a pasted
+    // panel rather than as light. A rounded-box distance with a wide falloff
+    // gives all four sides the same treatment and no corners to catch on.
     if (uWindowRect.z > 0.0) {
       vec2 wmin = uWindowRect.xy, wmax = uWindowRect.xy + uWindowRect.zw;
-      vec2 e = min(uv - wmin, wmax - uv);
-      float inside = smoothstep(-0.02, 0.03, min(e.x, e.y));
+      vec2 centre = (wmin + wmax) * 0.5;
+      vec2 halfSize = (wmax - wmin) * 0.5;   // 'half' is reserved in GLSL ES
+      float r = min(halfSize.x, halfSize.y) * 0.75;
+      vec2 q = abs(uv - centre) - (halfSize - r);
+      float d = length(max(q, 0.0)) + min(max(q.x, q.y), 0.0) - r;
+      float inside = 1.0 - smoothstep(-0.11, 0.07, d);
       col = mixOk(col, uPaletteC, inside * 0.55);
     }
 
@@ -203,20 +213,19 @@ export const PRESETS = {
    * uWindowRect is vec4(0) on every preset except the two homepage ones,
    * which are driven from the DOM by the hero (13.2).
    *
-   * The light end of every preset that reaches full brightness is TERRACOTTA,
-   * not gold. On a green site an amber light end is green-and-gold, which
-   * 12.4 refuses outright and which the hero - the largest surface here -
-   * would have stated on every visit. Amber survives as the milestone fill
-   * and the single homework chord, and nowhere in the light field.
+   * There is no warm hue in any preset. The field mixes green-dark to
+   * green-light in OKLab, so what reads as "light coming through the screen"
+   * is a pale sage-white rather than gold or clay. The token NAMES below are
+   * historical - P.sienna is a moss green and P.fillApricot is a pale leaf.
    */
-  'home-backdrop': { a: P.ink,       b: P.sienna,  c: P.fillApricot, strap: P.paper, density: 3.2, strapWidth: 0.0, glow: 0.45, drift: 1.0, construction: 0.0, grain: 0.012, opacity: 1.0, lightOrigin: [0.5, 0.5] },
-  'home-flat':     { a: P.ink,       b: P.sienna,  c: P.fillApricot, strap: P.paper, density: 3.2, strapWidth: 0.014, glow: 0.45, drift: 1.0, construction: 0.3, grain: 0.012, opacity: 1.0, lightOrigin: [0.5, 0.5] },
+  'home-backdrop': { a: P.ink,       b: P.slate,  c: P.fillApricot, strap: P.paper, density: 3.2, strapWidth: 0.0, glow: 0.45, drift: 1.0, construction: 0.0, grain: 0.012, opacity: 1.0, lightOrigin: [0.5, 0.5] },
+  'home-flat':     { a: P.ink,       b: P.slate,  c: P.fillApricot, strap: P.paper, density: 3.2, strapWidth: 0.014, glow: 0.45, drift: 1.0, construction: 0.3, grain: 0.012, opacity: 1.0, lightOrigin: [0.5, 0.5] },
   story:    { a: P.paper,     b: P.paperWarm,   c: P.fillSky,  strap: P.ink,   density: 3.6, strapWidth: 0.006, glow: 0.25, drift: 0.35, construction: 1.0,  grain: 0.010, opacity: 0.55, lightOrigin: [0.22, 0.30] },
   program:  { a: P.paperWarm, b: P.fillApricot, c: P.sienna,   strap: P.paper, density: 3.0, strapWidth: 0.014, glow: 0.40, drift: 0.50, construction: 0.35, grain: 0.010, opacity: 0.50, lightOrigin: [0.50, 0.18] },
   calendar: { a: P.paperCool, b: P.fillSky,     c: P.slate,    strap: P.paper, density: 4.6, strapWidth: 0.010, glow: 0.30, drift: 0.30, construction: 0.25, grain: 0.010, opacity: 0.45, lightOrigin: [0.78, 0.22] },
   enroll:   { a: P.paper,     b: P.fillApricot, c: P.sienna,   strap: P.paper, density: 2.6, strapWidth: 0.016, glow: 0.60, drift: 0.60, construction: 0.30, grain: 0.010, opacity: 0.55, lightOrigin: [0.30, 0.55] },
   faqs:     { a: P.paper,     b: P.paperCool,   c: P.paperWarm, strap: P.ink,  density: 5.2, strapWidth: 0.008, glow: 0.15, drift: 0.25, construction: 0.20, grain: 0.008, opacity: 0.35, lightOrigin: [0.50, 0.10] },
-  give:     { a: P.ink,       b: P.slate,       c: P.sienna,    strap: P.paper, density: 3.2, strapWidth: 0.012, glow: 0.90, drift: 0.70, construction: 0.30, grain: 0.014, opacity: 1.00, lightOrigin: [0.50, 0.02] },
+  give:     { a: P.ink,       b: P.slate,       c: P.fillApricot,    strap: P.paper, density: 3.2, strapWidth: 0.012, glow: 0.90, drift: 0.70, construction: 0.30, grain: 0.014, opacity: 1.00, lightOrigin: [0.50, 0.02] },
   contact:  { a: P.slateDeep, b: P.slate,       c: P.fillSky,  strap: P.paper, density: 2.2, strapWidth: 0.010, glow: 0.50, drift: 0.40, construction: 0.30, grain: 0.012, opacity: 1.00, lightOrigin: [0.50, 0.62] },
   notfound: { a: P.paper,     b: P.fillApricot, c: P.sienna,   strap: P.paper, density: 2.6, strapWidth: 0.016, glow: 0.60, drift: 0.60, construction: 0.30, grain: 0.010, opacity: 0.40, lightOrigin: [0.50, 0.50] },
 } satisfies Record<string, Preset>;

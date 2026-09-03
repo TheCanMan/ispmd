@@ -20,11 +20,11 @@ const OUT = resolve(ROOT, 'public/img');
 mkdirSync(OUT, { recursive: true });
 
 /* Tokens. These are the only colours this script may emit (DESIGN.md 1). */
-const INK = '#16291F';
-const PAPER = '#FBF8F2';
-const SIENNA = '#A85A1E';
-const SLATE_DEEP = '#10231B';
-const AMBER = '#F2C9A0';   /* --fill-apricot: the OG poster's light end is terracotta, not gold */
+const INK = '#14261C';
+const PAPER = '#F8FAF7';
+const SIENNA = '#2F6B45';
+const SLATE_DEEP = '#0F1F17';
+const AMBER = '#D9EDC6';   /* --fill-apricot, a pale leaf: the poster's light end is green */
 
 /* ---------------------------------------------------------------------
    9.2  The {10/3} decagram

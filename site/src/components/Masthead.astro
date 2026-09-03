@@ -172,10 +172,11 @@ const {
    * context - GSAP leaves a transform on anything with data-motion, which
    * makes one whether you asked for it or not.
    *
-   * So the reach is bounded instead: inset 24 with a 12px blur feathers from
-   * 36px outside the block to 12px outside it, clear of the text it protects
-   * and clear of the neighbour it must not touch. Measured gaps between
-   * masthead blocks are 45px (/give), 53px (/calendar) and 60px (/program).
+   * So the reach is BOUNDED instead - wide enough that two neighbouring
+   * scrims meet at full strength, narrow enough that neither reaches the
+   * other's glyphs. Measured gaps between masthead blocks are 45px (/give),
+   * 53px (/calendar) and 60px (/program); the geometry below is solved
+   * against the tightest of those.
    */
   .masthead__type > :global(*) {
     position: relative;
@@ -184,19 +185,35 @@ const {
   .masthead__type > :global(*:not(:empty))::before {
     content: "";
     position: absolute;
-    inset: calc(var(--s-5) * -1);
+    /*
+     * 36px inset against a 12px blur: the SOLID core reaches 24px beyond the
+     * block and the feather dies at 48px.
+     *
+     * Both numbers are set by the junction, not by taste. At 24/16 the core
+     * reached only 8px out, so across the 45px gap on /give the two scrims
+     * met as feather-against-feather and composited to well under their own
+     * 0.88 - a measured luminance spike from 0.037 to 0.0995, visible as a
+     * lighter bar straight across the slab. Two cores reaching 24px close
+     * that 45px gap with 3px to spare.
+     *
+     * The feather still has to stop short of the NEIGHBOUR's glyphs, because
+     * a scrim inside a GSAP-transformed sibling paints above them rather than
+     * behind. 48px lands 3px inside the next block's box, ahead of its own
+     * ~8px of leading, so it reaches padding and never a glyph.
+     */
+    inset: -36px;
     z-index: -1;
     pointer-events: none;
     /* Semi-transparent and softly blurred rather than an opaque slab: at full
        ink with a 12px edge this read as a black box laid over the band. The
        field still shows through; the measured worst glyph is what matters and
        it clears 4.5 with room to spare. */
-    background: rgba(251, 248, 242, 0.88);
-    filter: blur(var(--s-4));
+    background: rgba(248, 250, 247, 0.88);   /* --paper */
+    filter: blur(12px);
   }
 
   .masthead.on-dark .masthead__type > :global(*:not(:empty))::before {
-    background: rgba(22, 41, 31, 0.88);
+    background: rgba(20, 38, 28, 0.88);      /* --ink */
   }
 
   @media (min-width: 1024px) {
