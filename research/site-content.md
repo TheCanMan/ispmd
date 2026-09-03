@@ -31,9 +31,10 @@ Captured 2026-08-03.
 | School year | September through May |
 | Age range | 5 through 18 |
 
-**Framing rule.** ISP *meets at* the IEC. It does not *own* that address.
-Copy must say "classes are held at the Islamic Education Center" or equivalent, never "our address is."
-See the two-organization finding below for why this distinction is load-bearing.
+**Framing rule (revised 2026-08-03 after client call).** State the venue plainly and stop: "Classes are held at the Islamic Education Center, 7917 Montrose Rd, Potomac, MD 20854."
+**Do not add commentary differentiating ISP from the IEC** - no "separate organization," no "the building is not ours," no "meets there but does not own it." The school explicitly asked for that language to be removed.
+The one constraint that survives is factual, not rhetorical: copy still must not claim the address as ISP's own ("our address," "our building," "visit us at"). Say where class is held; say nothing about ownership either way.
+See the two-organization finding below for the facts behind this; the facts stand, the emphasis does not.
 
 ### Phone - resolved 2026-08-03
 
