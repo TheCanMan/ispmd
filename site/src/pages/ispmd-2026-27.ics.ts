@@ -24,8 +24,7 @@ const DTSTAMP = '20260803T000000Z';
 const CLASS_DESCRIPTION =
   'Class begins at 10:00 AM and runs until Salat al-Dhuhr, so the exact ' +
   'finishing time shifts through the year. Classes are held at the Islamic ' +
-  'Education Center, 7917 Montrose Rd, Potomac, MD 20854. The Islamic School ' +
-  'of Potomac is a separate organization and meets there.';
+  'Education Center, 7917 Montrose Rd, Potomac, MD 20854.';
 
 /**
  * RFC 5545 line folding at 75 octets. Long DESCRIPTION lines are the usual
