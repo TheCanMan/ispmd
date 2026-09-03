@@ -274,7 +274,13 @@ export async function mountHeroField({
            uniform vec4  uWindowRect;
            uniform vec2  uRes;
            varying float vPathT;
-           varying float vDelay;`
+           varying float vDelay;
+           float vWindowFade = 1.0;`
+        )
+        .replace(
+          '#include <color_fragment>',
+          `#include <color_fragment>
+           diffuseColor.a *= vWindowFade;`
         )
         .replace(
           '#include <clipping_planes_fragment>',
@@ -282,11 +288,21 @@ export async function mountHeroField({
            float grown = clamp((uRevealGlobal - vDelay) / 0.25, 0.0, 1.0);
            if (vPathT > grown) discard;
 
+           /*
+            * 13.2 culls the ribbons inside the aperture. A hard rectangular
+            * discard gave the window three crisp edges and made it read as a
+            * placeholder box rather than as light coming through a screen.
+            * Feathering the cull lets the strapwork dissolve into the aperture
+            * instead of being sliced off at a boundary.
+            */
            if (uWindowRect.z > 0.0) {
              vec2 uv = gl_FragCoord.xy / uRes;
              vec2 wmin = uWindowRect.xy;
              vec2 wmax = uWindowRect.xy + uWindowRect.zw;
-             if (all(greaterThan(uv, wmin)) && all(lessThan(uv, wmax))) discard;
+             vec2 e = min(uv - wmin, wmax - uv);
+             float inside = smoothstep(-0.055, 0.035, min(e.x, e.y));
+             if (inside > 0.985) discard;
+             vWindowFade = 1.0 - inside;
            }`
         );
     };

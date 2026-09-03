@@ -59,7 +59,7 @@ export const site = {
   },
 
   /**
-   * Where class meets. A separate organization's building.
+   * Where class meets.
    * Never written as the school's own address.
    */
   venue: {

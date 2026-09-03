@@ -127,20 +127,23 @@ const regionLabel = `The ${yearLabel} school year, Sunday by Sunday`;
 
   /* ---- grid variant: the Calendar page ---- */
 
+  /*
+   * The column count is chosen by the available width, not fixed. Eleven
+   * columns divided 33 cells into exactly three rows, which was elegant and
+   * unreadable: a 108px cell leaves 76px of content, and "Thanksgiving" broke
+   * to "Thanksgi / ving", "Deen Showcase" to "Showcas / e".
+   *
+   * A minimum cell width states the actual constraint - a title has to fit -
+   * and lets the browser pick the count at every breakpoint, instead of a
+   * magic number that only worked at one.
+   */
   .cal-band--grid .cal-band__cells {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
   }
 
-  @media (min-width: 600px) {
+  @media (max-width: 599px) {
     .cal-band--grid .cal-band__cells {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .cal-band--grid .cal-band__cells {
-      /* Eleven columns takes 33 cells to exactly three rows. */
-      grid-template-columns: repeat(11, minmax(0, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(128px, 1fr));
     }
   }
 

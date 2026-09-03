@@ -118,6 +118,16 @@ const {
     align-items: end;
   }
 
+  /*
+   * The eyebrow uses the SOFT token, not the faint one. 6.2 assigns --*-faint
+   * to meta labels on a solid ground; over the masthead's semi-transparent
+   * scrim a 13px faint label measured 3.88-4.34:1 on /contact, /give and
+   * /enroll. Soft clears it on every masthead with margin.
+   */
+  .masthead .t-label {
+    color: var(--ctx-text-soft);
+  }
+
   .masthead__block {
     grid-column: 1 / -1;
     display: flex;
@@ -147,33 +157,46 @@ const {
      PAGE's cid, so the rule silently skipped exactly the elements it was
      written for - the /program epigraph and the /give sub-line. Scoping the
      parent and globalising the child keeps it to this component's mastheads. */
+  /*
+   * SCRIM REACH IS A GEOMETRY PROBLEM, not a stacking one.
+   *
+   * Each block's scrim is a solid inset behind its own text. When it reached
+   * 272px beyond its block (inset 176 + blur 96) and the gap to the next block
+   * is 45px, it necessarily covered the neighbour's text - which is why
+   * "$60 tuition." painted at 5.18:1 while "A school with" painted at 14.45:1
+   * on the same headline.
+   *
+   * No z-index arrangement fixes that. Two overlapping scrims and two blocks
+   * of text: whichever order they paint in, one scrim lands on one text. And
+   * the children cannot be relied on to stay out of their own stacking
+   * context - GSAP leaves a transform on anything with data-motion, which
+   * makes one whether you asked for it or not.
+   *
+   * So the reach is bounded instead: inset 24 with a 12px blur feathers from
+   * 36px outside the block to 12px outside it, clear of the text it protects
+   * and clear of the neighbour it must not touch. Measured gaps between
+   * masthead blocks are 45px (/give), 53px (/calendar) and 60px (/program).
+   */
   .masthead__type > :global(*) {
     position: relative;
-    /*
-     * `filter` makes each ::before its own stacking context, but the CHILD it
-     * sits inside is not one, so a negative-z scrim can paint past its own
-     * parent and over an earlier sibling's text - /calendar and /program both
-     * put two blocks in this grid. Isolating each child makes that
-     * structurally impossible rather than accidentally fine.
-     */
-    isolation: isolate;
   }
 
   .masthead__type > :global(*:not(:empty))::before {
     content: "";
     position: absolute;
-    inset: calc(var(--s-11) * -1);
+    inset: calc(var(--s-5) * -1);
     z-index: -1;
     pointer-events: none;
-    background: var(--paper);
-    /* Same radius as the hero. Over a shader a 64px blur was enough; over a
-       photograph with a hard bright region (/contact's sky) the rectangle was
-       still legible, and the band clips whatever spills. */
-    filter: blur(var(--s-9));
+    /* Semi-transparent and softly blurred rather than an opaque slab: at full
+       ink with a 12px edge this read as a black box laid over the band. The
+       field still shows through; the measured worst glyph is what matters and
+       it clears 4.5 with room to spare. */
+    background: rgba(251, 248, 242, 0.88);
+    filter: blur(var(--s-4));
   }
 
   .masthead.on-dark .masthead__type > :global(*:not(:empty))::before {
-    background: var(--ink);
+    background: rgba(22, 41, 31, 0.88);
   }
 
   @media (min-width: 1024px) {

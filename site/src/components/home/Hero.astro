@@ -33,25 +33,26 @@ const hasFootage = montage.status === 'real' && !!montage.src;
   <canvas class="hero__canvas" aria-hidden="true" tabindex="-1" data-hero-canvas></canvas>
 
 
-  {/*
-    The epigraph the school already uses, 20:114. The client asked for it at
-    the top of the page, with the header, so it is the first thing in the
-    hero rather than a block three sections down.
-
-    It is an epigraph, not a banner: one quiet line under the header, in the
-    soft-on-dark colour, well below the headline in weight. The Arabic stays
-    Amiri and keeps lang="ar" dir="rtl"; it is never letter-spaced and never
-    transformed (3). This is now the ONLY place it appears on the homepage -
-    it used to sit in the manifesto section, and leaving both would have put
-    the same verse on one page twice.
-  */}
-  <div class="hero__epigraph on-dark">
-    <p class="t-arabic hero__epigraph-ar" lang="ar" dir="rtl">{epigraph.arabic}</p>
-    <p class="t-small t-italic hero__epigraph-en">{epigraph.english}</p>
-    <p class="t-label hero__epigraph-ref">{epigraph.reference}</p>
-  </div>
-
   <div class="hero__inner container">
+    {/*
+      The epigraph the school already uses, 20:114. The client asked for it at
+      the top of the page, with the header, so it opens the hero.
+
+      It sits INSIDE .hero__inner deliberately. As a sibling of it, the type
+      block's own scrim - inset 96px and blurred - painted straight over this
+      text: measured 1.65:1 on the Arabic, effectively invisible. Sharing one
+      parent puts both scrims in the same z-index -1 layer, beneath all of the
+      text rather than on top of some of it.
+
+      Quiet in SCALE, not in contrast. The Arabic is full --text-on-dark, stays
+      Amiri, and keeps lang="ar" dir="rtl"; it is never letter-spaced (3).
+    */}
+    <div class="hero__epigraph on-dark">
+      <p class="t-arabic hero__epigraph-ar" lang="ar" dir="rtl">{epigraph.arabic}</p>
+      <p class="t-small t-italic hero__epigraph-en">{epigraph.english}</p>
+      <p class="t-label hero__epigraph-ref">{epigraph.reference}</p>
+    </div>
+
     <div class="hero__grid grid">
       <div class="hero__type on-dark">
         <p class="t-label" data-motion="body-rise">POTOMAC, MARYLAND · SUNDAY MORNINGS</p>
@@ -191,13 +192,13 @@ const hasFootage = montage.status === 'real' && !!montage.src;
     overflow: hidden;
     /* The header is fixed and the hero sits under it, plus a little air so
        the eyebrow never sits flush against the header's bottom edge. */
-    padding-block-start: calc(64px + var(--s-10));
+    padding-block-start: calc(64px + var(--s-6));
     padding-block-end: var(--s-9);
   }
 
   @media (min-width: 1024px) {
     .hero {
-      padding-block-start: calc(76px + var(--s-10));
+      padding-block-start: calc(76px + var(--s-6));
     }
   }
 
@@ -211,8 +212,8 @@ const hasFootage = montage.status === 'real' && !!montage.src;
     inset: 0;
     z-index: var(--z-base);
     background:
-      radial-gradient(120% 90% at 68% 46%, var(--sienna) 0%, transparent 46%),
-      radial-gradient(140% 110% at 62% 52%, var(--slate) 0%, transparent 62%),
+      radial-gradient(120% 90% at 68% 46%, var(--fill-apricot) 0%, transparent 46%),
+      radial-gradient(140% 110% at 62% 52%, var(--sienna) 0%, transparent 62%),
       linear-gradient(158deg, var(--slate-deep) 0%, var(--ink) 100%);
   }
 
@@ -286,24 +287,13 @@ const hasFootage = montage.status === 'real' && !!montage.src;
   }
 
   .hero__epigraph {
-    position: absolute;
-    inset-block-start: calc(64px + var(--s-7));
-    inset-inline: 0;
-    z-index: var(--z-content);
+    position: relative;
     display: flex;
     flex-wrap: wrap;
     align-items: baseline;
     gap: var(--s-2) var(--s-5);
-    padding-inline: var(--gutter);
-    max-width: var(--container);
-    margin-inline: auto;
+    margin-block-end: var(--s-8);
     color: var(--text-on-dark-soft);
-  }
-
-  @media (min-width: 1024px) {
-    .hero__epigraph {
-      inset-block-start: calc(76px + var(--s-7));
-    }
   }
 
   /* Same construction as the type block's scrim: a solid --ink rectangle

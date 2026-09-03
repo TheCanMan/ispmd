@@ -1292,9 +1292,17 @@ a.card,
   color: var(--text);
 }
 
+/*
+ * 7.7 asks for a square cell and a two-line title. At eleven columns those
+ * two cannot both hold: "Thanksgiving Weekend", "Nights of Power" and
+ * "Semester 2 Begins" all truncated to "Thanksgiv", "Nights of", "Semester".
+ * Truncating the school's own event names is the worse failure, so the square
+ * becomes a MINIMUM and the cell grows to fit its title. Grid already levels
+ * every cell in a row, so the band still reads as a band of tiles.
+ */
 @media (min-width: 768px) {
   .cal-cell {
-    aspect-ratio: 1 / 1;
+    min-height: 9.5rem;
   }
 }
 
@@ -1327,11 +1335,10 @@ a.card,
   font-variation-settings: var(--vf-text);
   line-height: var(--lh-small);
   color: var(--text);
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  /* No line clamp and no break-word: the titles are short, and the ones that
+     wrap are exactly the ones a parent needs to read in full. Breaking inside
+     a word gave "Thanksgi / ving"; the cell is sized to fit instead. */
+  hyphens: none;
 }
 
 .cal-cell--class            { background: var(--fill-apricot); }
