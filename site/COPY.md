@@ -40,7 +40,7 @@ Tuition $60 per student and $100 per family, financial assistance available · k
 | **A class-by-class schedule** | Only the 10:00 AM start and the Salat al-Dhuhr close are confirmed. |
 | **Anything denominational or commemorative** | Settled positioning: broadly Muslim, no sectarian markers. |
 
-**The venue framing rule.** ISP *meets at* the Islamic Education Center. It does not own that address and is not that organization. Every reference reads "classes are held at the Islamic Education Center" or equivalent. Never "our address", never "visit us at", never anything implying the building is the school's. The school asked (2026, client call) that the site stop making a point of the two-organization distinction, so the explicit "is a separate organization" commentary that used to follow this fact on Calendar, FAQs and Contact has been cut. The venue fact itself - "classes are held at the Islamic Education Center" - is unaffected and remains everywhere it appeared.
+**The venue framing rule (revised 2026-08-03 after client call).** State the venue plainly and stop: "Classes are held at the Islamic Education Center, 7917 Montrose Rd, Potomac, MD 20854." Do not add commentary differentiating ISP from the IEC - no "separate organization," no "the building is not ours," no "meets there but does not own it." The school asked for that language to be removed. The one constraint that survives is factual: copy still must not claim the address as ISP's own ("our address," "our building," "visit us at"). Say where class is held; say nothing about ownership either way.
 
 ## Marked for confirmation before launch
 
@@ -385,7 +385,7 @@ It also means the school is exactly as good as the people who show up for it, wh
 
 ## 4. What a Sunday is
 
-**Label:** `THE MORNING`
+No section label - the first row's own marker already reads `THE MORNING`, and having both said it twice in a row.
 
 **Headline** (`.t-display`)
 
@@ -414,7 +414,7 @@ encouraged.
 **Body** (`.t-body`)
 
 ```
-That sentence has been on this school's FAQ page for years, and it is doing more work than it looks like. Volunteering is not a way to help out at the margins here. It is the mechanism. If you have an hour, a skill, or a strong opinion about how something should be run, the school would rather hear it than not.
+If you have an hour, a skill, or a strong opinion about how something should be run, the school would rather hear it than not.
 ```
 
 **Button:** `Get in touch`
