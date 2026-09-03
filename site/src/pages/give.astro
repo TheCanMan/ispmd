@@ -10,10 +10,9 @@
  * the masthead's own scroll distance via onField(), the one interior page
  * with scrubbed shader motion. Skipped under prefers-reduced-motion.
  *
- * The three suggested-amount tiles reuse MilestoneCard's asymmetric span
- * (1/4, 4/7, 8/11 with a deliberate gap at column 7) rather than the shared
- * <Card> component, matching how MilestoneCard itself is plain typography,
- * not a bordered card - so this is not a three-up card grid (4.1, 7.5, 12.4).
+ * The suggested-amount tiles this section used to carry were cut - a voice
+ * pass judged them a pitch. What is left is the fact, the EIN, and how to
+ * give.
  */
 import Base from '../layouts/Base.astro';
 import Masthead from '../components/Masthead.astro';
@@ -24,12 +23,6 @@ import Media from '../components/Media.astro';
 import Button from '../components/Button.astro';
 
 import { site } from '../data/site';
-
-const tiles = [
-  { amount: '$60', line: "One student's tuition for the year." },
-  { amount: '$100', line: "A family's tuition for the year." },
-  { amount: '$300', line: 'Five students, covered.' },
-];
 ---
 
 <Base
@@ -39,7 +32,7 @@ const tiles = [
   {/* 1. Masthead */}
   <Masthead preset="give" dark label="SUPPORT THE SCHOOL" lines={['A school with', '$60 tuition.']}>
     <p class="t-lead give-sub" data-motion="body-rise">
-      The rest of it is made up by people who decided a community should have a school in it.
+      Donations cover the rest.
     </p>
   </Masthead>
 
@@ -60,15 +53,13 @@ const tiles = [
     <div class="means__text">
       <SectionHeader
         label="WHERE THE MONEY GOES"
-        headline="There is no endowment and no marketing budget."
+        headline="Donations pay for books, materials, and the year's milestones."
         role="t-title"
       >
         <div class="flow">
           <p class="t-body" data-motion="body-rise">
-            Money given to this school goes into the Sunday morning: the books a class reads, the
-            materials a teacher needs, the Deen Showcase in December, the Quran Competition in May.
-            It is a short list because it is a small school, and every item on it is something a
-            child touches.
+            Money given to this school goes toward the books a class reads, the materials a
+            teacher needs, the Deen Showcase in December, and the Quran Competition in May.
           </p>
         </div>
       </SectionHeader>
@@ -85,17 +76,6 @@ const tiles = [
 
   {/* 4. Give */}
   <Section ground="paper" grid>
-    <div class="tiles">
-      {
-        tiles.map((tile, i) => (
-          <div class={`tile tile--${i + 1}`}>
-            <p class="t-num tile__amount">{tile.amount}</p>
-            <p class="t-small tile__line">{tile.line}</p>
-          </div>
-        ))
-      }
-    </div>
-
     <div class="give__actions">
       <p class="t-small give__note" data-motion="body-rise">
         Any amount goes to the same place. Give once, or set up something monthly, with a card or
@@ -110,8 +90,7 @@ const tiles = [
     <div class="check__text">
       <SectionHeader label="BY CHECK" headline="A check in the mail still works." role="t-title" />
       <p class="t-body" data-motion="body-rise">
-        For plenty of families it is the easier thing, so it is not a footnote here. Make it out
-        to the Islamic School of Potomac and send it to:
+        Make it out to the Islamic School of Potomac and send it to:
       </p>
     </div>
 
@@ -123,17 +102,16 @@ const tiles = [
     </Card>
   </Section>
 
-  {/* 6. Other ways */}
+  {/* 6. Thank you */}
   <Section ground="cool">
     <div class="other">
       <SectionHeader
-        label="OTHER WAYS TO HELP"
-        headline="Money is not the only thing the school runs on."
+        label="THANK YOU"
+        headline="Thank you for supporting the school."
         role="t-title"
       />
       <p class="t-body" data-motion="body-rise">
-        Parent feedback and volunteering is encouraged. An hour of your Sunday is worth real money
-        to a school this size.
+        Volunteering helps too. If you have an hour or a skill to offer, get in touch.
       </p>
       <div class="other__cta" data-motion="body-rise">
         <Button href="/contact" variant="quiet" icon="arrow-right">Get in touch</Button>
@@ -227,36 +205,6 @@ const tiles = [
   }
 
   /* ---- 4. Give ---- */
-
-  .tiles {
-    grid-column: 1 / -1;
-    display: grid;
-    grid-template-columns: repeat(10, minmax(0, 1fr));
-    gap: var(--grid-gap);
-    row-gap: var(--s-7);
-  }
-
-  .tile {
-    display: flex;
-    flex-direction: column;
-    gap: var(--s-2);
-    grid-column: span 10;
-  }
-
-  .tile__amount {
-    font-size: var(--fs-title);
-    line-height: var(--lh-title);
-  }
-
-  @media (min-width: 768px) {
-    .tile { grid-column: span 3; }
-  }
-
-  @media (min-width: 1024px) {
-    .tile--1 { grid-column: 1 / 4; }
-    .tile--2 { grid-column: 4 / 7; }
-    .tile--3 { grid-column: 8 / 11; }
-  }
 
   .give__actions {
     grid-column: 1 / -1;

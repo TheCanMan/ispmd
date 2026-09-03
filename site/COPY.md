@@ -7,6 +7,10 @@ Design and layout are in `DESIGN.md`. This file says what the words are; that fi
 
 ## Voice
 
+Revised 2026, after a whole-site voice pass: the client's own words were "less AI redundancy, less of a marketing pitch, just more so a holistic, simple, humble Sunday school that is very welcoming of new members and new students."
+
+**The model.** A parent who volunteers at the school wrote this on a Sunday afternoon, to tell a new family what to expect. Not a copywriter. Not a school that is impressed with itself.
+
 The school's own writing is better than its website, and three of its lines carry the whole institution.
 They appear here unchanged:
 
@@ -18,9 +22,21 @@ They appear here unchanged:
 
 Everything else is written to sit beside those without embarrassing them.
 
+**The test for every sentence you keep or write.** It must do one of three things: state a fact, tell the reader what to do, or welcome them. If a sentence comments on the school's own character - how honest it is, how it "stays true," what it "points at," what it "is most itself" - delete it. Do not replace it with a different flourish. The absence is the point.
+
+**Six tells, and what to do instead of writing them:**
+
+1. **The knowing closer.** A sentence at the end of a paragraph whose job is to admire the school rather than add information (`"...which is the most persuasive thing we can say about it"`). Cut it; end the paragraph on the last fact instead.
+2. **The reversal.** `"Not X, but Y."` / `"X rather than Y."` Say Y. (`"Taught by theme rather than by textbook"` becomes `"Each year has a theme."`)
+3. **The anaphora.** Three or four fragments in a row starting the same way (`"It is... It is... It is..."`). Say it once, plainly, in a single sentence.
+4. **Numerology.** Counting the same period more than one way in one place (thirty-three Sundays, twenty-five of them class, eight off, three of them milestones). State the shape of the year once and move on.
+5. **Insider tone.** `"The people who actually run the Sunday morning,"` `"a person will read it."` Say it once, plainly, in one place (Contact) - not as a recurring reassurance on every page.
+6. **Unverified claims.** Never promise something the school has not confirmed happens every time (`"no child has ever been turned away," "someone will meet you at the door"`). If it cannot be backed up, cut it; every surrounding sentence should still work.
+
 - Plain sentences. Short ones. No copywriter cadence, no "nurturing young minds", no "journey".
-- Concrete over aspirational. `Thirty-three Sundays` beats `a full year of enriching experiences`.
+- Concrete over aspirational. `Thirty-three Sundays` beats `a full year of enriching experiences`. `Children learn to read the Quran in Arabic` beats a paragraph about what the goal is not.
 - Never oversell. This is a small school with $60 tuition and it is more persuasive when it says so.
+- Welcome plainly, where it belongs. New families are welcome - say so once per page, in one plain sentence, and move on. Do not decorate it.
 - One exclamation mark exists on this site, in the teaching-philosophy line. It is theirs. Do not add another.
 - American spelling throughout (`enroll`, `enrollment`, `color`).
 - No em dashes. Plain hyphens or a full stop.
@@ -44,11 +60,12 @@ Tuition $60 per student and $100 per family, financial assistance available · k
 
 ## Marked for confirmation before launch
 
-None of these block the build. All are single-line edits.
+None of these block the build.
 
-1. **Three sentences make a claim the school has not published.** They are listed in full in the implementer notes at the end of this file, and each one is flagged inline where it appears. Confirm them or cut them; every surrounding paragraph works without them.
-2. **A history section on Our Story.** The page carries an explicit insertion point (`[HISTORY]`) for a founding year and origin story. It is written to be complete without one - do not invent filler for it.
-3. **"Volunteer-run" is deliberately absent.** The epic brief describes the school that way, but the school has not published the phrase, so this deck describes what volunteers actually do instead. That is truer, more persuasive, and needs no retraction if the framing turns out to be imprecise.
+1. **A history section on Our Story.** The page carries an explicit insertion point (`[HISTORY]`) for a founding year and origin story. It is written to be complete without one - do not invent filler for it.
+2. **"Volunteer-run" is deliberately absent.** The epic brief describes the school that way, but the school has not published the phrase, so this deck describes what volunteers actually do instead. That is truer, more persuasive, and needs no retraction if the framing turns out to be imprecise.
+
+*(A prior item here flagged three sentences making unpublished claims - "No child has ever been turned away...", the vague "school writes back" process description, and "someone will meet you at the door." The 2026 voice pass cut all three outright rather than flagging them; see implementer note 7.)*
 
 ## One correction to the research
 
@@ -185,7 +202,7 @@ We are a community.
 **Lead** (`.t-lead`)
 
 ```
-A school for children ages 5 to 18, one morning a week, built by the families who send their children to it.
+A school for children ages 5 to 18, one morning a week, built by the families who send their children to it. New families are always welcome - come on any Sunday and see a class.
 ```
 
 **Buttons:** `Enroll your child` · `See the program`
@@ -198,9 +215,9 @@ Section is unlabeled. The three rows are the content.
 
 | Index | Title (`.t-title`) | Line beneath (`.t-small`) | Goes to |
 |---|---|---|---|
-| `01` | `Thinking about enrolling` | `What a Sunday looks like, what it costs, and how to start.` | `/enroll` |
-| `02` | `Already with us` | `The calendar, the year's three big days, and when we next meet.` | `/calendar` |
-| `03` | `Standing behind the school` | `Where the money goes at a school with $60 tuition.` | `/give` |
+| `01` | `Thinking about enrolling` | `What a Sunday looks like, and what it costs.` | `/enroll` |
+| `02` | `Already with us` | `The calendar, and the year's three big days.` | `/calendar` |
+| `03` | `Standing behind the school` | `Where the $60 tuition goes.` | `/give` |
 
 ## 3. More than a Sunday School
 
@@ -216,7 +233,7 @@ of the family.
 **Lead** (`.t-lead`)
 
 ```
-The Islamic School of Potomac was founded with a commitment to uplift every member of the family, not just the students registered in our school. When the spiritual needs of each member of the family are nourished, everyone thrives.
+The Islamic School of Potomac was founded with a commitment to uplift every member of the family, not just the students registered in our school.
 ```
 
 **Epigraph block**
@@ -255,7 +272,7 @@ the parents!
 **Below** (`.t-body`, `--text-on-dark-soft`, spans `2 / 7`)
 
 ```
-Parents reinforce what their children learn by doing it with them: praying together, giving together, showing up for the community together. It is the part of the program that happens at your kitchen table, and it is the reason a Sunday morning here works.
+Parents reinforce what their children learn by doing it with them: praying together, giving together, showing up for the community together. It is the part of the program that happens at your kitchen table.
 ```
 
 **Button:** `See the program`
@@ -266,9 +283,9 @@ Parents reinforce what their children learn by doing it with them: praying toget
 
 | Index | Title | Body |
 |---|---|---|
-| `01` | `Arabic` | `We teach children to read Arabic so that they can meet the Quran themselves. Recitation through the Noorani method, basic Quranic vocabulary, the shorter suras committed to memory, and a love for the Quran as a book of guidance.` |
-| `02` | `Deen` | `Taught by theme rather than by textbook. A six-year-old and a sixteen-year-old spend the same Sunday on the same idea, each at the depth their age can hold.` |
-| `03` | `...and in between` | `The school's own name for the part that is on no syllabus. The friendships. The question asked in a hallway. The habit of showing up on a Sunday when you could be anywhere else.` |
+| `01` | `Arabic` | `Children learn to read Arabic through the Noorani method, memorize the shorter suras, and build enough vocabulary to read the Quran themselves.` |
+| `02` | `Deen` | `Each year has a theme. A six-year-old and a sixteen-year-old explore the same idea on the same Sunday, each at their own depth.` |
+| `03` | `...and in between` | `The school's name for everything that happens outside class: friendships, questions asked in a hallway, the habit of showing up. Children often remember this part best.` |
 
 **Button:** `See the program`
 
@@ -285,15 +302,15 @@ Thirty-three Sundays.
 **Body** (`.t-body`)
 
 ```
-The school meets on twenty-five of them. Eight Sundays are off, for holidays and for the Nights of Power. Three of the twenty-five the whole school looks forward to.
+The year runs September through May, with a Deen Showcase in December, Arabic exams and a Quran Competition in May.
 ```
 
 **The three milestone cards**
 
 | Date | Title | Line |
 |---|---|---|
-| `DECEMBER 13, 2026` | `Deen Showcase` | `The end of the first semester, and what the children have been working toward since September.` |
-| `MAY 9, 2027` | `Arabic Final Exams` | `A year of reading, in one morning.` |
+| `DECEMBER 13, 2026` | `Deen Showcase` | `The end of the first semester. Children present what they have been working on since September.` |
+| `MAY 9, 2027` | `Arabic Final Exams` | `Students show what they have learned.` |
 | `MAY 16, 2027` | `Quran Competition` | `The last day of school.` |
 
 **Buttons:** `See the full year` · `Add the year to your calendar`
@@ -307,15 +324,14 @@ The school meets on twenty-five of them. Eight Sundays are off, for holidays and
 **Display headline** (`.t-display`)
 
 ```
-Tuition is $60.
-That is not what
-a year costs.
+Tuition is $60
+a year.
 ```
 
 **Body** (`.t-body`)
 
 ```
-The difference is made up by people who believe a community should have a school in it. The Islamic School of Potomac is a 501(c)(3) non-profit, and every dollar goes into the Sunday morning: the books, the room, the year.
+Donations cover the rest. The Islamic School of Potomac is a 501(c)(3) non-profit, and every dollar goes into the Sunday morning: the books, the room, the year.
 ```
 
 **Button:** `Support the school`
@@ -337,22 +353,16 @@ a Sunday school.
 
 ## 2. The founding commitment
 
-**Lead** (`.t-lead`)
-
-```
-Most Sunday schools are built around a student. This one was built around a family.
-```
-
 **Column 1** (`.t-body`)
 
 ```
-The Islamic School of Potomac teaches children ages 5 through 18, September through May. Arabic, Deen, and a third part of the program the school has never quite been able to name, so it calls it "...and in between."
+The Islamic School of Potomac teaches children ages 5 through 18, September through May. Arabic, Deen, and what the school calls "...and in between."
 ```
 
 **Column 2** (`.t-body`)
 
 ```
-What holds those three together is not a curriculum. It is the understanding that a child does not learn a way of living for two hours on a Sunday and then set it down. What the school teaches has to be carried home, and the person who carries it is a parent.
+What holds those three together is the understanding that a child does not learn a way of living for two hours on a Sunday and then set it down. What the school teaches has to be carried home, and the person who carries it is a parent.
 ```
 
 **Pull quote** (`.t-title`, Literata italic, spans `2 / 10`)
@@ -376,11 +386,7 @@ We are a community.
 **Body** (`.t-body`)
 
 ```
-The families who send their children here are the same people who set out the chairs, teach the classes, run the Showcase and answer the email. That is not a shortage of staff dressed up as a virtue. It is how a school this size stays honest: nobody here is being paid to tell you it is going well.
-```
-
-```
-It also means the school is exactly as good as the people who show up for it, which is the most persuasive thing we can say about it.
+The families who send their children here also teach the classes, set out the chairs, and run the Showcase. New families are welcome to help as much or as little as they like.
 ```
 
 ## 4. What a Sunday is
@@ -470,7 +476,7 @@ and in between.
 **Lead** (`.t-lead`)
 
 ```
-The program has three parts. Two of them have names the school chose carefully.
+The program has three parts. Two of them have names the school chose carefully. Children look forward to reading the Quran, the yearly theme they share with the whole school, the Showcase, the Competition, and the friendships in between.
 ```
 
 ## 3. Arabic
@@ -487,20 +493,19 @@ Arabic
 **Body** (`.t-body`)
 
 ```
-The goal is not fluency in a modern spoken language. The goal is that a child can open the Quran and read it without an intermediary. Everything in this half of the program serves that.
+Children learn to read the Quran in Arabic.
 ```
 
 ```
 Classes are grouped by a placement test rather than by age, so a nine-year-old who reads well and a thirteen-year-old who is starting out are each in the right room.
 ```
 
-**Four-item list** (`.t-subtitle` rows)
+**Three-item list** (`.t-subtitle` rows)
 
 ```
 Recitation, taught through the Noorani method
 Basic Quranic vocabulary
 The shorter suras, committed to memory
-A love for the Quran as a book of guidance
 ```
 
 ## 4. Deen
@@ -517,7 +522,7 @@ Deen
 **Body** (`.t-body`)
 
 ```
-Deen is taught thematically rather than by textbook. The school picks a theme and every grade takes it on in a way its age can hold, which means a family with three children of different ages is having one conversation at home instead of three.
+Deen has a yearly theme. Every grade explores it at its own level, so a family with three children of different ages is having one conversation at home instead of three.
 ```
 
 ```
@@ -537,11 +542,7 @@ Classes are grouped by age, because the questions a child asks about how to live
 **Body** (`.t-body`)
 
 ```
-It is the friendship a child makes with someone they would never have met at their weekday school. It is the question asked in the hallway that the class was too shy for. It is a teenager who has been coming since kindergarten helping a five-year-old find the right room. It is the habit of showing up on a Sunday morning when you could be anywhere else.
-```
-
-```
-It is also, in the school's experience, the part children remember longest.
+Outside class, it is the friendship a child makes with someone they would never have met at their weekday school, the question asked in the hallway, and an older student helping a younger one find their room. Children often remember this part best.
 ```
 
 ## 6. Placement
@@ -582,9 +583,9 @@ A child who is told about charity learns a word. A child who watches a parent gi
 
 | Date | Title | Body |
 |---|---|---|
-| `DECEMBER 13, 2026` | `Deen Showcase` | `The end of the first semester. The children present what they have been working on since September, to each other and to their families.` |
-| `MAY 9, 2027` | `Arabic Final Exams` | `A year of reading, in one morning.` |
-| `MAY 16, 2027` | `Quran Competition` | `The last day of school, and the one the whole year points at.` |
+| `DECEMBER 13, 2026` | `Deen Showcase` | `The end of the first semester. Children present what they have been working on since September.` |
+| `MAY 9, 2027` | `Arabic Final Exams` | `Students show what they have learned.` |
+| `MAY 16, 2027` | `Quran Competition` | `The last day of school.` |
 
 **Button:** `See the full year`
 
@@ -660,7 +661,7 @@ First Semester
 **Sub-line** (`.t-small`)
 
 ```
-September 13 to December 13. Fourteen Sundays, eleven of them class.
+September 13 to December 13.
 ```
 
 Rows, in order. `Date` column is mono. The `Kind` column is the right-aligned label.
@@ -695,7 +696,7 @@ Second Semester
 **Sub-line** (`.t-small`)
 
 ```
-January 10 to May 16. Nineteen Sundays, fourteen of them class.
+January 10 to May 16.
 ```
 
 | Date | Title | Kind |
@@ -729,9 +730,9 @@ The May 16 row carries the note `Last day of school`.
 
 | Date | Title | Body |
 |---|---|---|
-| `DECEMBER 13, 2026` | `Deen Showcase` | `The children present what they have been working on since September. It closes the first semester, and it is the best morning to come if you want to see what the school actually is.` |
-| `MAY 9, 2027` | `Arabic Final Exams` | `A year of reading, in one morning. Nobody is ranked and nobody is held back.` |
-| `MAY 16, 2027` | `Quran Competition` | `The last day of school. The whole year points at it.` |
+| `DECEMBER 13, 2026` | `Deen Showcase` | `Children present what they have been working on since September. It closes the first semester.` |
+| `MAY 9, 2027` | `Arabic Final Exams` | `Students show what they have learned. Nobody is ranked and nobody is held back.` |
+| `MAY 16, 2027` | `Quran Competition` | `The last day of school.` |
 
 ## 7. Where and when
 
@@ -793,7 +794,7 @@ Enroll your child.
 **Lead** (`.t-lead`)
 
 ```
-One morning a week, from September through May. Arabic, Deen, and everything in between, for children ages 5 through 18. Class begins at 10:00 AM and runs until Salat al-Dhuhr, at the Islamic Education Center on Montrose Road in Potomac.
+We would love to have your child join us. One morning a week, from September through May, Arabic, Deen, and everything in between, for children ages 5 through 18.
 ```
 
 ## 3. Tuition
@@ -812,10 +813,8 @@ Financial assistance is available.
 ```
 
 ```
-It is not a special case and it is not a favor. If tuition is a difficulty for your family, say so when you enroll and it will be handled quietly. No child has ever been turned away from this school over $60.
+If tuition is a difficulty for your family, say so when you enroll and it will be handled quietly.
 ```
-
-> **Confirm before launch.** The final sentence above ("No child has ever been turned away...") is a strong claim the school has not published. Confirm it with the school or delete that sentence; the paragraph works without it.
 
 ## 4. Who it's for
 
@@ -834,7 +833,7 @@ It is not a special case and it is not a favor. If tuition is a difficulty for y
 | Index | Title (`.t-subtitle`) | Body (`.t-body`) |
 |---|---|---|
 | `01` | `Fill in the form` | `It takes a few minutes. Your child, your family, and how to reach you.` |
-| `02` | `The school writes back` | `You will hear from someone about Arabic placement and anything else that needs sorting before September.` |
+| `02` | `The school writes back` | `Someone from the school will be in touch about placement.` |
 | `03` | `Tuition` | `$60 for one student, $100 for a family. If that is a difficulty, say so in your reply.` |
 | `04` | `The first Sunday` | `Back to School Day is September 13, 2026. Class begins at 10:00 AM.` |
 
@@ -862,7 +861,7 @@ Questions before you enroll?
 **Body** (`.t-body`)
 
 ```
-Most of them are already answered on the FAQs page. If yours isn't, call (301) 929-1441 or write to info@ispmd.org and a person will read it.
+Most of them are already answered on the FAQs page. If yours isn't, call (301) 929-1441 or write to info@ispmd.org.
 ```
 
 **Buttons:** `Read the FAQs` · `info@ispmd.org`
@@ -939,7 +938,7 @@ Deen is taught thematically rather than from a fixed textbook. The school takes 
 **What is "...and in between"?**
 
 ```
-The school's own name for the part of the program that is on no syllabus. The friendships, the questions asked in hallways, the habit of showing up. It is not scheduled and it is not optional.
+The school's name for everything that happens outside class: the friendships, the questions asked in hallways, the habit of showing up.
 ```
 
 **Do you give homework?**
@@ -983,7 +982,7 @@ Yes. The Islamic School of Potomac is a 501(c)(3) non-profit organization, EIN 5
 **How do I reach the school?**
 
 ```
-By phone at (301) 929-1441, or by email at info@ispmd.org. Both reach the people who actually run the Sunday morning.
+By phone at (301) 929-1441, or by email at info@ispmd.org.
 ```
 
 ## 3. Aside (pull quote)
@@ -1003,7 +1002,7 @@ Still asking?
 **Body** (`.t-body`)
 
 ```
-Write to info@ispmd.org. There is no wrong question and there is no queue.
+Write to info@ispmd.org. Ask anything.
 ```
 
 **Buttons:** `info@ispmd.org` · `Get in touch`
@@ -1026,7 +1025,7 @@ $60 tuition.
 **Sub-line** (`.t-lead`, `--text-on-dark-soft`)
 
 ```
-The rest of it is made up by people who decided a community should have a school in it.
+Donations cover the rest.
 ```
 
 ## 2. Why
@@ -1044,14 +1043,13 @@ The Islamic School of Potomac teaches children ages 5 through 18, thirty-three S
 **Headline** (`.t-title`)
 
 ```
-There is no endowment
-and no marketing budget.
+Donations pay for books, materials, and the year's milestones.
 ```
 
 **Body** (`.t-body`)
 
 ```
-Money given to this school goes into the Sunday morning: the books a class reads, the materials a teacher needs, the Deen Showcase in December, the Quran Competition in May. It is a short list because it is a small school, and every item on it is something a child touches.
+Money given to this school goes toward the books a class reads, the materials a teacher needs, the Deen Showcase in December, and the Quran Competition in May.
 ```
 
 **Card** (mono)
@@ -1068,15 +1066,7 @@ EIN 52-1989063
 
 **Label:** `GIVE`
 
-The three amounts are presentational. All three route to the same PayPal button, and none of them may say or imply that the amount is pre-filled.
-
-| Amount | Line beneath |
-|---|---|
-| `$60` | `One student's tuition for the year.` |
-| `$100` | `A family's tuition for the year.` |
-| `$300` | `Five students, covered.` |
-
-**Note beneath the tiles** (`.t-small`)
+**Note beneath the button** (`.t-small`)
 
 ```
 Any amount goes to the same place. Give once, or set up something monthly, with a card or a PayPal balance.
@@ -1099,7 +1089,7 @@ still works.
 **Body** (`.t-body`)
 
 ```
-For plenty of families it is the easier thing, so it is not a footnote here. Make it out to the Islamic School of Potomac and send it to:
+Make it out to the Islamic School of Potomac and send it to:
 ```
 
 **Address card** (mono)
@@ -1111,21 +1101,20 @@ P.O. Box 833
 Rockville, MD 20848-0833
 ```
 
-## 6. Other ways
+## 6. Thank you
 
-**Label:** `OTHER WAYS TO HELP`
+**Label:** `THANK YOU`
 
 **Headline** (`.t-title`)
 
 ```
-Money is not the only
-thing the school runs on.
+Thank you for supporting the school.
 ```
 
 **Body** (`.t-body`)
 
 ```
-Parent feedback and volunteering is encouraged. An hour of your Sunday is worth real money to a school this size.
+Volunteering helps too. If you have an hour or a skill to offer, get in touch.
 ```
 
 **Button:** `Get in touch`
@@ -1167,7 +1156,7 @@ info@ispmd.org
 **Beneath it** (`.t-body`)
 
 ```
-A person reads this. It goes to the people who actually run the Sunday morning, so an answer usually comes back with something useful in it rather than a form reply.
+Call or email and one of the parents who runs the school will answer.
 ```
 
 **Three intent rows**, nested under the email row (each a `mailto:` with a pre-filled subject)
@@ -1237,11 +1226,11 @@ come and see.
 **Body** (`.t-body`)
 
 ```
-Sunday mornings between September and May, at the Islamic Education Center on Montrose Road. Call or write first so we know to look out for you, and someone will meet you at the door.
+Sunday mornings between September and May, at the Islamic Education Center on Montrose Road. You are welcome to visit any time; call or write first so we know to look out for you.
 ```
 
 ```
-If you want one morning to pick, make it the Deen Showcase on December 13. It is the day the school is most itself.
+If you want one morning to pick, make it the Deen Showcase on December 13.
 ```
 
 **Buttons:** `(301) 929-1441` · `info@ispmd.org`
@@ -1291,11 +1280,7 @@ The pattern continues, though. One of these will get you where you were going.
 4. **The Arabic string** is copied, never retyped. It appears twice: the homepage epigraph and the footer. The Program masthead reuses the same string.
 5. **`{N} days`** on the calendar page is the only computed string in this file. Handle 0 and 1 as written.
 6. **Every `mailto:` goes to `info@ispmd.org` and every `tel:` to `+13019291441`.** No other address or number exists anywhere on this site. The phone number is always *displayed* as `(301) 929-1441` and the `href` is always unformatted.
-7. **Three sentences are flagged for confirmation** and are the only ones in this file that make a claim the school has not published:
-   - `Enroll` section 3: "No child has ever been turned away from this school over $60."
-   - `Enroll` section 5, step 02: "The school writes back" and its body, which describes a process rather than a published fact.
-   - `Contact` section 5: "someone will meet you at the door."
-   Each works if deleted. Confirm or cut before cutover; do not soften them into vagueness.
+7. **Three sentences that once made an unverified claim were cut outright in the 2026 voice pass**, not just flagged: `Enroll` section 3 no longer promises no child has ever been turned away, `Enroll` section 5 step 02 no longer describes an unconfirmed process, and `Contact` section 5 no longer promises someone will meet you at the door. If a future draft is tempted to restore language like this, don't - state only what the school has confirmed happens every time.
 8. **"Volunteer-run"** does not appear as a phrase anywhere in this deck. The idea is carried by describing what volunteers actually do, which is both truer and more persuasive, and it means nothing has to be retracted if the framing turns out to be imprecise.
 
 
