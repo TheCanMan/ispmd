@@ -94,6 +94,10 @@ const jotformOrigin = `${new URL(site.enrollFormUrl).origin}/`;
         </HairlineRow>
       </HairlineList>
     </div>
+
+    <div class="enroll-list__media">
+      <Media slotId="enroll.classroom" sizes="(min-width: 1024px) 32vw, 90vw" />
+    </div>
   </Section>
 
   {/* 5. Steps */}
@@ -179,8 +183,13 @@ const jotformOrigin = `${new URL(site.enrollFormUrl).origin}/`;
   .tuition__figure,
   :global(.tuition__assistance),
   .enroll-list,
-  .enroll-steps {
+  .enroll-steps,
+  .enroll-list__media {
     grid-column: 1 / -1;
+  }
+
+  .enroll-list__media {
+    margin-block-start: var(--s-6);
   }
 
   :global(.enrolling__media) {
@@ -296,6 +305,10 @@ const jotformOrigin = `${new URL(site.enrollFormUrl).origin}/`;
 
     .enroll-list {
       grid-column: 2 / 9;
+    }
+
+    .enroll-list__media {
+      grid-column: 2 / 6;
     }
 
     .enroll-steps {

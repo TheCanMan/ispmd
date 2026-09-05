@@ -71,6 +71,10 @@ import { site } from '../data/site';
       </p>
       <p class="t-num means__ein-number">EIN 52-1989063</p>
     </Card>
+
+    <div class="means__media">
+      <Media slotId="give.classroom" sizes="(min-width: 1024px) 40vw, 90vw" />
+    </div>
   </Section>
 
   {/* 4. Give */}
@@ -175,11 +179,16 @@ import { site } from '../data/site';
   /* ---- 3. What $60 means here ---- */
 
   .means__text,
-  :global(.means__card) {
+  :global(.means__card),
+  .means__media {
     grid-column: 1 / -1;
   }
 
   :global(.means__card) {
+    margin-block-start: var(--s-6);
+  }
+
+  .means__media {
     margin-block-start: var(--s-6);
   }
 
@@ -196,11 +205,13 @@ import { site } from '../data/site';
   @media (min-width: 768px) {
     .means__text { grid-column: 1 / 7; }
     :global(.means__card) { grid-column: 7 / 11; margin-block-start: 0; }
+    .means__media { grid-column: 1 / 7; }
   }
 
   @media (min-width: 1024px) {
     .means__text { grid-column: 2 / 7; }
     :global(.means__card) { grid-column: 7 / 11; }
+    .means__media { grid-column: 2 / 7; }
   }
 
   /* ---- 4. Give ---- */

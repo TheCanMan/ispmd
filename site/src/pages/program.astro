@@ -179,6 +179,9 @@ const moments = [
   {/* 8. The year's three moments */}
   <Section ground="paper">
     <SectionHeader label="WHAT THE YEAR BUILDS TOWARD" class="moments__header" />
+    <div class="moments__media">
+      <Media slotId="program.showcase" sizes="(min-width: 1024px) 70vw, 100vw" />
+    </div>
     <HairlineList>
       {
         moments.map((moment) => (
@@ -386,6 +389,10 @@ const moments = [
   /* ---- 8. The year's three moments ---- */
 
   :global(.moments__header) {
+    margin-block-end: var(--s-6);
+  }
+
+  .moments__media {
     margin-block-end: var(--s-6);
   }
 

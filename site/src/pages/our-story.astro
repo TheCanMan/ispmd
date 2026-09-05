@@ -66,6 +66,10 @@ const moments = [
         family, not just the students registered in our school.
       </p>
     </blockquote>
+
+    <div class="founding__media">
+      <Media slotId="story.families" sizes="(min-width: 1024px) 32vw, 90vw" />
+    </div>
   </Section>
 
   {/* 3. A community, not a school */}
@@ -184,6 +188,19 @@ const moments = [
     .founding__col--1 { grid-column: 2 / 7; }
     .founding__col--2 { grid-column: 6 / 11; }
     .founding__quote { grid-column: 2 / 11; }
+  }
+
+  .founding__media {
+    grid-column: 1 / -1;
+    margin-block-start: var(--s-7);
+  }
+
+  @media (min-width: 768px) {
+    .founding__media { grid-column: 1 / 6; }
+  }
+
+  @media (min-width: 1024px) {
+    .founding__media { grid-column: 2 / 6; }
   }
 
   /* ---- 3. A community, not a school ---- */
