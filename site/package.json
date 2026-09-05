@@ -22,7 +22,8 @@
     "ingest:media": "node scripts/ingest-media.mjs",
     "measure:warm": "node scripts/measure-warm.mjs",
     "measure:pages": "node scripts/measure-pages.mjs",
-    "measure:hue": "node scripts/measure-hue.mjs"
+    "measure:hue": "node scripts/measure-hue.mjs",
+    "gate": "bash scripts/gate.sh"
   },
   "dependencies": {
     "astro": "^7.1.6",
