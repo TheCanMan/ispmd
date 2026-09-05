@@ -95,10 +95,17 @@
   --paper-cool:       #E3EBE3;   /* third light ground */
   --vellum:           #E7EEE5;   /* cards and insets */
 
-  --ink:              #14261C;   /* deep pine - primary dark ground */
-  --ink-raised:       #1D3327;   /* cards sitting on --ink */
-  --slate-deep:       #0F1F17;   /* deepest ground */
-  --slate-raised:     #182C21;   /* cards sitting on --slate-deep */
+  /* Lifted one step. At #14261C the pine measured OKLCH L 0.249 / chroma
+     0.031 and read as black rather than as green; this is L 0.283 / chroma
+     0.044, 42% more chroma, and is unmistakably green at a glance. This is
+     the ceiling: one step further and --text-on-dark-faint drops under 4.5
+     on --ink-raised. NOTE these are the dark GROUNDS. --text below stays at
+     the old value - it is body text on paper, where it is already optimal
+     and where lifting it would only cost contrast. */
+  --ink:              #17301F;   /* deep pine - primary dark ground */
+  --ink-raised:       #213A2B;   /* cards sitting on --ink */
+  --slate-deep:       #122619;   /* deepest ground */
+  --slate-raised:     #1C3524;   /* cards sitting on --slate-deep */
 
   /* ==========================================================
      1.2  COLOUR - TEXT ON LIGHT GROUNDS
@@ -1185,82 +1192,87 @@ a.card,
    replace the default one.
    ===================================================================== */
 
+/*
+ * Defined, and deliberately used by NO slot. A duotone maps an entire image
+ * onto two colours, which is the strongest possible version of the hue
+ * collapse described below; on photographs of people it flattens every face
+ * to one hue. It stays here for a genuinely textural surface if one ever
+ * appears. It is not a photograph treatment.
+ */
 .tr-ink-duotone { filter: url(#ink-duotone) contrast(1.04); }
 
 /*
- * THE GRADES LIFT. They used to sink.
+ * A GRADE MAY TOUCH LUMINANCE. IT MAY NOT TOUCH HUE.
  *
- * Both grades were built the same way: desaturate, then a MULTIPLY tint to
- * pull the midtones onto the site's axis. Multiply can only ever darken, and
- * `saturate(0.78)` can only ever drain colour, so every photograph on the
- * site arrived dimmer and greyer than it was shot - mean luminance 122.6 on
- * 0-255 with 17.5% saturation, and the quiet slots down at 65. Under
- * generated footage that is already an overcast documentary look, that
- * compounded into the wash the school reacted to.
+ * The previous version of this block unified hue with a `color` blend at 0.30
+ * and argued the pull was gentle because saturation survived. Saturation did
+ * survive - 74 to 82% of source. Hue did not. Measured over colourful pixels
+ * on the shipped build:
  *
- * The mechanism is inverted rather than tuned. A SCREEN of pale leaf lifts
- * blacks by roughly its own value and leaves whites where they are, so the
- * shadows and midtones open up while the highlights stay clean and unclipped
- * - which a global `brightness()` cannot do, since it scales the top end
- * straight into clipping. Saturation now goes slightly ABOVE 1.
+ *      slot            near-green        hue spread (1 = many hues)
+ *      enroll.sunday   16% -> 54%        0.49 -> 0.12   (24% kept)
+ *      program.deen    17% -> 47%        0.30 -> 0.10   (31% kept)
+ *      give.impact     31% ->  9%        0.22 -> 0.04   (19% kept)
  *
- * The green is still doing the unifying, but from the shadow end.
+ * That is what `color` does by definition: it takes hue AND saturation from
+ * the blend layer and keeps only the base's luminance. A room with skin,
+ * wood, blue chairs and sage in it came out one colour with the chroma
+ * intact, which reads as a tinted photograph - and a page of tinted
+ * photographs is exactly the gloom the school described. It cannot be tuned
+ * into a gentle unifier; the opacity only chooses how far the repaint goes.
+ *
+ * So hue unification is gone, not reduced. The generated stills already sit
+ * in the green family because that is what they were made for; they need no
+ * help. What remains is luminance work only:
+ *
+ *   - saturate() above 1
+ *   - brightness() for the lift
+ *
+ * The lift used to be a screen of --paper. A screen is achromatic, so it did
+ * not move hue - but screening toward white raises a pixel's darkest channel
+ * proportionally more than its brightest, and HSV saturation is
+ * (max - min) / max, so it drains colour by construction. Measured, it was
+ * delivering 65% of source saturation.
+ *
+ * brightness() is a straight multiply, and (k*max - k*min) / (k*max) is the
+ * same ratio, so it is saturation-NEUTRAL. It lifts and costs nothing. The
+ * usual objection is that it clips highlights, which is true of footage that
+ * is already near white - these stills are not, and the measurement below
+ * confirms it rather than assuming it.
+ *
+ * warm-grade and cool-grade are now identical. The names are kept because
+ * page files and the registry reference them, exactly as with the token
+ * names in section 1; the difference they used to encode was the hue pull,
+ * and the hue pull is what had to go.
  */
+.tr-warm-grade,
+.tr-cool-grade { filter: saturate(1.12) brightness(1.10); }
+
+.tr-warm-grade::after,
+.tr-cool-grade::after {   /* replaces the default plate rule for graded slots */
+  content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none;
+  border: 1px solid rgba(20, 38, 28, 0.16); border-radius: inherit;
+}
+
 /*
- * A grade is TWO jobs, and the old one did both with a single multiply.
- *
- *   1. hold the site on one hue family, whatever happens to be in the frame
- *   2. keep the photograph bright
- *
- * Multiply did the first by darkening, which is why it fought the second.
- * They are separated here. `color` takes hue and saturation from the blend
- * layer and keeps the BASE's luminance exactly, so the hue pull is free -
- * a wall of golden wood comes back onto the green axis without losing a
- * single step of brightness. `screen` then lifts the shadows and leaves the
- * highlights alone. Nothing in the stack darkens anything.
- *
- * The pull is partial on purpose. At full strength `color` is a duotone and
- * every face goes to one hue; at ~0.3 the frame keeps its own colour - blue
- * denim stays denim, a green mug stays a mug - while large warm surfaces
- * stop reading as brown.
+ * The one treatment that still puts something over the image, because that IS
+ * the treatment: the photograph sits behind the screen. Both layers are now
+ * far weaker than they were - the girih was at 0.16 soft-light over an --ink
+ * tile, which tints as well as textures, and the vignette was pulling this
+ * slot to Y 79.
  */
-.tr-warm-grade { filter: saturate(1.12) contrast(1.02) brightness(1.03); }
-.tr-warm-grade::before {   /* hue onto the green axis, luminance untouched */
-  content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
-  background: var(--sienna); opacity: 0.30; mix-blend-mode: color;
-}
-.tr-warm-grade::after {   /* lifts the shadows; also the graded plate rule */
-  content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none;
-  background: var(--fill-apricot); opacity: 0.17; mix-blend-mode: screen;
-  border: 1px solid rgba(20, 38, 28, 0.16); border-radius: inherit;
-}
-
-.tr-cool-grade { filter: saturate(1.10) contrast(1.02) brightness(1.03); }
-.tr-cool-grade::before {
-  content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
-  background: var(--slate); opacity: 0.30; mix-blend-mode: color;
-}
-.tr-cool-grade::after {
-  content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none;
-  background: var(--fill-sky); opacity: 0.15; mix-blend-mode: screen;
-  border: 1px solid rgba(20, 38, 28, 0.16); border-radius: inherit;
-}
-
-.tr-behind-screen { filter: saturate(1.08) contrast(1.02) brightness(1.05); }
+.tr-behind-screen { filter: saturate(1.12) brightness(1.10); }
 .tr-behind-screen::before {
   content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
   background-image: url("/img/girih-tile.svg");
   background-size: var(--pattern-scale) auto;
   background-repeat: repeat;
-  opacity: 0.16;
+  opacity: 0.07;
   mix-blend-mode: soft-light;
 }
 .tr-behind-screen::after {
   content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none;
-  /* The vignette was 0.18 and pulled the two darkest slots on the site down
-     to Y 69 and 79. It still seats the image behind the screen; it no longer
-     puts it in shadow. */
-  box-shadow: inset 0 0 48px 12px rgba(20, 38, 28, 0.09);
+  box-shadow: inset 0 0 48px 12px rgba(20, 38, 28, 0.04);
   border: 1px solid rgba(20, 38, 28, 0.16); border-radius: inherit;
 }
 

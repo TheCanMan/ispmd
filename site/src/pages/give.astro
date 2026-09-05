@@ -2,7 +2,7 @@
 /**
  * Give - DESIGN.md 14.7. Copy from COPY.md, "Give", verbatim.
  *
- * Section rhythm: shader masthead (dark, give) -> paper -> paper-warm ->
+ * Section rhythm: shader masthead (light, give) -> paper -> paper-warm ->
  * paper -> paper -> paper-cool -> ink footer. Two dark grounds total, footer
  * included, which is the maximum 4.2 allows.
  *
@@ -30,7 +30,7 @@ import { site } from '../data/site';
   description="Tuition is $60 a student. It does not cover a year. The Islamic School of Potomac is a 501(c)(3) non-profit, EIN 52-1989063."
 >
   {/* 1. Masthead */}
-  <Masthead preset="give" dark label="SUPPORT THE SCHOOL" lines={['A school with', '$60 tuition.']}>
+  <Masthead preset="give" label="SUPPORT THE SCHOOL" lines={['A school with', '$60 tuition.']}>
     <p class="t-lead give-sub" data-motion="body-rise">
       Donations cover the rest.
     </p>
@@ -145,7 +145,7 @@ import { site } from '../data/site';
 
   .give-sub {
     grid-column: 1 / -1;
-    color: var(--text-on-dark-soft);
+    color: var(--text-soft);
     margin-block-start: var(--s-4);
   }
 

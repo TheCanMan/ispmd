@@ -73,6 +73,33 @@ export interface MediaSlot {
   /** Decorative or purely textural media: alt="" and role="presentation". */
   decorative?: boolean;
 
+  /**
+   * WHAT THIS FILE ACTUALLY IS. Distinct from `status`, which only says
+   * whether a file is wired up.
+   *
+   *   'placeholder'  stock standing in for a shot that has not happened
+   *   'generated'    an illustration made for this project
+   *   'photo'        a real photograph of the Islamic School of Potomac
+   *
+   * Two things depend on it, and they must not be able to drift apart:
+   *
+   *   - ALT TEXT. Anything that is not a 'photo' has to say so, because a
+   *     screen-reader user cannot see that they are being shown an
+   *     illustration. `check:media` verifies the "Illustration: " prefix is
+   *     present on every 'generated' slot and absent on every 'photo'.
+   *
+   *   - THE SIZE FLOOR. minWidth/minHeight are the brief for real
+   *     photography and stay as written, but a generated illustration that
+   *     lands under them is a known, accepted trade rather than a defect.
+   *     Undersize is a warning for 'placeholder' and 'generated' and fatal
+   *     only for 'photo'. Without this the day check:media joins CI every
+   *     deploy would block on images we chose on purpose.
+   *
+   * Aspect deviation stays fatal for all three: a wrong crop is wrong
+   * whatever made the file.
+   */
+  provenance?: 'placeholder' | 'generated' | 'photo';
+
   /** For the hand-written shot list. Never rendered. */
   shotNote: string;
 }

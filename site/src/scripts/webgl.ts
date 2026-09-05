@@ -40,8 +40,8 @@ export const PALETTE = {
   paper: '#F8FAF7',
   paperWarm: '#EEF3EC',
   paperCool: '#E3EBE3',
-  ink: '#14261C',
-  slateDeep: '#0F1F17',
+  ink: '#17301F',
+  slateDeep: '#122619',
   sienna: '#2F6B45',
   slate: '#2C6157',
   amber: '#A3DC7A',
@@ -226,8 +226,11 @@ export const PRESETS = {
   calendar: { a: P.paperCool, b: P.fillSky,     c: P.slate,    strap: P.paper, density: 4.6, strapWidth: 0.010, glow: 0.30, drift: 0.30, construction: 0.25, grain: 0.010, opacity: 0.45, lightOrigin: [0.78, 0.22] },
   enroll:   { a: P.paper,     b: P.fillApricot, c: P.sienna,   strap: P.paper, density: 2.6, strapWidth: 0.016, glow: 0.60, drift: 0.60, construction: 0.30, grain: 0.010, opacity: 0.55, lightOrigin: [0.30, 0.55] },
   faqs:     { a: P.paper,     b: P.paperCool,   c: P.paperWarm, strap: P.ink,  density: 5.2, strapWidth: 0.008, glow: 0.15, drift: 0.25, construction: 0.20, grain: 0.008, opacity: 0.35, lightOrigin: [0.50, 0.10] },
-  give:     { a: P.ink,       b: P.slate,       c: P.fillApricot,    strap: P.paper, density: 3.2, strapWidth: 0.012, glow: 0.90, drift: 0.70, construction: 0.30, grain: 0.014, opacity: 1.00, lightOrigin: [0.50, 0.02] },
-  contact:  { a: P.slateDeep, b: P.slate,       c: P.fillSky,  strap: P.paper, density: 2.2, strapWidth: 0.010, glow: 0.50, drift: 0.40, construction: 0.30, grain: 0.012, opacity: 1.00, lightOrigin: [0.50, 0.62] },
+  /* give and contact were the site's only two DARK bands. Every page now
+     opens light; the deep pine is spent on the hero and the homework line,
+     which earn it, rather than on the top of an interior page. */
+  give:     { a: P.paperWarm, b: P.fillApricot, c: P.sienna,   strap: P.paper, density: 3.2, strapWidth: 0.012, glow: 0.55, drift: 0.70, construction: 0.30, grain: 0.010, opacity: 0.50, lightOrigin: [0.50, 0.12] },
+  contact:  { a: P.paperCool, b: P.fillSky,     c: P.slate,    strap: P.paper, density: 2.2, strapWidth: 0.010, glow: 0.35, drift: 0.40, construction: 0.30, grain: 0.010, opacity: 0.45, lightOrigin: [0.50, 0.42] },
   notfound: { a: P.paper,     b: P.fillApricot, c: P.sienna,   strap: P.paper, density: 2.6, strapWidth: 0.016, glow: 0.60, drift: 0.60, construction: 0.30, grain: 0.010, opacity: 0.40, lightOrigin: [0.50, 0.50] },
 } satisfies Record<string, Preset>;
 

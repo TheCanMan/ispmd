@@ -16,8 +16,8 @@ import { site, footerNav, epigraph, labels } from '../data/site';
 import Button from './Button.astro';
 ---
 
-<footer class="site-footer on-dark">
-  <div class="site-footer__lattice lattice lattice--strong lattice--lg" aria-hidden="true"></div>
+<footer class="site-footer">
+  <div class="site-footer__lattice lattice lattice--quiet lattice--lg" aria-hidden="true"></div>
 
   <div class="site-footer__inner container">
     <div class="site-footer__grid grid">
@@ -57,7 +57,7 @@ import Button from './Button.astro';
         </p>
         <p class="t-label">EIN {site.nonprofit.ein}</p>
 
-        <Button href="/give" variant="ghost-on-dark">{labels.give}</Button>
+        <Button href="/give" variant="ghost">{labels.give}</Button>
 
         <div class="site-footer__social">
           <a class="t-ui link-hook" href={site.social.instagram} rel="noopener noreferrer" target="_blank">Instagram</a>
@@ -75,12 +75,25 @@ import Button from './Button.astro';
 </footer>
 
 <style>
+  /*
+   * A LIGHT FOOTER.
+   *
+   * This was --ink, and it is the one block that appears on every page, so
+   * every page on the site ended at a measured mean luminance of 6.5 out of
+   * 255 - effectively black. The last thing a parent saw, nine times out of
+   * nine. Nothing else in the site's ground balance came close to that as a
+   * source of gloom: the pages already averaged 166.
+   *
+   * The deep pine is still the signature, but it is spent where it earns
+   * something - the hero and the homework line - rather than on the sign-off
+   * of every page.
+   */
   .site-footer {
     position: relative;
     isolation: isolate;
     overflow: hidden;
-    background: var(--ink);
-    color: var(--ctx-text-soft);
+    background: var(--paper-cool);
+    color: var(--text-soft);
     padding-block: calc(var(--section-y) + var(--s-9)) var(--section-y);
   }
 
@@ -135,7 +148,7 @@ import Button from './Button.astro';
     font-size: var(--fs-subtitle);
     line-height: 1.05;
     letter-spacing: var(--tr-subtitle);
-    color: var(--text-on-dark);
+    color: var(--text);
   }
 
   .site-footer__channels {
@@ -149,7 +162,7 @@ import Button from './Button.astro';
     font-size: var(--fs-subtitle);
     font-variation-settings: var(--vf-subtitle);
     line-height: var(--lh-subtitle);
-    color: var(--link-on-dark);
+    color: var(--text-link);
     text-decoration: none;
     min-height: 44px;
     display: inline-flex;
@@ -162,11 +175,11 @@ import Button from './Button.astro';
     flex-direction: column;
     gap: var(--s-1);
     font-style: normal;
-    color: var(--text-on-dark-soft);
+    color: var(--text-soft);
   }
 
   .site-footer__mail .t-small {
-    color: var(--text-on-dark-soft);
+    color: var(--text-soft);
   }
 
   .site-footer__col--links {
@@ -181,7 +194,7 @@ import Button from './Button.astro';
   }
 
   .site-footer__col--links a {
-    color: var(--text-on-dark-soft);
+    color: var(--text-soft);
     text-decoration: none;
     display: inline-flex;
     align-items: center;
@@ -190,7 +203,7 @@ import Button from './Button.astro';
   }
 
   .site-footer__col--legal .t-label {
-    color: var(--text-on-dark-faint);
+    color: var(--text-faint);
     max-width: 34ch;
   }
 
@@ -204,7 +217,7 @@ import Button from './Button.astro';
   }
 
   .site-footer__social a {
-    color: var(--text-on-dark-soft);
+    color: var(--text-soft);
     text-decoration: none;
     display: inline-flex;
     align-items: center;
@@ -221,15 +234,15 @@ import Button from './Button.astro';
     gap: var(--s-3);
     margin-block-start: var(--s-10);
     padding-block-start: var(--s-7);
-    border-block-start: var(--border-hair) solid var(--rule-on-dark);
+    border-block-start: var(--border-hair) solid var(--rule);
     text-align: center;
   }
 
   .site-footer__epigraph .t-arabic {
-    color: var(--text-on-dark-soft);
+    color: var(--text-soft);
   }
 
   .site-footer__epigraph .t-small {
-    color: var(--text-on-dark-soft);
+    color: var(--text-soft);
   }
 </style>

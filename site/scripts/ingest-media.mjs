@@ -242,6 +242,15 @@ for (const r of results) {
 
   body = body.replace(/\bstatus:\s*'placeholder'/, "status: 'real'");
 
+  /* Provenance is what these files ARE, and it is what drives both the alt
+     prefix and the size-floor severity. Set it here so the two can never
+     disagree with each other. */
+  if (/\bprovenance:\s*'\w+'/.test(body)) {
+    body = body.replace(/\bprovenance:\s*'\w+'/, "provenance: 'generated'");
+  } else {
+    body = body.replace(/\bstatus:\s*'real',/, "status: 'real',\n    provenance: 'generated',");
+  }
+
   if (/\bsrc:\s*'[^']*'/.test(body)) {
     body = body.replace(/\bsrc:\s*'[^']*'/, `src: '${r.registrySrc}'`);
   } else {

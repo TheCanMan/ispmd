@@ -4,7 +4,9 @@
  *
  * On every interior page the shader occupies a band, never the full page:
  * 52svh at >=768px, 44svh below, --ratio-band maximum. The page title sits
- * over it. Six of the eight bands are light; Give and Contact are dark.
+ * over it. ALL eight bands are light now - Give and Contact were the last two
+ * dark ones, and every page opening on ink is what made the site read as
+ * gloomy. The dark side of 6.2 is still supported by the `dark` prop.
  *
  * That is the site's rhythm: an overture on every page, a full-viewport hero
  * on exactly one.
@@ -213,7 +215,7 @@ const {
   }
 
   .masthead.on-dark .masthead__type > :global(*:not(:empty))::before {
-    background: rgba(20, 38, 28, 0.88);      /* --ink */
+    background: rgba(23, 48, 31, 0.88);      /* --ink */
   }
 
   @media (min-width: 1024px) {
@@ -258,13 +260,13 @@ const {
   }
   .masthead__fallback--give {
     background:
-      radial-gradient(140% 100% at 50% 100%, var(--sienna) 0%, var(--slate) 45%, transparent 78%),
-      linear-gradient(180deg, var(--ink) 0%, var(--ink) 100%);
+      radial-gradient(120% 90% at 50% 24%, var(--fill-apricot) 0%, transparent 62%),
+      linear-gradient(160deg, var(--paper-warm) 0%, var(--paper-cool) 100%);
   }
   .masthead__fallback--contact {
     background:
-      radial-gradient(120% 90% at 50% 62%, var(--fill-sky) 0%, transparent 58%),
-      linear-gradient(160deg, var(--slate-deep) 0%, var(--slate) 100%);
+      radial-gradient(120% 90% at 50% 46%, var(--fill-sky) 0%, transparent 58%),
+      linear-gradient(160deg, var(--paper-cool) 0%, var(--paper) 100%);
   }
   .masthead__fallback--notfound {
     background:

@@ -20,10 +20,10 @@ const OUT = resolve(ROOT, 'public/img');
 mkdirSync(OUT, { recursive: true });
 
 /* Tokens. These are the only colours this script may emit (DESIGN.md 1). */
-const INK = '#14261C';
+const INK = '#17301F';
 const PAPER = '#F8FAF7';
 const SIENNA = '#2F6B45';
-const SLATE_DEEP = '#0F1F17';
+const SLATE_DEEP = '#122619';
 const AMBER = '#D9EDC6';   /* --fill-apricot, a pale leaf: the poster's light end is green */
 
 /* ---------------------------------------------------------------------

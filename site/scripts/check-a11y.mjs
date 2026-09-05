@@ -16,6 +16,27 @@ const PAGES = [
   '/', '/our-story', '/program', '/calendar', '/enroll', '/faqs', '/give', '/contact', '/404',
 ];
 
+/*
+ * The 404 route has to be RESOLVED, not assumed.
+ *
+ * `astro preview` maps /404 to 404.html; a plain static server does not, and
+ * returns its OWN error page instead - whose bare h1 and p sit outside any
+ * landmark. That was reported as 4 axe violations "in our code" when the page
+ * being audited was the Python http.server error document. Probe once and use
+ * whichever form this server actually serves.
+ */
+const resolve404 = async () => {
+  for (const candidate of ['/404', '/404.html']) {
+    try {
+      const res = await fetch(`http://localhost:${PORT}${candidate}`);
+      if (res.ok) return candidate;
+    } catch {}
+  }
+  return '/404';
+};
+
+PAGES[PAGES.indexOf('/404')] = await resolve404();
+
 const browser = await chromium.launch();
 let ours = 0;
 const notes = [];

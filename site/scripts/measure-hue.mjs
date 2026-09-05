@@ -1,28 +1,182 @@
-// Hue retention: do photographs render in their own colours, or get repainted by the treatment?
-// Compares each real slot's source JPEG (src/assets/media/real/) against its rendered region on the page.
-// Fails if rendered hue spread < 85% of source, or the near-green share drifts more than 10 points.
-import { chromium } from 'playwright'; import { PNG } from 'pngjs';
-import { readFileSync, existsSync } from 'node:fs'; import { execSync } from 'node:child_process';
-const PORT = process.env.PORT || 4399; const BASE = `http://localhost:${PORT}`;
-const CHECKS = [['/enroll/','enroll-sunday'],['/program/','program-deen'],['/give/','give-impact'],['/our-story/','story-opening'],['/program/','program-between']];
-const hsv=(r,g,b)=>{r/=255;g/=255;b/=255;const M=Math.max(r,g,b),m=Math.min(r,g,b),d=M-m;let h=0;if(d){h=M===r?((g-b)/d)%6:M===g?(b-r)/d+2:(r-g)/d+4;h=(h*60+360)%360;}return {h,s:M?d/M:0,v:M}};
-function stats(png,x0,y0,w,h){let n=0,g=0,sx=0,sy=0;for(let y=y0;y<y0+h;y+=2)for(let x=x0;x<x0+w;x+=2){if(x<0||y<0||x>=png.width||y>=png.height)continue;const i=(png.width*y+x)<<2;const {h:hh,s,v}=hsv(png.data[i],png.data[i+1],png.data[i+2]);if(s<0.15||v<0.15)continue;n++;if(Math.abs(((hh-120)+540)%360-180)<=25)g++;sx+=Math.cos(hh*Math.PI/180);sy+=Math.sin(hh*Math.PI/180);}return {green:n?g/n:0,spread:n?1-Math.hypot(sx,sy)/n:0}}
-function sourcePng(base){ // decode the real JPEG via sips -> png (no extra deps)
-  const jpg=`src/assets/media/real/${base}.jpg`; if(!existsSync(jpg)) return null;
-  const tmp=`/tmp/measure-hue-${base}.png`; execSync(`sips -s format png "${jpg}" --out "${tmp}" >/dev/null 2>&1`); return PNG.sync.read(readFileSync(tmp));
+/**
+ * Does the photograph keep its COLOURS, or just its colourfulness?
+ *
+ *   npm run measure:hue [label] [slot,slot,...]
+ *
+ * Saturation alone cannot answer that. A `color` blend layer keeps the base's
+ * luminance and replaces its hue and saturation with the layer's, so a
+ * treatment can report 80% saturation retained while having repainted a room
+ * full of skin, wood, blue chairs and sage into one green. The eye reads that
+ * as a tinted photograph; the saturation number calls it healthy.
+ *
+ * So this measures the DISTRIBUTION of hue, over colourful pixels only
+ * (HSV saturation > 0.15 - grey pixels have no meaningful hue and would
+ * otherwise dominate any average):
+ *
+ *   spread     circular dispersion, 1 - |mean resultant vector|.
+ *              0 = every pixel is the same hue, 1 = hues spread evenly.
+ *              This is the number that collapses when a photo is tinted.
+ *   nearGreen  share of colourful pixels within 25 degrees of green.
+ *
+ * Both are computed on the SOURCE file off disk and on the RENDERED region as
+ * the browser composites it, so the two are directly comparable.
+ */
+import { chromium } from 'playwright';
+import { PNG } from 'pngjs';
+import { readFileSync, writeFileSync, existsSync } from 'node:fs';
+import { resolve, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import sharp from 'sharp';
+
+const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const PORT = process.env.PORT ?? '4500';
+const label = process.argv[2] ?? 'now';
+const WANT = (process.argv[3] ?? 'give.impact,program.deen,enroll.sunday').split(',');
+
+const SAT_FLOOR = 0.15;
+const GREEN_DEG = 120;
+const GREEN_TOL = 25;
+
+/** Every page that might carry one of the slots. */
+const PAGES = ['/', '/our-story', '/program', '/give', '/faqs', '/enroll', '/calendar', '/contact'];
+
+const hueStats = (data, channels) => {
+  let sx = 0, sy = 0, n = 0, near = 0;
+  for (let i = 0; i < data.length; i += channels) {
+    const r = data[i] / 255, g = data[i + 1] / 255, b = data[i + 2] / 255;
+    const mx = Math.max(r, g, b), mn = Math.min(r, g, b);
+    if (mx === 0) continue;
+    const sat = (mx - mn) / mx;
+    if (sat <= SAT_FLOOR) continue;
+
+    let h;
+    const d = mx - mn;
+    if (d === 0) continue;
+    if (mx === r) h = 60 * (((g - b) / d) % 6);
+    else if (mx === g) h = 60 * ((b - r) / d + 2);
+    else h = 60 * ((r - g) / d + 4);
+    if (h < 0) h += 360;
+
+    const rad = (h * Math.PI) / 180;
+    sx += Math.cos(rad);
+    sy += Math.sin(rad);
+    n++;
+
+    let dist = Math.abs(h - GREEN_DEG);
+    if (dist > 180) dist = 360 - dist;
+    if (dist <= GREEN_TOL) near++;
+  }
+  if (!n) return { spread: 0, nearGreen: 0, colourful: 0 };
+  const R = Math.hypot(sx / n, sy / n);
+  return { spread: 1 - R, nearGreen: (near / n) * 100, colourful: n };
+};
+
+/* Slot -> src from the registry text. */
+const srcOf = new Map();
+for (const f of ['home.ts', 'calendar.ts', 'content.ts']) {
+  const text = readFileSync(resolve(ROOT, 'src/data/media', f), 'utf8');
+  let key = null;
+  for (const line of text.split('\n')) {
+    const k = /^  '([a-z0-9.]+)':/.exec(line);
+    if (k) key = k[1];
+    const v = /^\s+src:\s*'([^']+)'/.exec(line);
+    if (v && key) srcOf.set(key, v[1]);
+  }
 }
-const b=await chromium.launch(); const ctx=await b.newContext({viewport:{width:1440,height:900},reducedMotion:'reduce'});
-let fails=0; console.log('slot              spread src->render (keep>=85%)   near-green src->render (drift<=10pt)');
-for(const [route,base] of CHECKS){
-  const src=sourcePng(base); if(!src){console.log(`${base.padEnd(17)} (no real file - skipped)`);continue;}
-  const S=stats(src,0,0,src.width,src.height);
-  const p=await ctx.newPage(); await p.goto(BASE+route,{waitUntil:'networkidle'}); await p.waitForTimeout(2200);
-  const box=await p.evaluate(h=>{const i=[...document.querySelectorAll('img')].find(i=>(i.currentSrc||i.src).includes(h));if(!i)return null;i.scrollIntoView({block:'center'});const r=i.getBoundingClientRect();return {x:r.x,y:r.y,w:r.width,h:r.height}},base);
-  if(!box){console.log(`${base.padEnd(17)} (not rendered on ${route})`);await p.close();continue;}
-  await p.waitForTimeout(500); const b2=await p.evaluate(h=>{const i=[...document.querySelectorAll('img')].find(i=>(i.currentSrc||i.src).includes(h));const r=i.getBoundingClientRect();return {x:r.x,y:r.y,w:r.width,h:r.height}},base);
-  const png=PNG.sync.read(await p.screenshot()); const R=stats(png,Math.round(b2.x)+4,Math.round(b2.y)+4,Math.round(b2.w)-8,Math.round(b2.h)-8);
-  const keep=S.spread?R.spread/S.spread:1; const drift=Math.abs(R.green-S.green)*100; const ok=keep>=0.85&&drift<=10; if(!ok)fails++;
-  console.log(`${base.padEnd(17)} ${S.spread.toFixed(2)} -> ${R.spread.toFixed(2)} (${(100*keep).toFixed(0)}%)`.padEnd(48)+`${(100*S.green).toFixed(0)}% -> ${(100*R.green).toFixed(0)}%  ${ok?'ok':'*** FAIL'}`);
-  await p.close();
+
+const browser = await chromium.launch();
+const ctx = await browser.newContext({
+  viewport: { width: 1440, height: 900 },
+  deviceScaleFactor: 1,
+  reducedMotion: 'reduce',
+});
+await ctx.addInitScript(() =>
+  Object.defineProperty(navigator, 'hardwareConcurrency', { get: () => 12 })
+);
+const page = await ctx.newPage();
+
+const found = new Map();
+
+for (const path of PAGES) {
+  if (found.size === WANT.length) break;
+  await page.goto(`http://localhost:${PORT}${path}`, { waitUntil: 'networkidle' });
+  for (const slot of WANT) {
+    if (found.has(slot)) continue;
+    const fig = await page.$(`figure.media[data-slot="${slot}"]`);
+    if (!fig) continue;
+    await fig.scrollIntoViewIfNeeded();
+    await page
+      .waitForFunction(
+        (el) => {
+          const m = el.querySelector('img, video');
+          if (!m) return false;
+          const ok = m.tagName === 'IMG' ? m.complete && m.naturalWidth > 0 : m.readyState >= 2;
+          return ok && (!el.classList.contains('media--reveal') || el.classList.contains('is-revealed'));
+        },
+        fig,
+        { timeout: 15000 }
+      )
+      .catch(() => {
+        throw new Error(`${slot}: never finished loading - refusing to measure a blank plate`);
+      });
+    await page.waitForTimeout(700);
+    const shot = await fig.screenshot();
+    writeFileSync(`/tmp/hue-${label}-${slot}.png`, shot);
+    const png = PNG.sync.read(shot);
+    found.set(slot, { path, rendered: hueStats(png.data, 4) });
+  }
 }
-await b.close(); if(fails){console.error(`measure:hue FAILED - ${fails} slot(s) repainted by the treatment`);process.exit(1);} console.log('measure:hue ok');
+await browser.close();
+
+console.log(`\n${label}  -  hue distribution, colourful pixels only (HSV sat > ${SAT_FLOOR})\n`);
+console.log('slot             near-green %          hue spread           colourful px');
+console.log('                 source -> render     source -> render');
+
+const rows = [];
+for (const slot of WANT) {
+  const hit = found.get(slot);
+  if (!hit) {
+    console.log(`${slot.padEnd(16)} NOT FOUND on any page`);
+    continue;
+  }
+  const file = resolve(ROOT, 'src/assets/media', srcOf.get(slot) ?? '');
+  if (!existsSync(file)) {
+    console.log(`${slot.padEnd(16)} source file missing (${srcOf.get(slot)})`);
+    continue;
+  }
+  const { data, info } = await sharp(file)
+    .resize(500, null, { fit: 'inside' })
+    .raw()
+    .toBuffer({ resolveWithObject: true });
+  const src = hueStats(data, info.channels);
+  const r = hit.rendered;
+
+  const spreadKept = src.spread > 0 ? (r.spread / src.spread) * 100 : 0;
+  const greenDelta = r.nearGreen - src.nearGreen;
+
+  rows.push({ slot, src, rendered: r, spreadKept, greenDelta });
+  console.log(
+    `${slot.padEnd(16)} ${src.nearGreen.toFixed(0).padStart(3)}% -> ${r.nearGreen.toFixed(0).padStart(3)}%` +
+      ` (${greenDelta >= 0 ? '+' : ''}${greenDelta.toFixed(0)}pt)` +
+      `    ${src.spread.toFixed(2)} -> ${r.spread.toFixed(2)} (${spreadKept.toFixed(0)}% kept)` +
+      `   ${r.colourful}`
+  );
+}
+
+/* Acceptance: spread >= 85% of source, near-green within +/-10 points. */
+const fails = rows.filter((r) => r.spreadKept < 85 || Math.abs(r.greenDelta) > 10);
+console.log('');
+for (const r of rows) {
+  const bad = [];
+  if (r.spreadKept < 85) bad.push(`hue spread only ${r.spreadKept.toFixed(0)}% of source (needs 85%)`);
+  if (Math.abs(r.greenDelta) > 10)
+    bad.push(`near-green moved ${r.greenDelta.toFixed(0)} points (needs within 10)`);
+  if (bad.length) console.log(`  FAIL  ${r.slot}: ${bad.join('; ')}`);
+}
+console.log(
+  fails.length
+    ? `\n${fails.length} of ${rows.length} slots fail the hue-fidelity bar.\n`
+    : `\nAll ${rows.length} slots keep their own colours.\n`
+);
+writeFileSync(`/tmp/hue-${label}.json`, JSON.stringify(rows, null, 2));
+process.exitCode = fails.length ? 1 : 0;

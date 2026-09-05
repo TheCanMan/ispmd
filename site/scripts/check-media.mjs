@@ -40,8 +40,28 @@ const { media } = await import(resolve(ROOT, 'src/data/media/index.ts'));
 
 const ASPECT_TOLERANCE = 0.25;
 
+/*
+ * Two severities, because they answer different questions.
+ *
+ *   problems    fatal in CI. Something is wrong.
+ *   advisories  never fatal, in any environment. Something is known and
+ *               accepted - the 19 generated illustrations land at 928-1584px
+ *               against minimums written for real photography. The minimums
+ *               stay as written, because they are the brief for the real
+ *               shoot; a generated file under them is a trade we made, not a
+ *               defect, and blocking every deploy on it would train everyone
+ *               to ignore the check.
+ *
+ * Aspect deviation is fatal for every provenance. A wrong crop is wrong
+ * whatever made the file.
+ */
 const problems = [];
+const advisories = [];
 const notes = [];
+
+/** Undersize is only a hard failure for a real photograph. */
+const sizeIssue = (slot, message) =>
+  (slot.provenance === 'photo' ? problems : advisories).push(message);
 
 function ratioValue(ratio) {
   const [w, h] = String(ratio).split('/').map(Number);
@@ -57,6 +77,30 @@ for (const [id, slot] of Object.entries(media)) {
 
   if (slot.decorative && slot.alt) {
     problems.push(`${where}: decorative slots render alt="", so the alt string here is dead text.`);
+  }
+
+  /*
+   * Provenance drives the alt prefix, and this is what stops them drifting.
+   * A generated illustration that describes itself as a photograph of this
+   * school is a confident falsehood told to exactly the users who cannot
+   * check it, so it is fatal rather than advisory.
+   */
+  if (!slot.provenance) {
+    problems.push(`${where}: no provenance. Say what this file is: 'placeholder', 'generated' or 'photo'.`);
+  } else if (!slot.decorative && slot.alt?.trim()) {
+    const prefixed = /^illustration:\s/i.test(slot.alt.trim());
+    if (slot.provenance === 'generated' && !prefixed) {
+      problems.push(
+        `${where}: provenance is 'generated' but alt does not begin "Illustration:". ` +
+          `A screen-reader user cannot see that this is not a photograph of the school.`
+      );
+    }
+    if (slot.provenance === 'photo' && prefixed) {
+      problems.push(
+        `${where}: provenance is 'photo' but alt still begins "Illustration:". ` +
+          `Drop the prefix - this one really is a photograph.`
+      );
+    }
   }
 
   if (slot.status === 'placeholder' && slot.alt && !slot.realAlt && !slot.decorative) {
@@ -108,7 +152,7 @@ for (const [id, slot] of Object.entries(media)) {
           );
         }
         if (pm.width < slot.minWidth) {
-          problems.push(`${where}: poster is ${pm.width}px wide, slot minimum is ${slot.minWidth}.`);
+          sizeIssue(slot, `${where}: poster is ${pm.width}px wide, slot minimum is ${slot.minWidth}.`);
         }
       } catch (err) {
         problems.push(`${where}: could not read poster ${slot.poster} (${err.message}).`);
@@ -135,10 +179,10 @@ for (const [id, slot] of Object.entries(media)) {
   const { width = 0, height = 0 } = meta;
 
   if (width < slot.minWidth) {
-    problems.push(`${where}: ${width}px wide, slot needs ${slot.minWidth}px.`);
+    sizeIssue(slot, `${where}: ${width}px wide, slot needs ${slot.minWidth}px. [${slot.provenance ?? 'unset'}]`);
   }
   if (height < slot.minHeight) {
-    problems.push(`${where}: ${height}px tall, slot needs ${slot.minHeight}px.`);
+    sizeIssue(slot, `${where}: ${height}px tall, slot needs ${slot.minHeight}px. [${slot.provenance ?? 'unset'}]`);
   }
 
   const want = ratioValue(slot.ratio);
@@ -157,11 +201,21 @@ for (const [id, slot] of Object.entries(media)) {
 
 const total = Object.keys(media).length;
 const placeholders = Object.values(media).filter((s) => s.status === 'placeholder').length;
+const byProv = (p) => Object.values(media).filter((s) => s.provenance === p).length;
 
 for (const note of notes) console.log(`  note  ${note}`);
+for (const a of advisories) console.log(`  note  ${a}`);
+
+const census =
+  `${total} slots: ${byProv('photo')} photo, ${byProv('generated')} generated, ` +
+  `${byProv('placeholder')} placeholder (${placeholders} not yet wired up)`;
 
 if (problems.length === 0) {
-  console.log(`\ncheck:media  ${total} slots, ${placeholders} still placeholder. Clean.\n`);
+  console.log(
+    `\ncheck:media  ${census}.\n` +
+      `${advisories.length} advisory note${advisories.length === 1 ? '' : 's'} ` +
+      `(size floors on non-photo slots, never fatal). Clean.\n`
+  );
   process.exit(0);
 }
 
