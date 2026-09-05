@@ -19,7 +19,8 @@
     "measure:media": "node scripts/measure-media.mjs",
     "measure:hero": "node scripts/measure-hero.mjs",
     "build:montage": "node scripts/build-montage.mjs",
-    "ingest:media": "node scripts/ingest-media.mjs"
+    "ingest:media": "node scripts/ingest-media.mjs",
+    "measure:warm": "node scripts/measure-warm.mjs"
   },
   "dependencies": {
     "astro": "^7.1.6",
