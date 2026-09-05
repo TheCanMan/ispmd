@@ -84,6 +84,38 @@ for (const [id, slot] of Object.entries(media)) {
     problems.push(`${where}: a video slot with a file must declare a poster.`);
   }
 
+  /*
+   * A declared poster that is not on disk is worse than no poster: the video
+   * element falls back to a transparent box, so the aperture renders empty
+   * and looks identical to State A. Check the file, and check its shape -
+   * a poster in the wrong ratio flashes a differently-cropped frame before
+   * the first video frame paints.
+   */
+  if (slot.kind === 'video' && slot.poster) {
+    const posterFile = resolve(ASSETS, slot.poster);
+    if (!existsSync(posterFile)) {
+      problems.push(`${where}: poster src/assets/media/${slot.poster} does not exist.`);
+    } else {
+      try {
+        const pm = await sharp(posterFile).metadata();
+        const [rw, rh] = slot.ratio.split('/').map(Number);
+        const want = rw / rh;
+        const got = pm.width / pm.height;
+        if (Math.abs(got - want) / want > 0.25) {
+          problems.push(
+            `${where}: poster is ${pm.width}x${pm.height} (${got.toFixed(2)}), ` +
+              `slot ratio is ${slot.ratio} (${want.toFixed(2)}).`
+          );
+        }
+        if (pm.width < slot.minWidth) {
+          problems.push(`${where}: poster is ${pm.width}px wide, slot minimum is ${slot.minWidth}.`);
+        }
+      } catch (err) {
+        problems.push(`${where}: could not read poster ${slot.poster} (${err.message}).`);
+      }
+    }
+  }
+
   const file = resolve(ASSETS, slot.src);
   if (!existsSync(file)) {
     problems.push(`${where}: src/assets/media/${slot.src} does not exist.`);

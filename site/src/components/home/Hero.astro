@@ -17,12 +17,51 @@
 import Button from '../Button.astro';
 import Icon from '../Icon.astro';
 import { labels, epigraph } from '../../data/site';
+import type { ImageMetadata } from 'astro';
 import { getSlot } from '../../data/media';
 
 /* 13.2 - State A while the montage is a placeholder: no video element, no
    poster. The aperture is simply where the light comes through. */
 const montage = getSlot('home.hero.montage');
 const hasFootage = montage.status === 'real' && !!montage.src;
+
+/*
+ * The montage is resolved here rather than through <Media>, because Media's
+ * glob yields ImageMetadata and a video has none. `?url` keeps these out of
+ * the image pipeline entirely and just hashes and copies them.
+ *
+ * The WebM is found by swapping the extension rather than by carrying a
+ * second registry field: the two files are one asset in two containers, and
+ * a slot that could name an mp4 and an unrelated webm is a slot that will
+ * eventually do so.
+ */
+const videoAssets = import.meta.glob<string>('/src/assets/media/**/*.{mp4,webm}', {
+  eager: true,
+  query: '?url',
+  import: 'default',
+});
+const posterAssets = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/media/**/*.{jpg,jpeg,png,webp,avif}',
+  { eager: true }
+);
+
+/* Narrowed into a local so TypeScript can see it: `hasFootage` is a boolean
+   derived from montage.src, which does not narrow the optional field itself. */
+const montageSrc = montage.status === 'real' ? montage.src : undefined;
+const montageMp4 = montageSrc ? videoAssets[`/src/assets/media/${montageSrc}`] : undefined;
+const montageWebm = montageSrc
+  ? videoAssets[`/src/assets/media/${montageSrc.replace(/\.mp4$/, '.webm')}`]
+  : undefined;
+const montagePoster = montage.poster
+  ? posterAssets[`/src/assets/media/${montage.poster}`]?.default.src
+  : undefined;
+
+if (hasFootage && !montageMp4) {
+  throw new Error(
+    `home.hero.montage: status is 'real' but src/assets/media/${montage.src} did not resolve. ` +
+      `A silently missing hero video renders an empty aperture that looks exactly like State A.`
+  );
+}
 ---
 
 <section class="hero" data-hero data-motion-group>
@@ -78,9 +117,30 @@ const hasFootage = montage.status === 'real' && !!montage.src;
       <div class="hero-window hero__window" data-hero-window>
         {
           hasFootage && (
-            <video muted loop playsinline preload="metadata" aria-hidden="true" class="hero__video" />
+            <video
+              muted
+              loop
+              playsinline
+              preload="metadata"
+              poster={montagePoster}
+              aria-hidden="true"
+              tabindex="-1"
+              class="hero__video"
+            >
+              {montageWebm && <source src={montageWebm} type="video/webm" />}
+              <source src={montageMp4} type="video/mp4" />
+            </video>
           )
         }
+
+        {/*
+          10 - the strapwork stays IN FRONT of the footage. Without it the
+          video reads as a rectangle pasted onto the field; with it the
+          aperture reads as what it is, a screen with light and movement
+          behind it. Rendered only in State B, since in State A there is
+          nothing to be in front of and the 3D lattice already covers this.
+        */}
+        {hasFootage && <div class="lattice hero__screen" aria-hidden="true" />}
       </div>
     </div>
   </div>
@@ -102,6 +162,34 @@ const hasFootage = montage.status === 'real' && !!montage.src;
   const hero = document.querySelector<HTMLElement>('[data-hero]');
   const canvas = document.querySelector<HTMLCanvasElement>('[data-hero-canvas]');
   const windowEl = document.querySelector<HTMLElement>('[data-hero-window]');
+
+  /*
+   * 5.4 - the montage plays from JS, never from an `autoplay` attribute.
+   *
+   * Autoplay is declarative and fires before any media query is consulted, so
+   * a visitor who asked for reduced motion would get a looping video and then
+   * watch us stop it. Withholding play() instead means the poster frame - a
+   * real frame of the montage, not a placeholder - is simply what the
+   * aperture shows, which is the correct still for that preference.
+   *
+   * The play() promise is caught because a browser may refuse it under its
+   * own power-saving or autoplay policy, and an unhandled rejection in the
+   * hero is not worth a console error for a decorative background.
+   */
+  const montageEl = document.querySelector<HTMLVideoElement>('.hero__video');
+  if (montageEl) {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const sync = () => {
+      if (reduce.matches) {
+        montageEl.pause();
+        montageEl.currentTime = 0;
+      } else {
+        montageEl.play().catch(() => {});
+      }
+    };
+    sync();
+    reduce.addEventListener('change', sync);
+  }
 
   if (hero && canvas && windowEl) {
     const tier = detectTier();
@@ -399,6 +487,36 @@ const hasFootage = montage.status === 'real' && !!montage.src;
     width: 100%;
     height: 100%;
     object-fit: cover;
+    /*
+     * The aperture in the shader is a rounded distance field with a wide
+     * falloff, so a hard-edged video inside it read as a rectangle laid on
+     * top of the light rather than as light coming through. A short feather -
+     * 28px on every side lets the footage meet the glow instead of cutting
+     * it. Two crossed linear masks rather than one radial: a radial feathers
+     * the corners far more than the edge midpoints, which on a 16:9 frame
+     * reads as an oval vignette. Intersecting an x-ramp with a y-ramp gives
+     * the same feather on all four sides. It stays a rectangle, because it is
+     * a screen; it just stops having a razor edge.
+     */
+    -webkit-mask-image:
+      linear-gradient(to right, transparent 0, #000 28px, #000 calc(100% - 28px), transparent 100%),
+      linear-gradient(to bottom, transparent 0, #000 28px, #000 calc(100% - 28px), transparent 100%);
+    mask-image:
+      linear-gradient(to right, transparent 0, #000 28px, #000 calc(100% - 28px), transparent 100%),
+      linear-gradient(to bottom, transparent 0, #000 28px, #000 calc(100% - 28px), transparent 100%);
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
+  }
+
+  /*
+   * In front of the footage. `multiply` rather than `soft-light` because the
+   * strapwork is --ink and the footage is now bright: soft-light against a
+   * bright base is almost a no-op, and the screen simply was not there.
+   */
+  .hero__screen {
+    z-index: var(--z-content);
+    mix-blend-mode: multiply;
+    opacity: var(--pattern-present);
   }
 
   .hero__cue {

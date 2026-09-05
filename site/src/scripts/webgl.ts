@@ -47,6 +47,7 @@ export const PALETTE = {
   amber: '#A3DC7A',
   fillApricot: '#D9EDC6',
   fillSky: '#93C4B4',
+  lightMorning: '#E6F8C4',   /* the hero field's light end - 1.5 */
 } as const;
 
 export function hexToVec3(hex: string): [number, number, number] {
@@ -218,8 +219,8 @@ export const PRESETS = {
    * is a pale sage-white rather than gold or clay. The token NAMES below are
    * historical - P.sienna is a moss green and P.fillApricot is a pale leaf.
    */
-  'home-backdrop': { a: P.ink,       b: P.slate,  c: P.fillApricot, strap: P.paper, density: 3.2, strapWidth: 0.0, glow: 0.45, drift: 1.0, construction: 0.0, grain: 0.012, opacity: 1.0, lightOrigin: [0.5, 0.5] },
-  'home-flat':     { a: P.ink,       b: P.slate,  c: P.fillApricot, strap: P.paper, density: 3.2, strapWidth: 0.014, glow: 0.45, drift: 1.0, construction: 0.3, grain: 0.012, opacity: 1.0, lightOrigin: [0.5, 0.5] },
+  'home-backdrop': { a: P.ink,       b: P.slate,  c: P.lightMorning, strap: P.paper, density: 3.2, strapWidth: 0.0, glow: 0.58, drift: 1.0, construction: 0.0, grain: 0.012, opacity: 1.0, lightOrigin: [0.5, 0.5] },
+  'home-flat':     { a: P.ink,       b: P.slate,  c: P.lightMorning, strap: P.paper, density: 3.2, strapWidth: 0.014, glow: 0.58, drift: 1.0, construction: 0.3, grain: 0.012, opacity: 1.0, lightOrigin: [0.5, 0.5] },
   story:    { a: P.paper,     b: P.paperWarm,   c: P.fillSky,  strap: P.ink,   density: 3.6, strapWidth: 0.006, glow: 0.25, drift: 0.35, construction: 1.0,  grain: 0.010, opacity: 0.55, lightOrigin: [0.22, 0.30] },
   program:  { a: P.paperWarm, b: P.fillApricot, c: P.sienna,   strap: P.paper, density: 3.0, strapWidth: 0.014, glow: 0.40, drift: 0.50, construction: 0.35, grain: 0.010, opacity: 0.50, lightOrigin: [0.50, 0.18] },
   calendar: { a: P.paperCool, b: P.fillSky,     c: P.slate,    strap: P.paper, density: 4.6, strapWidth: 0.010, glow: 0.30, drift: 0.30, construction: 0.25, grain: 0.010, opacity: 0.45, lightOrigin: [0.78, 0.22] },

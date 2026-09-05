@@ -8,25 +8,40 @@ import { defineMedia } from './types.ts';
 
 export const homeMedia = defineMedia({
   /**
-   * 13.2 - the Window. The hero montage and the 3D set-piece are the same
-   * surface, not alternatives. While this slot is a placeholder the hero
-   * renders State A: no video element, no poster, the aperture is simply
-   * where the light comes through. DESIGN.md 15 is explicit that a stock
-   * video montage of somebody else's school is worse than no video, so
-   * there is deliberately no file here.
+   * 13.2 - the Window. State B: the montage is live.
+   *
+   * DESIGN.md 15 forbids a stock montage of somebody else's school, and that
+   * still holds. This is not stock: it is footage generated for this project,
+   * which is a different thing from a library clip of strangers - but it is
+   * also NOT a recording of the Islamic School of Potomac, and nothing in the
+   * markup claims otherwise. The element is decorative and aria-hidden, so it
+   * makes no assertion to a screen reader at all.
+   *
+   * treatment is 'raw' rather than a grade because the grade is baked into
+   * the ENCODE (scripts/build-montage.mjs lifts gamma and saturation, taking
+   * mean Y from 95.9 to 121.8). Layering a CSS grade on top would process the
+   * footage twice and put back the dimness the lift just removed. The
+   * ink-duotone this slot used to specify was written for a bistre palette;
+   * on green it crushes colour footage into a single dark wash, which is the
+   * opposite of what the school asked for.
    */
   'home.hero.montage': {
     kind: 'video',
     ratio: '16/9',
-    minWidth: 2400,
-    minHeight: 1350,
-    treatment: 'ink-duotone',
+    minWidth: 1280,
+    minHeight: 720,
+    treatment: 'raw',
     focal: '50% 40%',
-    status: 'placeholder',
+    status: 'real',
+    src: 'real/hero-montage.mp4',
+    poster: 'real/hero-montage-poster.jpg',
     decorative: true,
     alt: '',
     shotNote:
-      '8-12s of cut coverage, wide, natural light: arrival at the door, a classroom from the back, a child reading aloud, parents talking in a hallway. No faces held longer than 1.5s.',
+      'GENERATED FOOTAGE, not ISP. Two 10s clips crossfaded into an 18.5s ' +
+      'seamless loop, 1280x720. Replace with real footage when it exists: ' +
+      'arrival at the door, a classroom from the back, a child reading aloud, ' +
+      'parents talking in a hallway. No faces held longer than 1.5s.',
   },
 
   'home.community.wide': {

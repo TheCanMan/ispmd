@@ -166,6 +166,14 @@
   --fill-amber:       #8FC46F;   /* milestone Sundays - the most saturated */
   --fill-mist:        #DDE5DB;   /* the loading ground */
 
+  /* The hero field's light end. NOT a fill and never a ground: this is the
+     colour the aperture resolves to, and it is the one place on the site
+     that has to read as morning light rather than as a pale tint. Brighter
+     and more chromatic than --fill-apricot on purpose (L 0.953 vs 0.921,
+     chroma 0.070 vs 0.056) - the field was landing at a pale sage that the
+     school read as dim. Still hue 124: green, and the guard checks it. */
+  --light-morning:    #E6F8C4;
+
   /* ==========================================================
      1.6  COLOUR - RULES, TINTS, STATES
      ========================================================== */
@@ -1179,33 +1187,66 @@ a.card,
 
 .tr-ink-duotone { filter: url(#ink-duotone) contrast(1.04); }
 
-/* 8.2's grade was built on sepia plus a sienna multiply, which made every
-   photograph brown. The mechanism is unchanged - a multiply to pull the
-   midtones onto the site's axis and a screen to lift the shadows - but the
-   axis is green now, and the sepia is gone. */
-.tr-warm-grade { filter: saturate(0.82) contrast(1.06) brightness(1.02); }
-.tr-warm-grade::before {
+/*
+ * THE GRADES LIFT. They used to sink.
+ *
+ * Both grades were built the same way: desaturate, then a MULTIPLY tint to
+ * pull the midtones onto the site's axis. Multiply can only ever darken, and
+ * `saturate(0.78)` can only ever drain colour, so every photograph on the
+ * site arrived dimmer and greyer than it was shot - mean luminance 122.6 on
+ * 0-255 with 17.5% saturation, and the quiet slots down at 65. Under
+ * generated footage that is already an overcast documentary look, that
+ * compounded into the wash the school reacted to.
+ *
+ * The mechanism is inverted rather than tuned. A SCREEN of pale leaf lifts
+ * blacks by roughly its own value and leaves whites where they are, so the
+ * shadows and midtones open up while the highlights stay clean and unclipped
+ * - which a global `brightness()` cannot do, since it scales the top end
+ * straight into clipping. Saturation now goes slightly ABOVE 1.
+ *
+ * The green is still doing the unifying, but from the shadow end.
+ */
+/*
+ * A grade is TWO jobs, and the old one did both with a single multiply.
+ *
+ *   1. hold the site on one hue family, whatever happens to be in the frame
+ *   2. keep the photograph bright
+ *
+ * Multiply did the first by darkening, which is why it fought the second.
+ * They are separated here. `color` takes hue and saturation from the blend
+ * layer and keeps the BASE's luminance exactly, so the hue pull is free -
+ * a wall of golden wood comes back onto the green axis without losing a
+ * single step of brightness. `screen` then lifts the shadows and leaves the
+ * highlights alone. Nothing in the stack darkens anything.
+ *
+ * The pull is partial on purpose. At full strength `color` is a duotone and
+ * every face goes to one hue; at ~0.3 the frame keeps its own colour - blue
+ * denim stays denim, a green mug stays a mug - while large warm surfaces
+ * stop reading as brown.
+ */
+.tr-warm-grade { filter: saturate(1.12) contrast(1.02) brightness(1.03); }
+.tr-warm-grade::before {   /* hue onto the green axis, luminance untouched */
   content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
-  background: var(--sienna); opacity: 0.07; mix-blend-mode: multiply;
+  background: var(--sienna); opacity: 0.30; mix-blend-mode: color;
 }
-.tr-warm-grade::after {   /* replaces the default plate rule for graded slots */
+.tr-warm-grade::after {   /* lifts the shadows; also the graded plate rule */
   content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none;
-  background: var(--fill-sky); opacity: 0.06; mix-blend-mode: screen;
+  background: var(--fill-apricot); opacity: 0.17; mix-blend-mode: screen;
   border: 1px solid rgba(20, 38, 28, 0.16); border-radius: inherit;
 }
 
-.tr-cool-grade { filter: saturate(0.78) contrast(1.05) brightness(1.01); }
+.tr-cool-grade { filter: saturate(1.10) contrast(1.02) brightness(1.03); }
 .tr-cool-grade::before {
   content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
-  background: var(--slate); opacity: 0.10; mix-blend-mode: multiply;
+  background: var(--slate); opacity: 0.30; mix-blend-mode: color;
 }
 .tr-cool-grade::after {
   content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none;
-  background: var(--fill-apricot); opacity: 0.05; mix-blend-mode: screen;
+  background: var(--fill-sky); opacity: 0.15; mix-blend-mode: screen;
   border: 1px solid rgba(20, 38, 28, 0.16); border-radius: inherit;
 }
 
-.tr-behind-screen { filter: saturate(0.80) contrast(1.08) brightness(0.98); }
+.tr-behind-screen { filter: saturate(1.08) contrast(1.02) brightness(1.05); }
 .tr-behind-screen::before {
   content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
   background-image: url("/img/girih-tile.svg");
@@ -1216,7 +1257,10 @@ a.card,
 }
 .tr-behind-screen::after {
   content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none;
-  box-shadow: inset 0 0 48px 12px rgba(20, 38, 28, 0.18);
+  /* The vignette was 0.18 and pulled the two darkest slots on the site down
+     to Y 69 and 79. It still seats the image behind the screen; it no longer
+     puts it in shadow. */
+  box-shadow: inset 0 0 48px 12px rgba(20, 38, 28, 0.09);
   border: 1px solid rgba(20, 38, 28, 0.16); border-radius: inherit;
 }
 

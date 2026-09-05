@@ -19,7 +19,12 @@ export const contentMedia = defineMedia({
     ratio: '21/9',
     minWidth: 2400,
     minHeight: 1029,
-    treatment: 'ink-duotone',
+    /* Was 'ink-duotone'. This frame is people arriving, not texture, and a
+       duotone flattens faces to a single-hue wash - the opposite of what the
+       school asked for. Duotone remains available for textural slots.
+       Cool rather than warm: the corridor is lit by fluorescent tubes, and
+       the bluer pull keeps its wood on the green axis instead of gold. */
+    treatment: 'cool-grade',
     focal: '50% 45%',
     status: 'placeholder',
     src: 'placeholder/story-opening.jpg',
@@ -144,7 +149,8 @@ export const contentMedia = defineMedia({
     ratio: '21/9',
     minWidth: 2400,
     minHeight: 1029,
-    treatment: 'ink-duotone',
+    /* Was 'ink-duotone'. A full room of people is a subject too. */
+    treatment: 'cool-grade',
     focal: '50% 55%',
     status: 'placeholder',
     src: 'placeholder/give-impact.jpg',
